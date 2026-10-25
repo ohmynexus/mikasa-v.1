@@ -47,6 +47,175 @@ button{transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}butt
 @media(max-width:650px){header.hero{grid-template-columns:1fr;gap:14px;padding:20px 15px 16px}.identity{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0}.jp{font-size:13px}.latin,.series{font-size:9px;margin:0}.hero-brand{text-align:left}.brand-line{justify-content:flex-start}.brand{font-size:clamp(28px,7.2vw,39px)}.wifi-mark{font-size:31px}.rule-caption{margin:10px 0 8px;padding-top:8px;font-size:8px;letter-spacing:.14em}.quote{font-size:12px}.hero-side{grid-column:auto;grid-template-columns:1fr 1fr;gap:8px}.clock-card{padding:10px}.live-day{font-size:10px}.live-clock{font-size:25px}.mini-quote{gap:7px;padding:7px}.mini-quote img{width:44px;height:44px}.mini-quote p{font-size:9px}.mini-quote small{font-size:8px}main{padding:0 10px 92px}.panelhead{grid-template-columns:1fr;padding:14px;gap:11px}.panelhead h2{font-size:19px}.tools{grid-template-columns:minmax(0,1fr) auto;gap:7px}.tools .primary{font-size:11px;padding:10px 11px}.search{font-size:12px;padding:11px 5px 11px 0}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px}.stat{min-height:73px;padding:10px;gap:9px}.stat-icon{width:34px;height:34px;flex-basis:34px;font-size:16px;border-radius:10px}.stat span{font-size:10px}.stat strong{font-size:19px}.list{padding:0 10px 14px;gap:11px}.customer{grid-template-columns:54px minmax(0,1fr);gap:10px;padding:12px}.customer>.avatar{width:54px;height:54px;border-radius:12px}.namebar h3{font-size:16px}.columns{margin-top:9px}.meta{font-size:12px}.reminder{padding:11px;font-size:12px}.reminder small{font-size:11px}.actions{gap:6px}.actions button{font-size:10px;padding:9px 9px}.history-entry{padding:10px}.form-quote img{width:52px;height:52px}.form-quote p{font-size:10px}}
 @media(prefers-reduced-motion:reduce){button{transition:none}}
 
+
+/* === TACTICAL HUD CARD + HEADER LAYOUT PATCH (CSS only; ledger JS unchanged) === */
+@media (min-width: 1001px){
+  header.hero{
+    grid-template-columns:minmax(190px,.82fr) minmax(390px,1.65fr) minmax(300px,.95fr);
+    align-items:center;
+    gap:clamp(16px,2vw,30px);
+  }
+  .hero-side{grid-template-columns:1fr;align-self:stretch;align-content:center}
+  .clock-card{padding:14px 17px}
+  .live-clock{font-size:clamp(26px,2.5vw,38px)}
+  .mini-quote{min-height:94px}
+  .mini-quote img{width:76px;height:76px}
+  .mini-quote p{font-size:12px}
+}
+.glass{border-color:#d5e9ff55;box-shadow:0 18px 70px #000a,0 0 0 1px #9bcfff0b,0 0 28px #249fff0c}
+.panelhead{grid-template-columns:auto minmax(0,1fr);align-items:center}
+.panelhead h2{display:flex;align-items:center;gap:8px}
+.tools{min-width:0}
+.stat{position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(120deg,#fff0,#fff1 45%,#fff0)}
+.customer{
+  isolation:isolate;position:relative;overflow:hidden;
+  border:1px solid #ff536d9c;border-radius:4px 17px 5px 17px;
+  padding:18px;gap:17px;
+  background:linear-gradient(110deg,rgba(8,12,20,.86),rgba(8,12,20,.72));
+  box-shadow:inset 0 0 0 1px #ff6d801b,inset 0 0 22px #ff31560c,
+    0 0 0 1px #ff36551c,0 0 18px #ff315617,0 12px 30px #0008;
+  clip-path:polygon(0 12px,12px 0,calc(100% - 24px) 0,100% 24px,100% calc(100% - 12px),calc(100% - 12px) 100%,18px 100%,0 calc(100% - 18px));
+}
+.customer:after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(90deg,rgba(5,8,15,.66),rgba(5,8,15,.42) 52%,rgba(5,8,15,.55)),url('./assets/mikasa-bg.png');
+  background-position:center,55% 37%;background-size:cover;background-repeat:no-repeat;
+  opacity:.34;filter:saturate(.86) contrast(1.08);
+}
+.customer:before{
+  content:"";position:absolute;z-index:0;inset:0;width:auto;border-radius:0;
+  background:linear-gradient(90deg,#ff3459 0 3px,transparent 3px calc(100% - 74px),#ff345944 calc(100% - 74px) calc(100% - 70px),transparent calc(100% - 70px));
+  opacity:.9;pointer-events:none;
+}
+.customer>*{position:relative;z-index:1}
+.customer>.avatar{
+  border:2px solid #ff526f;border-radius:4px 13px 4px 13px;
+  box-shadow:0 0 0 2px #ff3b602c,0 0 18px #ff315642,0 8px 20px #000a;
+  object-position:20% center;
+}
+.customer:has(.status:not(.unpaid)) {
+  border-color:#3ce9b59c;
+  box-shadow:inset 0 0 0 1px #39f3b31b,inset 0 0 24px #16d69a0c,
+    0 0 0 1px #20dca31e,0 0 19px #20dca322,0 12px 30px #0008;
+}
+.customer:has(.status:not(.unpaid)):after{
+  background-image:linear-gradient(90deg,rgba(3,14,15,.72),rgba(3,14,15,.47) 55%,rgba(3,14,15,.58)),url('./assets/mikasa-bg.png');
+  opacity:.27;
+}
+.customer:has(.status:not(.unpaid)):before{
+  background:linear-gradient(90deg,#28edb0 0 3px,transparent 3px calc(100% - 74px),#28edb044 calc(100% - 74px) calc(100% - 70px),transparent calc(100% - 70px));
+}
+.customer:has(.status:not(.unpaid))>.avatar{border-color:#39edb2;box-shadow:0 0 0 2px #20dca329,0 0 18px #20dca345,0 8px 20px #000a}
+.customer .namebar h3{text-shadow:0 2px 12px #000}
+.customer .status{padding:5px 10px;border:1px solid #ff526f7a;background:#40121fba;border-radius:3px 12px 3px 12px}
+.customer .status:not(.unpaid){border-color:#3ce9b57d;background:#07382dbd;color:#5fffc5}
+.reminder{border-radius:4px 12px 4px 12px;border-width:1px;box-shadow:0 0 0 1px #ffbb1d20,0 0 19px #ffad1c19,inset 0 0 24px #ffb11b0c}
+.reminder.paid,.reminder.cash{box-shadow:0 0 0 1px #35dfa220,0 0 20px #35dfa21e,inset 0 0 22px #35dfa20b}
+.actions{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.actions button,.history-toggle{
+  min-height:40px;border:1px solid #ffffff23;border-radius:3px 10px 3px 10px;
+  box-shadow:inset 0 1px #ffffff21,0 4px 13px #0004;
+  letter-spacing:.01em;
+}
+.actions .ok{border-color:#4dffc17a}
+.actions .primary{border-color:#ff66815c}
+.actions .edit{border-color:#55baff78}
+.actions .delete{border-color:#ff637c78}
+.history-toggle{border:1px solid #55caffb0;background:linear-gradient(120deg,#082b48,#0a1829);box-shadow:0 0 14px #25baff20,inset 0 1px #ffffff1a}
+.history-entry{border-radius:3px 12px 3px 12px;border-color:#b4d3f32d}
+.history-entry.selected{border-color:#ffd34c;box-shadow:0 0 0 1px #ffcf4566,0 0 18px #ffd34c1b}
+@media(min-width:761px){
+  .columns{grid-template-columns:minmax(0,1fr) minmax(300px,.95fr)}
+  .actions{flex-wrap:nowrap}
+  .actions button{white-space:nowrap}
+}
+@media(max-width:760px){
+  header.hero{grid-template-columns:1fr;gap:12px}
+  .hero-side{grid-column:auto;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch}
+  .clock-card,.mini-quote{min-width:0}
+  .mini-quote img{width:44px;height:44px}
+  .customer{grid-template-columns:54px minmax(0,1fr);padding:12px;gap:10px}
+  .customer>.avatar{width:54px;height:54px}
+  .columns{grid-template-columns:1fr;gap:11px}
+  .actions{flex-wrap:wrap}
+  .actions button{min-height:38px}
+}
+@media(max-width:380px){
+  .hero-side{grid-template-columns:1fr 1fr;gap:6px}
+  .clock-label{font-size:8px}
+  .live-day{font-size:9px}
+  .live-clock{font-size:21px}
+  .mini-quote img{width:36px;height:36px}
+  .mini-quote p{font-size:8px}
+}
+
+
+
+
+/* === FINAL DARK NEON TACTICAL HUD SKIN | CSS ONLY === */
+:root{--hud-red:#ff3158;--hud-gold:#ffd44f;--hud-mint:#35f0b5;--hud-blue:#54caff}
+/* Right header widgets stay side-by-side on wide screens. */
+@media(min-width:1001px){
+  header.hero{grid-template-columns:minmax(175px,.78fr) minmax(340px,1.55fr) minmax(340px,1fr);gap:clamp(14px,1.7vw,25px)}
+  .hero-side{grid-column:auto;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;align-content:center;gap:8px}
+  .clock-card{min-width:0;padding:11px 12px;border-radius:4px 13px 4px 13px;border-color:#ff405f99;box-shadow:0 0 0 1px #ff31581b,0 0 19px #ff31551c,inset 0 0 22px #ff31550b}
+  .clock-label{font-size:8px;letter-spacing:.1em}.live-day{font-size:10px;line-height:1.35}.live-clock{font-size:clamp(20px,1.8vw,28px);letter-spacing:.025em}
+  .mini-quote{min-width:0;min-height:0;align-items:center;padding:8px;gap:8px;border-radius:4px 13px 4px 13px;border-color:#a9bfdc52;background:linear-gradient(135deg,#111827e8,#080c15eb);box-shadow:inset 0 0 18px #51c9ff08,0 0 16px #0005}
+  .mini-quote img{width:clamp(42px,4.3vw,58px);height:clamp(42px,4.3vw,58px);border-radius:4px 10px 4px 10px}
+  .mini-quote p{font-size:clamp(9px,.85vw,11px);line-height:1.45}.mini-quote small{font-size:8px}
+}
+/* At medium widths, keep the live widgets in one horizontal row. */
+@media(min-width:651px) and (max-width:1000px){
+  header.hero{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:15px}
+  .hero-side{grid-column:1/-1;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+  .clock-card,.mini-quote{min-width:0}
+}
+/* Customer panels: visible artwork under a deliberate dark veil, crisp neon frame. */
+.customer{
+  --hud-glow:rgba(255,43,83,.62);isolation:isolate;position:relative;overflow:hidden;
+  border:1px solid #ff365f;border-radius:5px 18px 5px 18px;
+  background:#080d16;clip-path:polygon(0 13px,13px 0,calc(100% - 28px) 0,100% 28px,100% calc(100% - 13px),calc(100% - 13px) 100%,18px 100%,0 calc(100% - 18px));
+  box-shadow:inset 0 0 0 1px #ff5d761f,inset 0 0 28px #ff315612,0 0 0 1px #ff31562e,0 0 23px var(--hud-glow),0 13px 32px #000a;
+}
+.customer:after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  /* Source is supplied in the repository as assets/mikasa-bg.jpg. */
+  background-image:linear-gradient(90deg,rgba(4,7,14,.80),rgba(4,7,14,.76) 53%,rgba(4,7,14,.80)),url('./assets/mikasa-bg.jpg');
+  background-position:center,54% 38%;background-size:cover;background-repeat:no-repeat;opacity:1;filter:saturate(.92) contrast(1.08);
+}
+.customer:before{
+  content:"";position:absolute;z-index:0;inset:0;width:auto;pointer-events:none;border-radius:0;opacity:1;
+  background:linear-gradient(90deg,#ff3159 0 3px,transparent 3px calc(100% - 80px),#ff365b77 calc(100% - 80px) calc(100% - 76px),transparent calc(100% - 76px)),linear-gradient(135deg,transparent 0 92%,#ff3d6255 92% 92.5%,transparent 92.5%);
+}
+.customer>*{position:relative;z-index:1}
+.customer>.avatar{border:2px solid #ff4668;border-radius:4px 13px 4px 13px;box-shadow:0 0 0 2px #ff3b6033,0 0 20px #ff31565c,0 8px 22px #000d}
+.customer:has(.status:not(.unpaid)){--hud-glow:rgba(36,242,177,.5);border-color:#35f0b5;box-shadow:inset 0 0 0 1px #39f3b325,inset 0 0 26px #16d69a10,0 0 0 1px #20dca333,0 0 24px var(--hud-glow),0 13px 32px #000a}
+.customer:has(.status:not(.unpaid)):after{background-image:linear-gradient(90deg,rgba(3,13,14,.81),rgba(3,13,14,.77) 53%,rgba(3,13,14,.81)),url('./assets/mikasa-bg.jpg')}
+.customer:has(.status:not(.unpaid)):before{background:linear-gradient(90deg,#28edb0 0 3px,transparent 3px calc(100% - 80px),#28edb077 calc(100% - 80px) calc(100% - 76px),transparent calc(100% - 76px))}
+.customer:has(.status:not(.unpaid))>.avatar{border-color:#39edb2;box-shadow:0 0 0 2px #20dca329,0 0 20px #20dca34d,0 8px 22px #000d}
+.customer .namebar h3{text-shadow:0 2px 12px #000,0 0 15px #000}
+.customer .status{padding:5px 10px;border:1px solid #ff526f99;background:#40121fe8;border-radius:3px 12px 3px 12px;box-shadow:0 0 12px #ff31551c}
+.customer .status:not(.unpaid){border-color:#3ce9b59c;background:#07382de8;color:#5fffc5;box-shadow:0 0 12px #20dca326}
+.customer .columns,.customer .actions,.customer .history-toggle,.customer .history-list{min-width:0}
+.customer .reminder{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.customer .actions button,.customer .history-toggle{border-radius:3px 10px 3px 10px;border:1px solid #ffffff35;box-shadow:inset 0 1px #ffffff20,0 4px 15px #0006;transition:filter .15s ease,box-shadow .15s ease,transform .15s ease}
+.customer .actions button:hover,.customer .history-toggle:hover{filter:brightness(1.18);box-shadow:0 0 16px #57caff25,inset 0 1px #ffffff2a}
+.customer .actions .ok{border-color:#4dffc18a;box-shadow:0 0 13px #0da76a25}
+.customer .actions .edit{border-color:#55baff88}.customer .actions .delete{border-color:#ff637c99}.customer .actions .primary{border-color:#ff668188}
+.customer .history-toggle{border-color:#55caffc2;background:linear-gradient(120deg,#082b48f5,#0a1829f5);box-shadow:0 0 16px #25baff25,inset 0 1px #ffffff1c}
+.customer .history-entry{background:rgba(5,10,19,.91);border-color:#b4d3f33d;backdrop-filter:blur(4px)}
+.customer .history-entry.selected{border:2px solid #ffd34c;box-shadow:0 0 0 1px #ffcf4566,0 0 22px #ffd34c24}
+@media(min-width:761px){.customer .columns{grid-template-columns:minmax(0,1fr) minmax(290px,.95fr)}.customer .actions{flex-wrap:wrap}.customer .actions button{white-space:nowrap}}
+@media(max-width:760px){
+  .hero-side{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px}
+  .clock-card{padding:9px;border-radius:4px 11px 4px 11px}.clock-label{font-size:8px;letter-spacing:.08em}.live-day{font-size:9px}.live-clock{font-size:clamp(18px,5.5vw,25px)}
+  .mini-quote{padding:7px;gap:6px;border-radius:4px 11px 4px 11px}.mini-quote img{width:42px;height:42px}.mini-quote p{font-size:9px}.mini-quote small{font-size:8px}
+  .customer{border-radius:4px 14px 4px 14px;padding:11px;grid-template-columns:54px minmax(0,1fr);gap:10px}
+  .customer>.avatar{width:54px;height:54px}.customer .actions{flex-wrap:wrap}.customer .actions button{min-height:36px;font-size:10px;padding:8px 9px}
+}
+@media(max-width:365px){.hero-side{grid-template-columns:1fr}.live-clock{font-size:25px}.mini-quote img{width:48px;height:48px}}
+
 </style></head>
 <body>
 <header class="hero">
