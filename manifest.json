@@ -1,0 +1,21 @@
+{
+  "name": "Utang WiFi Mikasa",
+  "short_name": "UtangWiFi",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090b10",
+  "theme_color": "#e11d48",
+  "description": "Pencatatan utang dan pengingat tagihan WiFi.",
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

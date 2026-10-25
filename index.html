@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e11d48"><meta name="description" content="Buku catat tagihan WiFi dan pengingat pembayaran pelanggan.">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="./assets/icon-192.png"><link rel="apple-touch-icon" href="./assets/icon-192.png">
+<title>Buku Catat Utang WiFi — Mikasa</title>
+<style>
+:root{color-scheme:dark;--pink:#ff3b60;--gold:#ffe05b;--green:#36e3a0;--line:#ffffff2c}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#090b10;color:#f8f9fc;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:url('./assets/mikasa-bg.png') 25% center/cover no-repeat}
+body:after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,#080a10a1,#090b1077 55%,#080a1099)}
+header{max-width:1160px;margin:auto;padding:26px 22px 18px}.eyebrow{letter-spacing:.23em;font-size:11px;color:#f2cdd5}.brand{font-size:clamp(28px,4vw,45px);line-height:1.1;margin:8px 0;font-weight:900;letter-spacing:-.04em}.brand em{color:var(--pink);font-style:normal}.quote{color:#f1e9ec;margin:0;font-size:14px}
+main{max-width:1160px;margin:auto;padding:0 22px 90px}.glass{background:#10141bd9;border:1px solid var(--line);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);box-shadow:0 16px 55px #0007;border-radius:18px;overflow:hidden}
+.panelhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 20px;border-bottom:1px solid #ffffff1b}.panelhead h2{margin:0;font-size:20px}.tools{display:flex;gap:8px;flex-wrap:wrap}.search,input,textarea{font:inherit}.search{padding:11px 13px;border:1px solid #667080;border-radius:10px;background:#0b0e15;color:white;min-width:190px}
+button{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer;color:white}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #ffd84c;outline-offset:2px}.primary{background:linear-gradient(125deg,#ff4163,#c90a36)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:15px 18px}.stat{padding:12px;border:1px solid #ffffff26;border-radius:12px;background:#ffffff09}.stat span{display:block;font-size:11px;color:#c5cbd7}.stat strong{display:block;font-size:clamp(18px,2.5vw,25px);margin-top:4px}.gold{color:var(--gold)}.dangerText{color:#ff637b}.success{color:var(--green)}
+.list{padding:0 16px 18px;display:grid;gap:11px}.customer{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;padding:13px;border:1px solid #ffffff32;border-radius:13px;background:#111721c9}.avatar{width:52px;height:52px;object-fit:cover;object-position:20% center;border-radius:12px;border:1px solid #ff617a}.detail{min-width:0}.namebar{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.namebar h3{margin:0;font-size:16px}.status{font-size:11px;color:var(--green);font-weight:850}.status.unpaid{color:#ff617a}.columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.9fr);gap:12px;margin-top:8px}.meta{font-size:12px;line-height:1.9;color:#dce0e8;overflow-wrap:anywhere}.meta b{color:#fff}.reminder{border:1px solid #ffb800;border-radius:10px;background:#291d0beF;padding:10px 12px;color:var(--gold);font-size:13px;line-height:1.5;font-weight:900}.reminder small{display:block;color:#ff9274;font-size:12px;font-weight:750}.reminder.paid{border-color:#26d992;background:#06251a;color:#8dffd0}.reminder.paid small{color:#b6e9d2}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.actions button{font-size:11px;padding:9px 10px}.history-toggle{margin-top:10px;font-size:11px}.history-list{display:grid;gap:8px;margin-top:9px}.history-entry{border:1px solid #ffffff28;border-radius:10px;padding:10px;background:#090e16b8;cursor:pointer;transition:border-color .15s,box-shadow .15s}.history-entry:focus-visible{outline:2px solid #ffd84c;outline-offset:2px}.history-entry.selected{border:2px solid #ffcc45;box-shadow:0 0 0 1px #ffcc4533}.history-entry .selected-note{display:block;color:#ffe05b;font-size:10px;font-weight:800;margin-top:3px}.history-entry .actions{margin-top:8px}.ok{background:#087b51}.edit{background:#155f9e}.delete{background:#a91c34}.empty{text-align:center;padding:40px 12px;color:#c3c9d5}.foot{text-align:center;padding:14px;color:#bac2d1;font-size:11px}
+.fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));width:60px;height:60px;border-radius:50%;font-size:35px;padding:0;background:linear-gradient(140deg,#ff4163,#c80030);box-shadow:0 8px 26px #f22a4c77;border:1px solid #ff9cac;z-index:30}
+.overlay{position:fixed;inset:0;z-index:100;background:#03050bdc;backdrop-filter:blur(9px);display:none;align-items:center;justify-content:center;padding:14px}.overlay.show{display:flex}.modal{width:min(560px,100%);max-height:min(92dvh,900px);overflow:auto;background:#11151df5;border:1px solid #ffffff45;border-radius:18px;box-shadow:0 25px 90px #000c;padding:20px}.modalhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.modalhead h2{margin:0}.close{font-size:24px;width:40px;height:40px;padding:0;background:#353d4b}.sub{font-size:12px;color:#c2c8d5;margin:5px 0 15px}.field{margin:13px 0}.field label{display:block;font-size:12px;font-weight:850;margin-bottom:7px}.field input,.field textarea{width:100%;padding:12px;border:1px solid #596476;background:#0a0e15;color:#fff;border-radius:10px;font-size:14px}.field textarea{min-height:80px;resize:vertical}.amount{display:flex;align-items:center;gap:8px;border:1px solid #596476;border-radius:10px;background:#0a0e15;padding-left:12px;color:var(--gold)}.amount input{border:0;background:transparent}.quick{display:flex;gap:6px;flex-wrap:wrap}.quick button{background:#394456;border:1px solid #657186;padding:8px 11px;font-size:12px}.quick button.sel{background:#66500a;border-color:var(--gold);color:var(--gold)}.pay-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pay-mode{border:1px solid #657186;background:#202735;padding:11px 9px;font-size:12px}.pay-mode.active.debt{background:#4b1723;border-color:#ff617a;color:#ffd5dd}.pay-mode.active.cash{background:#064632;border-color:#36e3a0;color:#a8ffdc}.reminder.cash{border-color:#36e3a0;background:#063729;color:#9affd7}.reminder.cash small{color:#c1ffe8}.bill-warning.cash{border-color:#39d99d;background:linear-gradient(140deg,#064a35,#06271d);color:#9affd7;box-shadow:0 0 22px #28df9b19}.bill-warning.cash small{color:#c2f5df}.bill-modal.cash-theme{border-color:#39d99d;box-shadow:0 0 0 1px #39d99d22,0 0 28px #26d99228,0 24px 85px #000d}.bill-amount.cash-amount{color:#86ffd0}.wide{width:100%;padding:14px}.msg{font-size:12px;color:var(--gold);min-height:16px;margin-top:7px}
+
+.bill-overlay{position:fixed;inset:0;z-index:130;background:#02040bdc;backdrop-filter:blur(11px);-webkit-backdrop-filter:blur(11px);display:none;align-items:center;justify-content:center;padding:14px}.bill-overlay.show{display:flex;animation:billFade .2s ease-out}.bill-modal{width:min(470px,100%);max-height:90dvh;overflow:auto;background:linear-gradient(145deg,#171b25f7,#090d15f8);border:1px solid #d7ae39;border-radius:20px;padding:18px;box-shadow:0 0 0 1px #ffd84b22,0 0 28px #ffca3830,0 24px 85px #000d;animation:billZoom .24s cubic-bezier(.2,.8,.2,1)}.bill-head{display:flex;align-items:center;gap:11px;margin-bottom:15px}.bill-head .avatar{flex:0 0 48px;width:48px;height:48px}.bill-who{min-width:0;flex:1}.bill-who strong{display:block;font-size:17px;overflow-wrap:anywhere}.bill-badge{display:inline-block;margin-top:4px;font-size:10px;font-weight:900;letter-spacing:.06em;border-radius:999px;padding:4px 8px;background:#4b1521;color:#ff8296}.bill-badge.paid{background:#083c2c;color:#73f3bd}.bill-close{align-self:flex-start;width:38px;height:38px;padding:0;font-size:25px;background:#303745}.bill-warning{border:1px solid #ffd044;border-radius:13px;padding:14px;background:linear-gradient(140deg,#38290b,#211908);color:#ffe36b;font-weight:900;font-size:15px;line-height:1.45;box-shadow:inset 0 0 20px #ffc72b0c}.bill-warning small{display:block;margin-top:7px;color:#ff9c81;font-size:13px;font-weight:800;line-height:1.55}.bill-warning.paid{border-color:#39d99d;background:#06271d;color:#86ffd0}.bill-warning.paid small{color:#c2f5df}.bill-details{display:grid;gap:10px;margin:16px 2px}.bill-detail-label{font-size:11px;color:#aeb8c9}.bill-detail-value{font-size:14px;font-weight:750;overflow-wrap:anywhere}.bill-amount{font-size:27px;font-weight:950;color:#ffe05b;letter-spacing:-.03em}.bill-modal-actions{display:flex;gap:9px;margin-top:14px}.bill-modal-actions button{flex:1;min-height:46px}.bill-dismiss{background:#343c4b}.bill-overlay .bill-close:focus-visible,.bill-modal button:focus-visible{outline:2px solid #ffe05b;outline-offset:3px}@keyframes billFade{from{opacity:0}to{opacity:1}}@keyframes billZoom{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}@media(prefers-reduced-motion:reduce){.bill-overlay.show,.bill-modal{animation:none}}
+@media(max-width:760px){body:before{background-position:22% center}.columns{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,minmax(0,1fr));padding:11px}.stat{padding:10px}.panelhead{padding:15px}.search{min-width:0;flex:1;width:100%}.tools{width:100%}.tools button{flex:0 0 auto}header{padding:22px 15px 15px}main{padding:0 12px 95px}.customer{padding:10px;grid-template-columns:44px minmax(0,1fr)}.avatar{width:44px;height:44px}.namebar h3{font-size:15px}.overlay{padding:9px}.modal{padding:16px;max-height:91dvh}}
+
+/* Visual refresh layer — keeps the existing ledger behavior and event wiring intact */
+:root{--ice:#67c9ff;--red:#ff3156;--gold:#ffd45a;--mint:#53edb1;--panel:rgba(10,14,23,.78)}
+body{background:#070a10;color:#f8faff;letter-spacing:.005em}
+body:before{background-image:url('./assets/mikasa-bg.png');background-position:24% center;filter:saturate(.9) brightness(.76)}
+body:after{background:radial-gradient(ellipse at 50% 10%,rgba(20,42,70,.2),transparent 42%),linear-gradient(110deg,rgba(3,7,15,.67),rgba(6,9,17,.48) 48%,rgba(4,6,13,.75))}
+header.hero{max-width:1440px;padding:25px clamp(18px,3vw,44px) 24px;display:grid;grid-template-columns:minmax(175px,.78fr) minmax(340px,1.7fr) minmax(245px,.9fr);align-items:start;gap:22px}
+.identity{padding-top:5px;color:#e6eaf3;text-shadow:0 2px 15px #000}.jp{font-size:clamp(16px,1.6vw,22px);letter-spacing:.1em;font-weight:800}.latin{font-size:12px;letter-spacing:.24em;font-weight:900;color:#ff526f;margin-top:9px}.series{font-size:10px;letter-spacing:.27em;color:#c1ccdc;margin-top:5px}
+.hero-brand{text-align:center;padding-top:4px}.brand-line{display:flex;justify-content:center;align-items:center;gap:12px}.wifi-mark{font-size:clamp(30px,4vw,46px);color:#65caff;text-shadow:0 0 9px #19aaff,0 0 24px #1985ff;line-height:1}
+.brand{font-size:clamp(29px,3.3vw,48px);margin:0;letter-spacing:-.045em;text-shadow:0 4px 20px #000}.brand em{color:#ff3156;text-shadow:0 0 20px #ff214333}
+.rule-caption{margin:13px auto 9px;padding-top:11px;border-top:1px solid #d9e5f344;color:#e2e7f1;font-size:clamp(9px,1vw,12px);letter-spacing:.19em;font-weight:800}
+.quote{font-size:clamp(12px,1.2vw,15px);color:#f3edf0;margin:0;font-style:italic}.quote span{white-space:nowrap;color:#e4cbd2}
+.hero-side{display:grid;gap:9px}.clock-card{border:1px solid #5dc7ff5c;background:linear-gradient(140deg,#0a1a2cdb,#0a0f1bdf);border-radius:14px;padding:12px 15px;box-shadow:inset 0 0 20px #2aaaff0a,0 8px 30px #0005}.clock-label{font-size:9px;letter-spacing:.16em;color:#86cfff;font-weight:900}.live-day{font-size:12px;color:#dce8f6;margin-top:7px}.live-clock{font-variant-numeric:tabular-nums;font-size:clamp(23px,2.3vw,32px);font-weight:950;letter-spacing:.04em;color:#f8fbff;text-shadow:0 0 16px #5bbfff55}
+.mini-quote,.form-quote{display:flex;align-items:center;gap:11px;padding:9px;border:1px solid #ffffff2b;border-radius:13px;background:#101521d9;backdrop-filter:blur(12px)}.mini-quote img,.form-quote img{width:57px;height:57px;object-fit:cover;object-position:20% center;border-radius:9px;border:1px solid #ff5974;flex:0 0 auto}.mini-quote p,.form-quote p{font-size:11px;line-height:1.5;font-style:italic;color:#f1e7ec;margin:0}.mini-quote small,.form-quote small{display:block;font-size:9px;font-style:normal;color:#ff9caf;margin-top:4px;font-weight:800}
+main{max-width:1440px;padding:0 clamp(14px,3vw,44px) 100px}.glass{border-radius:22px;border-color:#dbeaff39;background:rgba(10,13,22,.77);box-shadow:0 24px 75px #0008,0 0 0 1px #ffffff06;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.panelhead{padding:20px 24px;border-bottom:1px solid #b8cde526;display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px}.panelhead h2{font-size:clamp(19px,2vw,25px);font-weight:900;white-space:nowrap}.panel-wifi{color:#f4f8ff;margin-right:7px;text-shadow:0 0 12px #6dcfff}
+.tools{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:10px}.search-wrap{display:flex;align-items:center;gap:8px;padding-left:13px;border:1px solid #7581988c;border-radius:11px;background:#080c14;color:#8bcfff}.search-wrap>span{font-size:23px;line-height:1}.search{border:0;background:transparent;min-width:0;width:100%;padding:12px 8px 12px 0}.search:focus{outline:0}.search-wrap:focus-within{border-color:#65caff;box-shadow:0 0 0 2px #65caff25}
+button{transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}button:hover{filter:brightness(1.1);transform:translateY(-1px)}button:active{transform:translateY(0)}
+.primary{background:linear-gradient(120deg,#ff3e60,#d50838);box-shadow:0 6px 20px #e6194530}.stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:18px 22px}.stat{display:flex;align-items:center;gap:13px;min-width:0;min-height:82px;border-radius:15px;padding:15px;background:linear-gradient(135deg,#ffffff0e,#ffffff04);box-shadow:inset 0 1px #ffffff0a}.stat span{font-size:11px;line-height:1.4}.stat strong{font-size:clamp(19px,2vw,27px);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.stat-icon{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border-radius:13px;font-size:20px;font-weight:950;background:#ffffff10}.stat-blue{border-color:#329eff80;background:linear-gradient(130deg,#0d3153b8,#111d30a8)}.stat-blue .stat-icon{color:#8dd1ff;background:#197ed933}.stat-gold{border-color:#e5b83c80;background:linear-gradient(130deg,#3d2c0cb8,#20190fa8)}.stat-gold .stat-icon{color:#ffdf68;background:#d39b222d}.stat-red{border-color:#ff506b88;background:linear-gradient(130deg,#451521b8,#21131ca8)}.stat-red .stat-icon{color:#ff7a8e;background:#ff345222}.stat-green{border-color:#35dba080;background:linear-gradient(130deg,#0a392cb8,#101f20a8)}.stat-green .stat-icon{color:#72ffca;background:#23c98c25}
+.list{padding:0 22px 22px;gap:14px}.customer{grid-template-columns:94px minmax(0,1fr);gap:17px;padding:18px;border-radius:18px;border-color:#a7bad42e;background:linear-gradient(112deg,rgba(15,21,33,.91),rgba(9,14,23,.84));box-shadow:inset 0 1px #ffffff08,0 12px 28px #0003;position:relative}.customer:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;border-radius:18px 0 0 18px;background:linear-gradient(180deg,#ff4b69,#e6ba4a 48%,#4acfff);opacity:.8}.customer>.avatar{width:94px;height:94px;border-radius:17px;object-position:20% center;box-shadow:0 5px 22px #0008;border:1px solid #ff6581}
+.detail{min-width:0}.namebar h3{font-size:clamp(17px,1.8vw,22px);font-weight:950;letter-spacing:-.025em}.status{font-size:11px;letter-spacing:.05em}.columns{grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr);gap:22px;margin-top:12px;align-items:start}.meta{font-size:13px;line-height:1.95;color:#cbd3e1}.meta b{color:#f8fbff}.meta .gold{color:#ffdf62}.reminder{border-radius:13px;padding:13px 15px;font-size:13px;line-height:1.55;background:linear-gradient(135deg,#332309f2,#201407f0);box-shadow:inset 0 0 25px #ffbb190c,0 0 18px #ffba1212;border-color:#ffca47}.reminder: first-line{font-weight:950}.reminder small{font-size:12px;line-height:1.65;color:#ff9b80}.reminder.paid{background:linear-gradient(135deg,#073c2df2,#061e19f0);box-shadow:0 0 20px #35dfa21b}.reminder.cash{background:linear-gradient(135deg,#064b3af2,#071e1bf0);box-shadow:0 0 22px #35dfa222}.actions{gap:8px;margin-top:11px}.actions button{font-size:11px;padding:10px 12px;border-radius:10px}.ok{background:linear-gradient(120deg,#07945f,#08754d);box-shadow:0 4px 14px #0da76a28}.edit{background:linear-gradient(120deg,#177ec3,#15568f)}.delete{background:linear-gradient(120deg,#c62646,#92162f)}.history-toggle{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:11px}.history-list{gap:9px;margin-top:10px}.history-entry{border-color:#ffffff23;background:#090e18d9;padding:13px;border-radius:13px}.history-entry.selected{border:2px solid #ffd34c;box-shadow:0 0 0 1px #ffcf4533,0 0 20px #ffd34c0b}.foot{font-size:12px;color:#c4cedd;padding:20px}
+.modal{border-color:#9baac044;background:linear-gradient(150deg,rgba(17,22,33,.99),rgba(7,11,18,.99));box-shadow:0 25px 90px #000d,0 0 30px #ff31560b;padding:22px}.form-quote{margin:0 0 15px;border-color:#ff5b7540;background:#17131b}.form-quote img{width:64px;height:64px}.form-quote p{font-size:12px}.modalhead h2{font-size:23px;font-weight:950}.field{margin:15px 0}.field label{font-size:12px;color:#e6edf7;letter-spacing:.01em}.field input,.field textarea{border-color:#66738a;background:#090d15}.amount{border-color:#66738a}.quick button{border-radius:999px;background:linear-gradient(145deg,#465264,#2d3645);border-color:#6f7d90}.quick button.sel{background:#66500a;border-color:var(--gold)}.pay-mode{border-radius:11px}.wide{font-size:15px;letter-spacing:.01em;box-shadow:0 8px 26px #e51e4638}
+.fab{width:62px;height:62px;box-shadow:0 8px 30px #f22a4c66}
+@media(max-width:1000px){header.hero{grid-template-columns:minmax(130px,.7fr) minmax(280px,1.5fr);}.hero-side{grid-column:1/-1;grid-template-columns:1fr 1fr}.columns{grid-template-columns:1fr;gap:12px}.customer{grid-template-columns:76px minmax(0,1fr)}.customer>.avatar{width:76px;height:76px}}
+@media(max-width:650px){header.hero{grid-template-columns:1fr;gap:14px;padding:20px 15px 16px}.identity{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0}.jp{font-size:13px}.latin,.series{font-size:9px;margin:0}.hero-brand{text-align:left}.brand-line{justify-content:flex-start}.brand{font-size:clamp(28px,7.2vw,39px)}.wifi-mark{font-size:31px}.rule-caption{margin:10px 0 8px;padding-top:8px;font-size:8px;letter-spacing:.14em}.quote{font-size:12px}.hero-side{grid-column:auto;grid-template-columns:1fr 1fr;gap:8px}.clock-card{padding:10px}.live-day{font-size:10px}.live-clock{font-size:25px}.mini-quote{gap:7px;padding:7px}.mini-quote img{width:44px;height:44px}.mini-quote p{font-size:9px}.mini-quote small{font-size:8px}main{padding:0 10px 92px}.panelhead{grid-template-columns:1fr;padding:14px;gap:11px}.panelhead h2{font-size:19px}.tools{grid-template-columns:minmax(0,1fr) auto;gap:7px}.tools .primary{font-size:11px;padding:10px 11px}.search{font-size:12px;padding:11px 5px 11px 0}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px}.stat{min-height:73px;padding:10px;gap:9px}.stat-icon{width:34px;height:34px;flex-basis:34px;font-size:16px;border-radius:10px}.stat span{font-size:10px}.stat strong{font-size:19px}.list{padding:0 10px 14px;gap:11px}.customer{grid-template-columns:54px minmax(0,1fr);gap:10px;padding:12px}.customer>.avatar{width:54px;height:54px;border-radius:12px}.namebar h3{font-size:16px}.columns{margin-top:9px}.meta{font-size:12px}.reminder{padding:11px;font-size:12px}.reminder small{font-size:11px}.actions{gap:6px}.actions button{font-size:10px;padding:9px 9px}.history-entry{padding:10px}.form-quote img{width:52px;height:52px}.form-quote p{font-size:10px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+
+</style></head>
+<body>
+<header class="hero">
+  <div class="identity"><div class="jp">ミカサ・アッカーマン</div><div class="latin">MIKASA ACKERMAN</div><div class="series">ATTACK ON TITAN</div></div>
+  <div class="hero-brand"><div class="brand-line"><span class="wifi-mark">◉</span><h1 class="brand">Buku Catat <em>Utang WiFi</em></h1></div>
+    <div class="rule-caption">— CATAT • INGAT • TIDAK ADA YANG TERLUPA —</div>
+    <p class="quote">“Aku akan tetap melindungi apa yang penting.” <span>— Mikasa Ackerman</span></p>
+  </div>
+  <aside class="hero-side">
+    <div class="clock-card"><div class="clock-label">MIKASA SYSTEM / LOCAL TIME</div><div id="liveDay" class="live-day">Memuat kalender…</div><div id="liveClock" class="live-clock">00:00:00</div></div>
+    <div class="mini-quote"><img src="./assets/mikasa-bg.png" alt="Ilustrasi Mikasa Ackerman"><p>“Selama masih ada orang yang perlu dilindungi, aku akan terus maju.”<small>— Mikasa Ackerman —</small></p></div>
+  </aside>
+</header>
+<main><section class="glass">
+<div class="panelhead"><h2><span class="panel-wifi">◉</span> Daftar Pelanggan</h2><div class="tools"><div class="search-wrap"><span>⌕</span><input id="search" class="search" placeholder="Cari nama pelanggan…" aria-label="Cari nama"></div><button id="newBtn" class="primary">＋ Tambah Pelanggan</button></div></div>
+<div class="stats">
+<div class="stat stat-blue"><div class="stat-icon">♙</div><div><span>Total Pelanggan</span><strong id="count">0</strong></div></div>
+<div class="stat stat-gold"><div class="stat-icon">Rp</div><div><span>Total Utang Aktif</span><strong id="total" class="gold">Rp0</strong></div></div>
+<div class="stat stat-red"><div class="stat-icon">⚠</div><div><span>Perlu Pengingat</span><strong id="pending" class="dangerText">0</strong></div></div>
+<div class="stat stat-green"><div class="stat-icon">✓</div><div><span>Sudah Lunas / Cash</span><strong id="paidCount" class="success">0</strong></div></div>
+</div>
+<div id="list" class="list"></div><div class="foot">Pengingat ditampilkan saat aplikasi dibuka. Tidak ada pemutusan otomatis.</div>
+</section></main>
+<button class="fab" id="fab" aria-label="Tambah pelanggan" title="Tambah pelanggan">+</button>
+<div class="bill-overlay" id="billOverlay" role="dialog" aria-modal="true" aria-labelledby="billModalName">
+ <section class="bill-modal">
+  <div class="bill-head"><img class="avatar" src="./assets/mikasa-bg.png" alt="Avatar Mikasa"><div class="bill-who"><strong id="billModalName"></strong><span id="billModalStatus" class="bill-badge"></span></div><button class="bill-close" id="billModalClose" aria-label="Tutup pop-up">×</button></div>
+  <div id="billModalWarning" class="bill-warning"></div>
+  <div class="bill-details"><div><div class="bill-detail-label">Periode Tagihan</div><div class="bill-detail-value" id="billModalPeriod"></div></div><div><div class="bill-detail-label">Nominal Utang</div><div class="bill-amount" id="billModalAmount"></div></div><div id="billModalNoteWrap"><div class="bill-detail-label">Catatan</div><div class="bill-detail-value" id="billModalNote"></div></div></div>
+  <div class="bill-modal-actions"><button class="ok" id="billModalPaid">✓ Tandai Lunas Periode Ini</button><button class="bill-dismiss" id="billModalDismiss">Tutup</button></div>
+ </section>
+</div>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="formTitle"><section class="modal">
+<div class="form-quote"><img src="./assets/mikasa-bg.png" alt="Mikasa Ackerman"><p>“Setiap orang memiliki hal berharga untuk dilindungi.”<small>— Mikasa Ackerman —</small></p></div>
+<div class="modalhead"><h2 id="formTitle">Tambah Pelanggan</h2><button id="close" class="close" aria-label="Tutup">×</button></div><p class="sub">Catat pelanggan dan tagihan WiFi bulanan.</p>
+<form id="form"><input type="hidden" id="recordId">
+<div class="field"><label for="name">♙ &nbsp; Nama Pelanggan</label><input id="name" required maxlength="100" placeholder="Masukkan nama pelanggan"></div>
+<div class="field"><label for="amount">▤ &nbsp; Jumlah Utang (Nominal)</label><div class="amount">Rp <input id="amount" type="number" min="0" step="1000" required placeholder="0"></div></div>
+<div class="field"><label>◉ &nbsp; Pilih Nominal Cepat</label><div class="quick"><button type="button" data-val="50000">50rb</button><button type="button" data-val="100000">100rb</button><button type="button" data-val="150000">150rb</button><button type="button" data-val="500000">500rb</button><button type="button" data-val="1000000">1jt</button></div></div>
+<div class="field"><label for="start">▦ &nbsp; Tanggal Mulai Tagihan</label><input id="start" type="date" required></div>
+<div class="field" id="payModeField"><label>◈ &nbsp; Mode Pencatatan</label><div class="pay-modes"><button type="button" class="pay-mode active debt" data-pay-mode="debt">🔴 Catat Utang (Belum Bayar)</button><button type="button" class="pay-mode cash" data-pay-mode="cash">💵 Bayar Cash (Lunas)</button></div></div>
+<div class="field"><label for="note">▤ &nbsp; Catatan Tambahan</label><textarea id="note" maxlength="1000" placeholder="Paket WiFi, informasi tambahan (opsional)"></textarea></div>
+<button class="primary wide" id="save" type="submit">Simpan Pelanggan</button><div class="msg" id="msg" role="status"></div>
+</form></section></div>
+<script>
+(()=>{'use strict';
+const KEY='mikasaWifiLedger_v2',q=s=>document.querySelector(s),
+ money=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0),
+ pad=n=>String(n).padStart(2,'0'),uid=()=>crypto.randomUUID?.()||String(Date.now())+Math.random().toString(16).slice(2),
+ dateOnly=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`,
+ parseDate=s=>{const [y,m,d]=String(s||'').split('-').map(Number);return new Date(y,(m||1)-1,d||1,12)},
+ dateLabel=d=>d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}),
+ shiftMonth=(start,idx=1)=>{const first=new Date(start.getFullYear(),start.getMonth()+idx,1,12),last=new Date(first.getFullYear(),first.getMonth()+1,0,12);return new Date(first.getFullYear(),first.getMonth(),Math.min(start.getDate(),last.getDate()),12)},
+ safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
+ normName=s=>String(s||'').trim().toLocaleLowerCase('id-ID');
+let expanded=new Set(),selectedBills=new Map(),rows=[],editing=null,addingTo=null,formPayMode='debt';
+function normalizeBill(b={},fallback={}) {
+ const start=b.start||b.date||fallback.start||dateOnly(new Date());
+ return {id:String(b.id||uid()),start,amount:Math.max(0,Number(b.amount??b.nominal??fallback.amount)||0),
+ note:String(b.note??fallback.note??''),paid:!!(b.paid??b.isPaid??b.lunas??false),
+  paymentType:String(b.paymentType||b.mode||'debt').toLowerCase()==='cash'?'cash':'debt'};
+}
+function normalizeCustomer(r={}) {
+ const name=String(r.name??r.nama??'').trim(); if(!name)return null;
+ let bills;
+ if(Array.isArray(r.bills)&&r.bills.length) bills=r.bills.map(b=>normalizeBill(b,{note:r.note}));
+ else if(Array.isArray(r.tagihan)&&r.tagihan.length) bills=r.tagihan.map(b=>normalizeBill(b,{note:r.note}));
+ else {
+   // Repair records saved in the older single-bill shape, including empty/malformed bills.
+   const amount=Number(r.amount??r.nominal??r.total??r.totalUtang??0);
+   const start=r.start||r.tanggal||r.tanggalMulai||r.mulaiTagihan;
+   if(start && Number.isFinite(amount) && amount>0) bills=[normalizeBill({start,amount,note:r.note||r.catatan||'',paid:false})];
+   else bills=[];
+ }
+ return {id:String(r.id||uid()),name,note:String(r.note??r.catatan??''),bills};
+}
+function loadSaved(){
+ const raw=localStorage.getItem(KEY);
+ if(raw){try{const parsed=JSON.parse(raw);if(Array.isArray(parsed))rows=parsed.map(normalizeCustomer).filter(Boolean)}catch{rows=[]}}
+ // Also recover the earlier app key if the active key contains no usable records.
+ if(!rows.length){
+   for(const oldKey of ['mikasaWifiLedger','wifiLedger','utangWifiCustomers']){
+     try{const parsed=JSON.parse(localStorage.getItem(oldKey)||'null');if(Array.isArray(parsed)){const repaired=parsed.map(normalizeCustomer).filter(Boolean);if(repaired.length){rows=repaired;break}}}catch{}
+   }
+ }
+ // Merge duplicate customer records created by earlier builds, preserving every bill.
+ const merged=[];
+ for(const customer of rows){const existing=merged.find(c=>normName(c.name)===normName(customer.name));if(existing){existing.bills.push(...customer.bills);if(!existing.note)existing.note=customer.note}else merged.push(customer)}
+ rows=merged;
+ try{store()}catch(e){console.warn('Migrasi ledger gagal:',e)}
+}
+const billsOf=c=>Array.isArray(c.bills)?c.bills:[],
+ sorted=c=>billsOf(c).slice().sort((a,b)=>a.start.localeCompare(b.start)),
+ info=b=>{const period=parseDate(b.start);return{period,pay:shiftMonth(period,1)}};
+let modalBillRef=null;
+function openBillReminder(customer,bill){
+ if(!customer||!bill)return;
+ modalBillRef={customerId:customer.id,billId:bill.id};
+ const d=info(bill),isPaid=!!bill.paid,isCash=bill.paymentType==='cash';
+ q('#billModalName').textContent=customer.name;
+ q('#billModalStatus').textContent=isPaid?'✓ LUNAS':'● BELUM LUNAS';
+ q('#billModalStatus').className='bill-badge'+(isPaid?' paid':'');
+ const warning=q('#billModalWarning');
+ warning.className='bill-warning'+(isCash?' cash':isPaid?' paid':'');
+ warning.innerHTML=isCash?`💵 PENGINGAT PELANGGAN CASH (LUNAS)<small>Sudah bayar cash: ${safe(dateLabel(d.period))}<br>Jadwal perpanjang berikutnya: ${safe(dateLabel(d.pay))} (Cek lanjut Cash atau Utang).</small>`:isPaid?`✓ TAGIHAN SUDAH LUNAS<small>Periode ${safe(dateLabel(d.period))} telah dibayar.</small>`:`⚠️ PENGINGAT TAGIHAN<small>Jadwal bayar: ${safe(dateLabel(d.pay))}<br>Untuk membayar tagihan punya: ${safe(dateLabel(d.period))} yang belum dibayar.</small>`;
+ q('.bill-modal').classList.toggle('cash-theme',isCash);
+ q('#billModalAmount').classList.toggle('cash-amount',isCash);
+ q('#billModalPeriod').textContent=dateLabel(d.period);
+ q('#billModalAmount').textContent=money(bill.amount);
+ q('#billModalNote').textContent=bill.note||'—';
+ q('#billModalNoteWrap').hidden=!bill.note;
+ q('#billModalPaid').hidden=isPaid;
+ q('#billOverlay').classList.add('show');
+ q('#billOverlay').setAttribute('aria-hidden','false');
+ q('#billModalClose').focus({preventScroll:true});
+}
+function closeBillReminder(){
+ q('#billOverlay').classList.remove('show');
+ q('#billOverlay').setAttribute('aria-hidden','true');
+ modalBillRef=null;
+}
+function store(){localStorage.setItem(KEY,JSON.stringify(rows))}
+function render(){
+ const term=q('#search').value.toLowerCase().trim(),shown=rows.filter(c=>c.name.toLowerCase().includes(term)),
+ pendingAll=rows.flatMap(c=>billsOf(c).filter(b=>!b.paid));
+ q('#count').textContent=rows.length;q('#total').textContent=money(pendingAll.reduce((sum,b)=>sum+Number(b.amount||0),0));q('#pending').textContent=pendingAll.length;q('#paidCount').textContent=rows.flatMap(c=>billsOf(c)).filter(b=>b.paid||b.paymentType==='cash').length;
+ const root=q('#list');root.innerHTML='';
+ if(!shown.length){root.innerHTML=`<div class="empty">${rows.length?'Nama tidak ditemukan.':'Belum ada catatan pelanggan. Tekan + untuk menambahkan.'}</div>`;return}
+ shown.forEach(c=>{
+   const bs=sorted(c),pending=bs.filter(b=>!b.paid).sort((a,b)=>b.start.localeCompare(a.start)),
+   selectedId=selectedBills.get(c.id),
+   main=bs.find(b=>b.id===selectedId)||bs.slice().sort((a,b)=>b.start.localeCompare(a.start))[0]||null,
+   total=pending.reduce((sum,b)=>sum+Number(b.amount||0),0),
+   expandedNow=expanded.has(c.id),hasHistory=bs.length>1||bs.some(b=>b.paid),card=document.createElement('article');
+   if(main)selectedBills.set(c.id,main.id);else selectedBills.delete(c.id);
+   card.className='customer';
+   let reminder=main?.paymentType==='cash' ? (()=>{const d=info(main);return `<div class="reminder cash">💵 PENGINGAT PELANGGAN CASH (LUNAS)<small>Sudah bayar cash: ${safe(dateLabel(d.period))}<br>Jadwal perpanjang berikutnya: ${safe(dateLabel(d.pay))} (Cek lanjut Cash atau Utang).</small></div>`})()
+    : main&&!main.paid ? (()=>{const d=info(main);return `<div class="reminder">⚠️ PENGINGAT TAGIHAN<small>Jadwal bayar: ${safe(dateLabel(d.pay))}<br>Untuk membayar tagihan punya: ${safe(dateLabel(d.period))} yang belum dibayar.</small></div>`})()
+    : main?.paid ? `<div class="reminder paid">✓ TAGIHAN LUNAS<small>Periode ${safe(dateLabel(info(main).period))} sudah dibayar.</small></div>`
+    : `<div class="reminder"><small>Belum ada catatan tagihan. Tekan Tambah Utang untuk mencatat.</small></div>`;
+   let history=hasHistory?`<button class="history-toggle edit" data-action="history" data-id="${safe(c.id)}">${expandedNow?'▲ Sembunyikan Riwayat':'▼ Lihat Semua Riwayat'}</button>${expandedNow?`<div class="history-list">${bs.slice().reverse().map(b=>{const d=info(b),isSelected=!!main&&b.id===main.id;return `<div class="history-entry ${isSelected?'selected':''}" data-action="select-period" data-customer="${safe(c.id)}" data-bill="${safe(b.id)}" role="button" tabindex="0" aria-pressed="${isSelected}" aria-label="Tampilkan pengingat periode ${safe(dateLabel(d.period))}"><div class="meta"><b>Periode: ${safe(dateLabel(d.period))}</b>${isSelected?'<span class="selected-note">(Sedang ditampilkan di pengingat atas)</span>':''}<br>Nominal: <b class="gold">${money(b.amount)}</b><br>Jadwal bayar: <b>${safe(dateLabel(d.pay))}</b><br>Status: <b class="${b.paid?'success':'dangerText'}">${b.paymentType==='cash'?'LUNAS (CASH)':b.paid?'LUNAS':'BELUM LUNAS (UTANG)'}</b>${b.note?'<br>Catatan: '+safe(b.note):''}</div><div class="actions">${b.paid?'':`<button class="ok" data-action="paid-bill" data-customer="${safe(c.id)}" data-bill="${safe(b.id)}">✓ Tandai Lunas</button>`}<button class="edit" data-action="edit-bill" data-customer="${safe(c.id)}" data-bill="${safe(b.id)}">Edit</button><button class="primary" data-action="renew-debt-from" data-customer="${safe(c.id)}" data-bill="${safe(b.id)}">＋ Lanjut Utang</button><button class="ok" data-action="renew-cash-from" data-customer="${safe(c.id)}" data-bill="${safe(b.id)}">💵 Lanjut Cash</button><button class="delete" data-action="delete-bill" data-customer="${safe(c.id)}" data-bill="${safe(b.id)}">Hapus</button></div></div>`}).join('')}</div>`:''}`:'';
+   card.innerHTML=`<img class="avatar" src="./assets/mikasa-bg.png" alt=""><div class="detail"><div class="namebar"><h3>${safe(c.name)}</h3><span class="status ${pending.length?'unpaid':''}">${pending.length?'● AKTIF':bs.length?'✓ LUNAS':'BELUM ADA TAGIHAN'}</span></div><div class="columns"><div class="meta">Jumlah tagihan belum lunas: <b class="gold">${money(total)}</b><br>Total catatan tagihan: <b>${bs.length}</b><br>Catatan: ${safe(c.note||'—')}</div><div>${reminder}<div class="actions">${main&&!main.paid?`<button class="ok" data-action="paid-bill" data-customer="${safe(c.id)}" data-bill="${safe(main.id)}">✓ Tandai Lunas</button>`:''}<button class="primary" data-action="add-bill" data-id="${safe(c.id)}">＋ Tambah Utang / Cash</button><button class="delete" data-action="delete-customer" data-id="${safe(c.id)}">Hapus</button></div>${history}</div></div></div>`;
+   root.append(card);
+ });
+}
+function showModal({customer=null,bill=null}={}){
+ q('#form').reset();editing=bill?{customerId:customer.id,billId:bill.id}:null;addingTo=customer?.id||null;
+ formPayMode=bill?(bill.paymentType||'debt'):'debt';syncPayMode();q('#payModeField').hidden=false;q('#recordId').value='';q('#formTitle').textContent=bill?'Edit Tagihan':customer?'Tambah Utang':'Tambah Pelanggan';
+ q('#save').textContent=bill?'Simpan Perubahan':customer?'Simpan Utang':'Simpan Pelanggan';
+ q('#name').value=customer?.name||'';q('#name').readOnly=!!customer;
+ document.querySelectorAll('[data-val]').forEach(b=>b.classList.remove('sel'));
+ if(bill){q('#name').value=customer.name;q('#amount').value=bill.amount;q('#start').value=bill.start;q('#note').value=bill.note||''}
+ else q('#start').value=dateOnly(new Date());
+ q('#msg').textContent='';q('#overlay').classList.add('show');document.body.style.overflow='hidden';setTimeout(()=>q('#name').focus(),50);
+}
+function syncPayMode(){document.querySelectorAll('[data-pay-mode]').forEach(b=>{const active=b.dataset.payMode===formPayMode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))})}
+function hideModal(){q('#overlay').classList.remove('show');document.body.style.overflow='';q('#name').readOnly=false;editing=null;addingTo=null}
+q('#newBtn').onclick=()=>showModal();q('#fab').onclick=()=>showModal();q('#close').onclick=hideModal;
+q('#overlay').addEventListener('click',e=>{if(e.target===q('#overlay'))hideModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideModal()});
+document.querySelectorAll('[data-pay-mode]').forEach(b=>b.onclick=()=>{formPayMode=b.dataset.payMode;syncPayMode()});
+document.querySelectorAll('[data-val]').forEach(b=>b.onclick=()=>{q('#amount').value=b.dataset.val;document.querySelectorAll('[data-val]').forEach(x=>x.classList.toggle('sel',x===b))});
+q('#form').onsubmit=e=>{
+ e.preventDefault();const name=q('#name').value.trim(),amount=Number(q('#amount').value),start=q('#start').value,note=q('#note').value.trim();
+ if(!name||!start||!Number.isFinite(amount)||amount<=0){q('#msg').textContent='Masukkan nama, tanggal, dan nominal utang lebih dari Rp0.';return}
+ const newBill={id:uid(),start,amount,note,paid:formPayMode==='cash',paymentType:formPayMode};
+ try{
+   if(editing){
+     const customer=rows.find(c=>c.id===editing.customerId),bill=customer?.bills.find(b=>b.id===editing.billId);
+     if(!bill)throw Error('Tagihan yang diedit tidak ditemukan.');
+     Object.assign(bill,{start,amount,note,paymentType:formPayMode,paid:formPayMode==='cash'});
+     if(!customer.note&&note)customer.note=note;
+   }else if(addingTo){
+     const customer=rows.find(c=>c.id===addingTo);if(!customer)throw Error('Pelanggan tidak ditemukan.');customer.bills.push(newBill);
+   }else{
+     // Names that already exist receive a new bill in the existing customer's ledger.
+     const existing=rows.find(c=>normName(c.name)===normName(name));
+     if(existing)existing.bills.push(newBill);
+     else rows.push({id:uid(),name,note,bills:[newBill]});
+   }
+   store();hideModal();render();
+ }catch(err){q('#msg').textContent='Penyimpanan gagal: '+(err?.message||'periksa penyimpanan browser.')}
+};
+function createRenewal(customer,source,mode){
+ if(!customer||!source)return;
+ const startDate=shiftMonth(parseDate(source.start),1),start=dateOnly(startDate);
+ const existing=customer.bills.find(b=>b.start===start&&b.paymentType===(mode==='cash'?'cash':'debt')&&(!b.paid||mode==='cash'));
+ if(existing){alert(`Periode ${dateLabel(startDate)} dengan mode ${mode==='cash'?'Cash':'Utang'} sudah tercatat.`);return}
+ customer.bills.push({id:uid(),start,amount:Number(source.amount)||0,note:source.note||customer.note||'',paid:mode==='cash',paymentType:mode});
+ const created=customer.bills[customer.bills.length-1];
+ selectedBills.set(customer.id,created.id);expanded.add(customer.id);store();render();
+}
+q('#list').addEventListener('click',e=>{
+ const actionControl=e.target.closest('button[data-action]');
+ if(actionControl){
+  e.stopPropagation();
+  const action=actionControl.dataset.action;
+  const customerId=actionControl.dataset.customer||actionControl.dataset.id,customer=rows.find(c=>c.id===customerId);if(!customer)return;
+  const billId=actionControl.dataset.bill,bill=customer.bills.find(x=>x.id===billId);
+  switch(action){
+  case'history':expanded.has(customer.id)?expanded.delete(customer.id):expanded.add(customer.id);render();break;
+  case'add-bill':showModal({customer});break;
+  case'renew-debt':{const latest=sorted(customer).slice(-1)[0];createRenewal(customer,latest,'debt');break}
+  case'renew-cash':{const latest=sorted(customer).slice(-1)[0];createRenewal(customer,latest,'cash');break}
+  case'renew-debt-from':if(bill)createRenewal(customer,bill,'debt');break;
+  case'renew-cash-from':if(bill)createRenewal(customer,bill,'cash');break;
+  case'edit-bill':if(bill)showModal({customer,bill});break;
+  case'paid-bill':
+   if(bill&&!bill.paid&&confirm(`Tandai lunas tagihan periode ${dateLabel(parseDate(bill.start))} sebesar ${money(bill.amount)}?`)){bill.paid=true;store();render()}break;
+  case'delete-bill':
+   if(bill&&confirm(`Hapus tagihan periode ${dateLabel(parseDate(bill.start))} sebesar ${money(bill.amount)}?`)){customer.bills=customer.bills.filter(x=>x.id!==bill.id);if(!customer.bills.length)rows=rows.filter(c=>c.id!==customer.id);store();render()}break;
+  case'delete-customer':
+   if(confirm(`Hapus pelanggan ${customer.name} beserta seluruh tagihan dan riwayatnya?`)){rows=rows.filter(c=>c.id!==customer.id);expanded.delete(customer.id);selectedBills.delete(customer.id);store();render()}break;
+  }
+  return;
+ }
+ const entry=e.target.closest('.history-entry[data-action="select-period"]');
+ if(entry){
+  const customer=rows.find(c=>c.id===entry.dataset.customer);
+  const bill=customer?.bills.find(x=>x.id===entry.dataset.bill);
+  if(customer&&bill){selectedBills.set(customer.id,bill.id);render();openBillReminder(customer,bill)}
+ }
+});
+q('#list').addEventListener('keydown',e=>{
+ if(e.key!=='Enter'&&e.key!==' ')return;
+ const entry=e.target.closest('.history-entry[data-action="select-period"]');
+ if(!entry)return;
+ e.preventDefault();
+ const customer=rows.find(c=>c.id===entry.dataset.customer);
+ const bill=customer?.bills.find(x=>x.id===entry.dataset.bill);
+ if(customer&&bill){selectedBills.set(customer.id,bill.id);render();openBillReminder(customer,bill)}
+});
+q('#billModalClose').addEventListener('click',closeBillReminder);
+q('#billModalDismiss').addEventListener('click',closeBillReminder);
+q('#billOverlay').addEventListener('click',e=>{if(e.target===q('#billOverlay'))closeBillReminder()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&q('#billOverlay').classList.contains('show'))closeBillReminder()});
+q('#billModalPaid').addEventListener('click',()=>{
+ if(!modalBillRef)return;
+ const customer=rows.find(c=>c.id===modalBillRef.customerId);
+ const bill=customer?.bills.find(b=>b.id===modalBillRef.billId);
+ if(!customer||!bill||bill.paid)return;
+ if(confirm(`Tandai lunas tagihan periode ${dateLabel(parseDate(bill.start))} sebesar ${money(bill.amount)}?`)){
+  bill.paid=true;selectedBills.set(customer.id,bill.id);store();render();openBillReminder(customer,bill);
+ }
+});
+q('#search').addEventListener('input',render);loadSaved();render();
+const updateClock=()=>{const now=new Date();q('#liveDay').textContent=new Intl.DateTimeFormat('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);q('#liveClock').textContent=new Intl.DateTimeFormat('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now)};
+updateClock();setInterval(updateClock,1000);
+if('serviceWorker'in navigator && location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('SW registration:',err)))}
+})();
+</script></body></html>
