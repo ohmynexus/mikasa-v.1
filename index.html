@@ -532,7 +532,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#241039 0%,transparent 37%),ra
    <label for="customerName">♙ Nama Pelanggan</label><input id="customerName" required maxlength="90" placeholder="Nama pelanggan">
    <label>Mode Pencatatan</label><div class="mode-row"><button type="button" class="mode-btn active" data-mode="debt">🔴 Catat Utang (Belum Bayar)</button><button type="button" class="mode-btn" data-mode="cash">💵 Bayar Cash (Lunas)</button></div>
    <label for="billAmount">▣ Jumlah Utang (Nominal)</label><input id="billAmount" type="number" inputmode="numeric" min="0" step="1000" required placeholder="Nominal dalam rupiah">
-   <div class="quick"><button type="button" data-amount="50000">50rb</button><button type="button" data-amount="100000">100rb</button><button type="button" data-amount="150000">150rb</button><button type="button" data-amount="500000">500rb</button><button type="button" data-amount="1000000">1jt</button></div>
+   <div class="quick"><button type="button" data-amount="50000">50rb</button><button type="button" data-amount="100000">100rb</button><button type="button" data-amount="150000">150rb</button><button type="button" data-amount="200000">200rb</button><button type="button" data-amount="1000000">1jt</button></div>
    <label for="billDate">▦ Tanggal Mulai Periode</label><input id="billDate" type="date" required>
    <label for="billNote">▤ Catatan Tambahan</label><textarea id="billNote" maxlength="500" placeholder="Opsional"></textarea>
    <div class="form-actions"><button type="button" class="quiet" data-close="formModal">Batal</button><button class="primary" type="submit">＋ Simpan</button></div>
@@ -563,34 +563,38 @@ function formatDate(s){if(!s)return '—';return parseDate(s).toLocaleDateString
 function money(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0)}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function billStatus(b){return b.status==='cash'||b.status==='paid'?'paid':'debt'}
+function normalizeImportDate(value){
+ if(value===undefined||value===null||value==='')return '';
+ if(typeof value==='number'&&Number.isFinite(value)){const d=new Date(value);return isNaN(d)?'':dateLocal(d)}
+ let s=String(value).trim();
+ if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);
+ const m=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+ if(m){const d=new Date(+m[3],+m[2]-1,+m[1]);return isNaN(d)?'':dateLocal(d)}
+ const parsed=new Date(s);return isNaN(parsed)?'':dateLocal(parsed);
+}
 function normalizeBill(raw){
  if(!raw||typeof raw!=='object')return null;
- let period=raw.period||raw.date||raw.startDate||raw.tanggal||raw.billingDate;
- if(!period)return null;
- if(/^\d{1,2}\s+\w+\s+\d{4}$/i.test(period)){const d=new Date(period);if(!isNaN(d))period=dateLocal(d)}
- if(!/^\d{4}-\d{2}-\d{2}$/.test(period))return null;
- let st=String(raw.status||raw.mode||'').toLowerCase();
- let isPaid=['cash','paid','lunas','lunas (cash)','lunas/cash'].some(x=>st.includes(x))||raw.paid===true||raw.lunas===true;
- const amount=Number(raw.amount??raw.nominal??raw.total??raw.jumlah??0)||0;
- return {id:String(raw.id||uid()),period,amount,status:isPaid?'cash':'debt',note:String(raw.note??raw.catatan??''),createdAt:raw.createdAt||Date.now()};
+ const rawPeriod=raw.period??raw.date??raw.startDate??raw.tanggal??raw.billingDate??raw.billDate??raw.billing_date??raw.paymentDate??raw.transactionDate??raw.createdDate??raw.periode;
+ const period=normalizeImportDate(rawPeriod);if(!period)return null;
+ const st=String(raw.status??raw.mode??raw.state??raw.paymentStatus??raw.jenisTransaksi??'').toLowerCase();
+ const isPaid=['cash','paid','lunas','bayar','pembayaran','settled'].some(x=>st.includes(x))||raw.paid===true||raw.lunas===true||raw.isPaid===true;
+ const amountRaw=raw.amount??raw.nominal??raw.total??raw.jumlah??raw.debtAmount??raw.totalAmount??raw.nilai??raw.value??0;
+ const amount=typeof amountRaw==='string'?Number(amountRaw.replace(/[^\d,.-]/g,'').replace(/\.(?=\d{3}(?:\D|$))/g,'').replace(',','.')):Number(amountRaw);
+ return {id:String(raw.id??raw.billId??raw.transactionId??uid()),period,amount:Number.isFinite(amount)?amount:0,status:isPaid?'cash':'debt',note:String(raw.note??raw.catatan??raw.description??raw.keterangan??''),createdAt:Number(raw.createdAt??raw.timestamp??raw.created_at)||Date.now()};
 }
 function normalizeCustomer(raw){
  if(!raw||typeof raw!=='object')return null;
- const name=String(raw.name??raw.nama??raw.customerName??'').trim();if(!name)return null;
- let rawBills=raw.bills||raw.tagihan||raw.history||raw.riwayat||raw.records;
+ const name=String(raw.name??raw.nama??raw.customerName??raw.namaPelanggan??raw.customer_name??raw.fullName??raw.pelanggan??'').trim();if(!name)return null;
+ let rawBills=raw.bills??raw.tagihan??raw.history??raw.riwayat??raw.records??raw.invoices??raw.periods??raw.transactions??raw.transaksi;
+ if(rawBills&&!Array.isArray(rawBills)&&typeof rawBills==='object')rawBills=Object.values(rawBills);
  if(!Array.isArray(rawBills))rawBills=[];
  let bills=rawBills.map(normalizeBill).filter(Boolean);
- // Legacy single-bill record conversion, including earlier fields.
  if(!bills.length){
-  const period=raw.period||raw.date||raw.startDate||raw.tanggal||raw.billingDate||raw.billDate;
-  const amount=raw.amount??raw.nominal??raw.total??raw.jumlah??raw.debtAmount;
-  const status=String(raw.status||'').toLowerCase();
-  if(period&&amount!==undefined){
-   const b=normalizeBill({period,amount,status:raw.mode||status,note:raw.note||raw.catatan||''});if(b)bills.push(b);
-  }
+  const period=raw.period??raw.date??raw.startDate??raw.tanggal??raw.billingDate??raw.billDate??raw.periode;
+  const amount=raw.amount??raw.nominal??raw.total??raw.jumlah??raw.debtAmount??raw.totalAmount;
+  if(period!==undefined&&amount!==undefined){const b=normalizeBill({period,amount,status:raw.mode??raw.status??raw.paymentStatus,note:raw.note??raw.catatan});if(b)bills.push(b)}
  }
- // Merge duplicate legacy entries by case-insensitive customer name.
- return {id:String(raw.id||raw.customerId||uid()),name,note:String(raw.note??raw.catatan??''),bills};
+ return {id:String(raw.id??raw.customerId??raw.customer_id??raw.idPelanggan??uid()),name,note:String(raw.note??raw.catatan??raw.customerNote??raw.keterangan??''),bills};
 }
 function loadData(){
  let stored=null;
@@ -698,7 +702,7 @@ function render(){
  $('bentoPaidRate').textContent=settledPct+'% lunas/cash';
  $('bentoDebtFill').style.width=settledPct+'%';
 
- $('heroSummary').textContent=`${count} pelanggan · ${need} membutuhkan pengingat`;
+ if($('heroSummary'))$('heroSummary').textContent=`${count} pelanggan · ${need} membutuhkan pengingat`;
  $('navCustomerCount').textContent=count;
  const totalBills=customers.reduce((s,c)=>s+c.bills.length,0),paidBills=customers.reduce((s,c)=>s+c.bills.filter(b=>billStatus(b)==='paid').length,0);
  $('progressFill').style.width=(totalBills?paidBills/totalBills*100:0)+'%';
@@ -885,11 +889,24 @@ function parseCSV(text){
  return [...grouped.values()];
 }
 function restoreJSON(text){
- const obj=JSON.parse(text);
- const list=Array.isArray(obj)?obj:(obj&&Array.isArray(obj.customers)?obj.customers:obj&&Array.isArray(obj.data)?obj.data:null);
- if(!list)throw Error('Struktur JSON tidak dikenali. Gunakan file hasil Backup JSON aplikasi.');
+ let obj=JSON.parse(text);
+ for(let depth=0;depth<3&&typeof obj==='string';depth++)obj=JSON.parse(obj);
+ const keys=['customers','data','pelanggan','daftarPelanggan','daftar_pelanggan','clients','clientList','customerList','users','records'];
+ let list=Array.isArray(obj)?obj:null;
+ if(!list&&obj&&typeof obj==='object'){
+  for(const key of keys){const candidate=obj[key];
+   if(Array.isArray(candidate)){list=candidate;break}
+   if(candidate&&typeof candidate==='object'){const vals=Object.values(candidate);if(vals.length&&vals.every(x=>x&&typeof x==='object')){list=vals;break}}
+  }
+  if(!list){for(const key of ['backup','payload','database','db','export','state']){const nested=obj[key];
+   if(Array.isArray(nested)){list=nested;break}
+   if(nested&&typeof nested==='object'){for(const sub of keys)if(Array.isArray(nested[sub])){list=nested[sub];break}}
+   if(list)break;
+  }}
+ }
+ if(!list)throw Error('Struktur JSON tidak dikenali. Coba file hasil Backup JSON dari aplikasi Mikasa Wireless.');
  const result=list.map(normalizeCustomer).filter(Boolean);
- if(!result.length)throw Error('Tidak ditemukan data pelanggan yang valid.');
+ if(!result.length)throw Error(`File JSON berisi ${list.length} entri, tetapi tidak ada pelanggan valid. Kemungkinan nama pelanggan atau format data berbeda.`);
  return result;
 }
 async function restoreFile(file){
@@ -902,6 +919,7 @@ async function restoreFile(file){
   else throw Error('Pilih file .json atau .csv.');
   if(!imported.length)throw Error('Tidak ditemukan data valid pada file.');
   const summary=imported.reduce((s,c)=>s+c.bills.length,0);
+  $('backupStatus').textContent=`File terbaca · ${imported.length} pelanggan · ${summary} periode`;
   const replace=confirm(`Pulihkan ${imported.length} pelanggan dan ${summary} periode dari file ini?\n\nOK = GANTI data lokal saat ini\nBatal = gabungkan dengan data lokal`);
   if(replace)customers=imported;
   else{
