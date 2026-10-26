@@ -702,7 +702,7 @@ function render(){
  $('bentoPaidRate').textContent=settledPct+'% lunas/cash';
  $('bentoDebtFill').style.width=settledPct+'%';
 
- $('heroSummary').textContent=`${count} pelanggan · ${need} membutuhkan pengingat`;
+ if($('heroSummary'))$('heroSummary').textContent=`${count} pelanggan · ${need} membutuhkan pengingat`;
  $('navCustomerCount').textContent=count;
  const totalBills=customers.reduce((s,c)=>s+c.bills.length,0),paidBills=customers.reduce((s,c)=>s+c.bills.filter(b=>billStatus(b)==='paid').length,0);
  $('progressFill').style.width=(totalBills?paidBills/totalBills*100:0)+'%';
