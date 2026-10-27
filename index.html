@@ -759,6 +759,17 @@ function removeBill(customerId,billId){
  c.bills=c.bills.filter(x=>x.id!==billId);if(selectedBill[c.id]===billId)delete selectedBill[c.id];
  persist();render();
 }
+function renameCustomer(id){
+ const c=findCustomer(id);if(!c)return;
+ const entered=prompt('Ubah nama pelanggan:',c.name);
+ if(entered===null)return;
+ const name=entered.trim();
+ if(!name){alert('Nama pelanggan tidak boleh kosong.');return}
+ if(name.length>90){alert('Nama maksimal 90 karakter.');return}
+ const duplicate=customers.some(x=>x.id!==id&&x.name.trim().toLocaleLowerCase('id-ID')===name.toLocaleLowerCase('id-ID'));
+ if(duplicate){alert('Nama tersebut sudah digunakan pelanggan lain. Gunakan nama yang berbeda.');return}
+ c.name=name;persist();render();
+}
 function removeCustomer(id){const c=findCustomer(id);if(!c)return;if(!confirm(`Hapus pelanggan ${c.name} beserta seluruh riwayatnya?`))return;customers=customers.filter(x=>x.id!==id);expanded.delete(id);delete selectedBill[id];persist();render()}
 function showBillModal(customerId,billId){
  const c=findCustomer(customerId),b=c?.bills.find(x=>x.id===billId);if(!c||!b)return;
@@ -796,7 +807,7 @@ $('customerList').addEventListener('click',e=>{
   e.stopPropagation();const {act,customer:cid,bill:bid}=action.dataset;
   if(act==='history'){expanded.has(cid)?expanded.delete(cid):expanded.add(cid);render()}
   else if(act==='add-bill')openForm({customerId:cid});
-  else if(act==='edit-customer'){const c=findCustomer(cid);if(!c)return;openForm({customerId:cid,billId:latestBill(c)?.id||null})}
+  else if(act==='edit-customer')renameCustomer(cid)
   else if(act==='paid-selected'){const c=findCustomer(cid),b=c&&selected(c);if(b)markPaid(cid,b.id)}
   else if(act==='paid')markPaid(cid,bid);
   else if(act==='edit')openForm({customerId:cid,billId:bid});
