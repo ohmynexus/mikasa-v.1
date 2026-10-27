@@ -67,7 +67,8 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opa
 .view-nav{display:flex;gap:10px;margin:0 0 20px;padding:7px;border:1px solid #493463;border-radius:18px;background:#100b1bdc;box-shadow:var(--shadow);position:relative;z-index:1;margin-bottom:24px;background:#100b1bf5;backdrop-filter:blur(12px)}
 .view-tab{display:flex;align-items:center;justify-content:center;gap:9px;flex:1;min-width:0;border:1px solid transparent;background:transparent;border-radius:12px;padding:12px 15px;color:#bba9cf;font-weight:800}
 .view-tab.active{color:#f6eaff;border-color:#a855f7;background:linear-gradient(120deg,#612b8b77,#291536a8);box-shadow:inset 0 0 14px #a855f71a,0 0 14px #a855f722}
-.tab-icon{font-size:1.2rem;color:#d8b4fe}.nav-count{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;border-radius:99px;background:#a855f7;color:#fff;font-size:.75rem}.view-page[hidden]{display:none!important}.customer-panel{margin-bottom:16px}.customer-panel .customer-list{min-height:180px}.fab{display:none}
+.tab-icon{font-size:1.2rem;color:#d8b4fe}.nav-count{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;border-radius:99px;background:#a855f7;color:#fff;font-size:.75rem}.view-page[hidden]{display:none!important}
+.billing-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.cal-dayname{text-align:center;color:#cbb8df;font-weight:800;font-size:.78rem;padding:6px 0}.cal-day{min-height:66px;border:1px solid #493463;background:#0d0916;border-radius:12px;padding:7px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left}.cal-day.outside{opacity:.35}.cal-day.today{border-color:#e9b5ff;box-shadow:inset 0 0 0 1px #c084fc}.cal-day.selected{background:#39204e;border-color:#d8b4fe}.cal-day .cal-num{font-weight:850}.cal-dots{display:flex;gap:4px;flex-wrap:wrap}.cal-dot{width:7px;height:7px;border-radius:50%;background:#e9b5ff}.cal-dot.paid{background:#7bf0c0}.cal-day:disabled{cursor:default;opacity:.4}@media(max-width:560px){.billing-calendar{gap:4px}.cal-day{min-height:52px;padding:5px;border-radius:9px;font-size:.78rem}.cal-dayname{font-size:.65rem}.cal-dot{width:6px;height:6px}}.customer-panel{margin-bottom:16px}.customer-panel .customer-list{min-height:180px}.fab{display:none}
 @media(max-width:560px){.view-nav{position:relative;margin-bottom:18px;gap:5px;padding:5px;border-radius:15px}.view-tab{padding:10px 7px;font-size:.77rem;gap:6px}.tab-icon{font-size:1.05rem}.nav-count{min-width:20px;height:20px;font-size:.68rem}.customer-panel .panel-head{gap:12px}}
 
 
@@ -426,11 +427,97 @@ body{background:radial-gradient(ellipse at 15% 0%,#241039 0%,transparent 37%),ra
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 
+<style id="mw-startup-style">
+/* Mikasa Wireless — startup loading screen */
+#mw-startup{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 38%,#29133f 0%,#100a1b 48%,#08070e 100%);color:#f8edff;opacity:1;visibility:visible;transition:opacity .42s ease,visibility .42s ease}
+#mw-startup.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#mw-startup .mw-loader-card{width:min(370px,100%);text-align:center;padding:34px 25px 30px;border:1px solid #7444a0;border-radius:28px;background:linear-gradient(145deg,#191027f5,#0d0917f5);box-shadow:0 0 35px #a855f72a,inset 0 0 26px #a855f70b}
+#mw-startup .mw-mark{width:100px;height:100px;margin:0 auto 21px;position:relative;display:grid;place-items:center;border-radius:27px;border:1px solid #c084fc;background:linear-gradient(145deg,#321b49,#120d20);box-shadow:0 0 24px #b65cff48, inset 0 0 20px #a855f71c;animation:mw-breathe 2s ease-in-out infinite}
+#mw-startup .mw-mark svg{width:66px;height:66px;filter:drop-shadow(0 0 8px #df8aff7c)}
+#mw-startup h1{font-size:1.42rem;line-height:1.2;letter-spacing:.015em;margin:0;font-weight:850}
+#mw-startup h1 span{display:block;color:#df8aff;margin-top:5px}
+#mw-startup .mw-caption{color:#bcaaca;font-size:.83rem;letter-spacing:.15em;text-transform:uppercase;margin:13px 0 25px}
+#mw-startup .mw-track{height:7px;border-radius:99px;background:#2b1b3b;border:1px solid #4e3269;overflow:hidden}
+#mw-startup .mw-progress{height:100%;width:36%;border-radius:99px;background:linear-gradient(90deg,#a855f7,#e879f9);box-shadow:0 0 13px #d946ef;animation:mw-progress 1.45s ease-in-out infinite}
+#mw-startup .mw-status{margin:13px 0 0;color:#d6c2e8;font-size:.78rem;letter-spacing:.04em}
+@keyframes mw-progress{0%{transform:translateX(-110%);width:36%}55%{width:58%}100%{transform:translateX(285%);width:36%}}
+@keyframes mw-breathe{0%,100%{transform:translateY(0);box-shadow:0 0 20px #b65cff38,inset 0 0 20px #a855f71c}50%{transform:translateY(-4px);box-shadow:0 0 31px #b65cff66,inset 0 0 23px #a855f728}}
+@media(prefers-reduced-motion:reduce){#mw-startup *,#mw-startup{animation:none!important;transition:none!important}}
+</style>
+
+<style id="mw-theme-presets">
+.topnav-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}.theme-control{display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);font-size:.83rem;font-weight:800}.theme-control select{max-width:160px;background:transparent;color:inherit;border:0;outline-offset:3px;font-weight:750;padding:3px}.theme-control option{background:#181326;color:#f6f0ff}
+body[data-theme="midnight"]{--bg:#07111f;--panel:#0d1b2d;--panel2:#13263d;--line:#285071;--violet:#38bdf8;--lilac:#7dd3fc;--pink:#60a5fa;--text:#eaf6ff;--muted:#a6bfd5;--green:#34d399;--red:#fb7185;--gold:#facc15;--shadow:0 0 24px #0284c725;background:radial-gradient(ellipse at 25% -10%,#123a5b 0,transparent 42%),radial-gradient(ellipse at 100% 25%,#102b49 0,transparent 34%),var(--bg)}
+body[data-theme="midnight"] .topnav,body[data-theme="midnight"] .profile,body[data-theme="midnight"] .widget,body[data-theme="midnight"] .panel,body[data-theme="midnight"] .stat,body[data-theme="midnight"] .customer,body[data-theme="midnight"] .modalbox{background:linear-gradient(140deg,#10243af2,#091524f5);border-color:#285071}body[data-theme="midnight"] button{background:linear-gradient(135deg,#12314c,#0d1b2d);border-color:#32678b}body[data-theme="midnight"] .primary{background:linear-gradient(120deg,#0284c7,#2563eb)}body[data-theme="midnight"] .view-tab.active{background:linear-gradient(120deg,#0369a1,#2563eb)}
+body[data-theme="light"]{color-scheme:light;--bg:#f4f5f9;--panel:#fff;--panel2:#f0f1f8;--line:#d8dbea;--violet:#6950c9;--lilac:#7256d8;--pink:#be4eae;--text:#25223a;--muted:#66677e;--green:#12805e;--red:#c63857;--gold:#9b6a00;--shadow:0 5px 24px #35315a12;background:linear-gradient(150deg,#f5f3ff,#f3f7fc 50%,#fff)}body[data-theme="light"] .topnav,body[data-theme="light"] .profile,body[data-theme="light"] .widget,body[data-theme="light"] .panel,body[data-theme="light"] .stat,body[data-theme="light"] .customer,body[data-theme="light"] .modalbox{background:#fff;border-color:#ded9ef;box-shadow:0 5px 24px #39305b12}body[data-theme="light"] .brand,body[data-theme="light"] .profile h1 span,body[data-theme="light"] .eyebrow,body[data-theme="light"] .widget h3,body[data-theme="light"] .clock,body[data-theme="light"] .amount,body[data-theme="light"] .stat strong.money{color:#6846ba;text-shadow:none}body[data-theme="light"] button{background:#f4f1fc;border-color:#d2c8ed;color:#30264c}body[data-theme="light"] .primary{background:linear-gradient(120deg,#7957d5,#b14da8);color:white}body[data-theme="light"] .view-tab{background:#fff;color:#51476c;border-color:#ded9ef}body[data-theme="light"] .view-tab.active{background:linear-gradient(120deg,#7957d5,#a34fbb);color:white}body[data-theme="light"] .search input,body[data-theme="light"] input,body[data-theme="light"] textarea,body[data-theme="light"] select{background:#fff;color:#25223a;border-color:#d6d3e5}body[data-theme="light"] .details,body[data-theme="light"] .profile-data p,body[data-theme="light"] .sub,body[data-theme="light"] .date-now{color:#66677e}body[data-theme="light"] .details b,body[data-theme="light"] .bill strong{color:#302744}body[data-theme="light"] .badge{background:#f0eaff;color:#6441a6;border-color:#d5c6f6}body[data-theme="light"] .reminder{background:#f7f3ff;color:#39304d}body[data-theme="light"] .reminder p{color:#514767}body[data-theme="light"] .reminder h4{color:#6846ba}body[data-theme="light"] .billing-calendar .cal-day{background:#fff;color:#29243c;border-color:#ded9ef}body[data-theme="light"] .cal-day.selected{background:#eee5ff;border-color:#7957d5}body[data-theme="light"] .cal-dayname{color:#655b7d}body[data-theme="light"] .cal-dot{background:#c026d3}body[data-theme="light"] .cal-dot.paid{background:#15956b}
+/* Full Comic: halftone texture, bold ink borders, speech-card feel and impact accents. */
+body[data-theme="comic"]{color-scheme:light;--bg:#fff5d9;--panel:#fffdf4;--panel2:#ffe49a;--line:#211b27;--violet:#e63c28;--lilac:#ffca28;--pink:#ec4f38;--text:#211b27;--muted:#51464b;--green:#16794d;--red:#c52d3a;--gold:#875c00;--shadow:5px 6px 0 #211b27;background-color:#fff5d9;background-image:radial-gradient(#27202a22 1px,transparent 1.5px);background-size:8px 8px}body[data-theme="comic"] .topnav,body[data-theme="comic"] .profile,body[data-theme="comic"] .widget,body[data-theme="comic"] .panel,body[data-theme="comic"] .stat,body[data-theme="comic"] .customer,body[data-theme="comic"] .modalbox{background:#fffdf4;border:2px solid #211b27;border-radius:10px;box-shadow:5px 6px 0 #211b27}body[data-theme="comic"] .topnav{transform:rotate(-.25deg)}body[data-theme="comic"] .brand,body[data-theme="comic"] .profile h1 span,body[data-theme="comic"] .eyebrow,body[data-theme="comic"] .widget h3,body[data-theme="comic"] .clock,body[data-theme="comic"] .amount,body[data-theme="comic"] .stat strong.money{color:#d93627;text-shadow:1px 1px 0 #ffca28}body[data-theme="comic"] button{background:#fffdf4;color:#211b27;border:2px solid #211b27;border-radius:8px;box-shadow:2px 3px 0 #211b27;font-weight:850}body[data-theme="comic"] button:hover{box-shadow:4px 5px 0 #211b27;transform:translate(-1px,-1px)}body[data-theme="comic"] .primary,body[data-theme="comic"] .view-tab.active{background:#ffca28;color:#211b27;border:2px solid #211b27;box-shadow:3px 4px 0 #211b27}body[data-theme="comic"] .view-tab{background:#fffdf4;color:#211b27;border:2px solid #211b27}body[data-theme="comic"] .customer:before{background:radial-gradient(#211b2714 1px,transparent 1.5px);background-size:6px 6px}body[data-theme="comic"] .badge{background:#ffca28;color:#211b27;border:2px solid #211b27;border-radius:4px}body[data-theme="comic"] .badge.cash{background:#a6f2be;color:#173b2a;border-color:#211b27}body[data-theme="comic"] .reminder{background:#fff0b6;color:#211b27;border:2px solid #211b27;box-shadow:3px 3px 0 #211b27}body[data-theme="comic"] .reminder p,body[data-theme="comic"] .reminder h4{color:#211b27}body[data-theme="comic"] .search input,body[data-theme="comic"] input,body[data-theme="comic"] textarea,body[data-theme="comic"] select{background:#fff;color:#211b27;border:2px solid #211b27}body[data-theme="comic"] .billing-calendar .cal-day{background:#fffdf4;color:#211b27;border:2px solid #211b27;border-radius:6px;box-shadow:2px 2px 0 #211b27}body[data-theme="comic"] .cal-day.selected{background:#ffdf72}body[data-theme="comic"] .cal-day.today{outline:3px dashed #e63c28;outline-offset:1px}body[data-theme="comic"] .cal-dayname{color:#211b27}body[data-theme="comic"] .cal-dot{background:#e63c28}body[data-theme="comic"] .cal-dot.paid{background:#168755}body[data-theme="comic"] .stat-icon{background:#ffdc63;color:#211b27;border:2px solid #211b27}body[data-theme="comic"] .quote .orb{background:#ffca28;color:#211b27;border:2px solid #211b27}body[data-theme="comic"] .nav-count{background:#e63c28;color:white}
+/* Customer avatars adapt their frame, tint and finish to the active preset. */
+body[data-theme="neon"] .person .customer-avatar{border-radius:50%;padding:2px;background:#130d20;border:2px solid #c084fc;box-shadow:0 0 0 3px #a855f722,0 0 22px #a855f766;filter:saturate(1.14) hue-rotate(0deg)}
+body[data-theme="midnight"] .person .customer-avatar{border-radius:50%;padding:2px;background:#07111f;border:2px solid #7dd3fc;box-shadow:0 0 0 3px #38bdf822,0 0 20px #0284c755;filter:saturate(.9) hue-rotate(12deg) contrast(1.05)}
+body[data-theme="light"] .person .customer-avatar{border-radius:18px;padding:3px;background:#fff;border:2px solid #7256d8;box-shadow:0 3px 12px #39305b20;filter:saturate(.92) contrast(1.02)}
+body[data-theme="comic"] .person .customer-avatar{border-radius:12px;padding:2px;background:#ffca28;border:3px solid #211b27;box-shadow:3px 4px 0 #211b27;filter:saturate(1.3) contrast(1.12);transform:rotate(-2deg)}
+body[data-theme="comic"] .customer.is-cash .person .customer-avatar{border-color:#211b27;box-shadow:3px 4px 0 #16794d}
+@media(max-width:640px){.topnav{align-items:flex-start;flex-direction:column}.topnav-actions{width:100%;justify-content:space-between}.theme-control select{max-width:142px}}
+/* Comic readability and consistent art direction patch */
+body[data-theme="comic"]{font-family:"Trebuchet MS","Comic Sans MS",system-ui,sans-serif;font-weight:600;letter-spacing:.005em}
+body[data-theme="comic"] h1,body[data-theme="comic"] h2,body[data-theme="comic"] h3,body[data-theme="comic"] h4,body[data-theme="comic"] .brand,body[data-theme="comic"] .eyebrow,body[data-theme="comic"] .view-tab,body[data-theme="comic"] button{font-family:"Trebuchet MS","Comic Sans MS",system-ui,sans-serif;font-weight:900;letter-spacing:.015em}
+body[data-theme="comic"] p,body[data-theme="comic"] label,body[data-theme="comic"] .sub,body[data-theme="comic"] .details,body[data-theme="comic"] .date-now,body[data-theme="comic"] .profile-data,body[data-theme="comic"] .profile-data p,body[data-theme="comic"] .profile-data span,body[data-theme="comic"] .profile-data strong,body[data-theme="comic"] .summary,body[data-theme="comic"] .summary *{color:#30232a}
+body[data-theme="comic"] .profile h1,body[data-theme="comic"] .profile h2,body[data-theme="comic"] .profile h3,body[data-theme="comic"] .panel h2,body[data-theme="comic"] .widget h3,body[data-theme="comic"] .summary h2,body[data-theme="comic"] .summary h3{color:#30232a!important;text-shadow:none}
+body[data-theme="comic"] .profile h1 span,body[data-theme="comic"] .profile .profile-title,body[data-theme="comic"] .profile .admin-name,body[data-theme="comic"] .profile .ratio-label,body[data-theme="comic"] .profile .profile-data p span,body[data-theme="comic"] .profile .profile-data p strong{color:#30232a!important;text-shadow:none}
+body[data-theme="comic"] .analytics,body[data-theme="comic"] .analytics-card,body[data-theme="comic"] .chart-card,body[data-theme="comic"] .dashboard-chart,body[data-theme="comic"] .analytics *{color:#fdf7e8}
+body[data-theme="comic"] .analytics h2,body[data-theme="comic"] .analytics h3,body[data-theme="comic"] .analytics strong,body[data-theme="comic"] .analytics .metric,body[data-theme="comic"] .analytics .value{color:#fff3c4!important}
+body[data-theme="comic"] .analytics p,body[data-theme="comic"] .analytics small,body[data-theme="comic"] .analytics span,body[data-theme="comic"] .analytics label{color:#e8dbea!important}
+body[data-theme="comic"] .stat,body[data-theme="comic"] .stat *{color:#30232a}
+body[data-theme="comic"] .stat strong,body[data-theme="comic"] .stat .value,body[data-theme="comic"] .stat .money{color:#bd2f23!important}
+body[data-theme="comic"] .dashboard-summary,body[data-theme="comic"] .summary-card,body[data-theme="comic"] .system-summary,body[data-theme="comic"] .quest-status{color:#30232a}
+body[data-theme="comic"] .dashboard-summary *,body[data-theme="comic"] .summary-card *,body[data-theme="comic"] .system-summary *,body[data-theme="comic"] .quest-status *{text-shadow:none}
+body[data-theme="comic"] .dashboard-summary h2,body[data-theme="comic"] .summary-card h2,body[data-theme="comic"] .system-summary h2,body[data-theme="comic"] .quest-status h2{color:#30232a!important}
+body[data-theme="comic"] .profile .progress,body[data-theme="comic"] .progress-track{border:2px solid #211b27}
+body[data-theme="comic"] .quote,body[data-theme="comic"] .quote *{color:#30232a!important}
+body[data-theme="comic"] .quote em,body[data-theme="comic"] .quote cite{color:#5c3e4a!important;font-style:italic}
+body[data-theme="comic"] .view-tab.active,body[data-theme="comic"] .primary{color:#211b27!important}
+body[data-theme="comic"] input::placeholder,body[data-theme="comic"] textarea::placeholder{color:#6a5a60;opacity:1}
+body[data-theme="comic"] .theme-control,body[data-theme="comic"] .theme-control *{color:#211b27!important}
+body[data-theme="comic"] .bento-monthly,body[data-theme="comic"] .bento-monthly *{color:#30232a}
+body[data-theme="comic"] .bento-monthly .analytics-kicker,body[data-theme="comic"] .bento-monthly h3{color:#30232a!important}
+body[data-theme="comic"] .bento-ledger-row{background:#fff8df;border:2px solid #211b27;box-shadow:2px 3px 0 #211b27}
+body[data-theme="comic"] .bento-ledger-row span{color:#51434a!important}
+body[data-theme="comic"] .bento-ledger-row b{color:#b92f23!important}
+body[data-theme="comic"] .bento-quest-stat{background:#24152f;border:2px solid #211b27;box-shadow:3px 4px 0 #211b27}
+body[data-theme="comic"] .bento-quest-stat,body[data-theme="comic"] .bento-quest-stat span{color:#fff4d2!important}
+body[data-theme="comic"] .bento-quest-stat b{color:#ffdc63!important}
+body[data-theme="comic"] .bento-trend .trend-metric{background:#160e20;border:2px solid #62477a}
+body[data-theme="comic"] .bento-trend .trend-metric span{color:#d7c9df!important}
+body[data-theme="comic"] .bento-trend .trend-metric b{color:#ffe5a1!important}
+body[data-theme="comic"] .bento-trend .analytics-title h3{color:#fff4d2!important}
+body[data-theme="comic"] .bento-trend .analytics-kicker{color:#f4cf62!important}
+body[data-theme="comic"] .person .customer-avatar{border-radius:10px;border:3px solid #211b27;box-shadow:3px 4px 0 #211b27;filter:saturate(1.15) contrast(1.08);transform:rotate(-1deg)}
+@media(prefers-reduced-motion:reduce){body[data-theme="comic"] *{transition:none!important}}
+</style>
+
 </head>
 <body>
+<div id="mw-startup" role="status" aria-live="polite" aria-label="Memuat Catatan Utang WiFi">
+  <div class="mw-loader-card">
+    <div class="mw-mark" aria-hidden="true">
+      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 18.5C16 16.57 17.57 15 19.5 15H48L58 25V54.5C58 56.43 56.43 58 54.5 58H19.5C17.57 58 16 56.43 16 54.5V18.5Z" stroke="#E9B5FF" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M47.5 15V25.5H58M24 34H48M24 41H43M24 48H39" stroke="#C084FC" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M23 27.5C30.2 20.9 41.8 20.9 49 27.5M27.5 31.5C32.2 27.4 39.8 27.4 44.5 31.5" stroke="#F0ABFC" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="36" cy="34.8" r="1.8" fill="#F0ABFC"/>
+      </svg>
+    </div>
+    <h1>CATATAN <span>UTANG WiFi</span></h1>
+    <p class="mw-caption">MIKASA WIRELESS</p>
+    <div class="mw-track" aria-hidden="true"><div class="mw-progress"></div></div>
+    <p class="mw-status">Menyiapkan dashboard...</p>
+  </div>
+</div>
+
 <div class="shadow-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 <div class="wrap">
-  <nav class="topnav"><div class="brand">◈ MIKASA WIRELESS</div><div class="nav-meta">DASHBOARD LEDGER · <span id="systemState">SYSTEM ONLINE</span></div></nav>
+  <nav class="topnav"><div class="brand">◈ MIKASA WIRELESS</div><div class="topnav-actions"><div class="nav-meta">DASHBOARD LEDGER · <span id="systemState">SYSTEM ONLINE</span></div><label class="theme-control" for="themePicker"><span aria-hidden="true">◐</span><span>Tema</span><select id="themePicker" aria-label="Pilih tema tampilan"><option value="neon">Neon Purple</option><option value="midnight">Midnight Blue</option><option value="light">Light Minimal</option><option value="comic">Full Comic</option></select></label></div></nav>
   <section class="backup-bar" aria-label="Cadangan data">
     <span class="backup-label">◈ Data Management</span>
     <button type="button" id="backupJsonBtn">💾 Backup JSON</button>
@@ -447,7 +534,15 @@ body{background:radial-gradient(ellipse at 15% 0%,#241039 0%,transparent 37%),ra
   <nav class="view-nav" aria-label="Navigasi utama" role="tablist">
     <button type="button" class="view-tab active" id="tabDashboard" role="tab" aria-selected="true" aria-controls="dashboardPage" data-view="dashboard"><span class="tab-icon">⌂</span><span>Halaman Utama</span></button>
     <button type="button" class="view-tab" id="tabCustomers" role="tab" aria-selected="false" aria-controls="customersPage" data-view="customers"><span class="tab-icon">♙</span><span>Daftar Pelanggan</span><b class="nav-count" id="navCustomerCount">0</b></button>
+    <button type="button" class="view-tab" id="tabCalendar" role="tab" aria-selected="false" aria-controls="calendarPage" data-view="calendar"><span class="tab-icon">▦</span><span>Kalender Tagihan</span></button>
   </nav>
+  <section id="calendarPage" class="view-page" role="tabpanel" aria-labelledby="tabCalendar" hidden>
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-head"><h2>▦ Kalender Tagihan</h2><div class="tools" style="flex:0 1 auto;min-width:0"><button id="calPrev" type="button" aria-label="Bulan sebelumnya">‹</button><strong id="calMonth" style="align-self:center;min-width:145px;text-align:center">—</strong><button id="calNext" type="button" aria-label="Bulan berikutnya">›</button></div></div>
+      <div style="padding:16px 20px"><div id="billingCalendar" class="billing-calendar" aria-label="Tanggal kalender"></div><div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:15px;color:#c7bbd8;font-size:.82rem"><span>● <b style="color:#f0abfc">Belum lunas</b></span><span>● <b style="color:#7bf0c0">Lunas</b></span><span style="color:#9a8baa">Pilih tanggal untuk melihat detail</span></div></div>
+    </section>
+    <section class="panel"><div class="panel-head"><h2 id="calSelectedTitle">Daftar Tagihan</h2></div><div id="calSelectedBills" class="customer-list"><div class="empty">Pilih tanggal yang memiliki penanda.</div></div></section>
+  </section>
   <section id="dashboardPage" class="view-page" role="tabpanel" aria-labelledby="tabDashboard">
     <div class="bento-dashboard">
       <section class="profile bento-profile">
@@ -556,6 +651,13 @@ const STORAGE_KEY='wifiDebtCustomers_v4';
 const OLD_KEYS=['wifiDebtCustomers','utangWifiCustomers','customers','wifi_debt_customers'];
 const $=id=>document.getElementById(id);
 let customers=[],expanded=new Set(),selectedBill={},formContext={customerId:null,billId:null,mode:'debt'},modalTarget=null;
+
+const THEME_KEY='mikasaWirelessTheme_v1';
+const themePicker=$('themePicker');
+function applyTheme(theme,save=true){const valid=['neon','midnight','light','comic'].includes(theme)?theme:'neon';document.body.dataset.theme=valid;themePicker.value=valid;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=valid==='light'?'#f4f5f9':valid==='comic'?'#fff5d9':valid==='midnight'?'#07111f':'#0b0914';if(save){try{localStorage.setItem(THEME_KEY,valid)}catch{}}}
+try{applyTheme(localStorage.getItem(THEME_KEY)||'neon',false)}catch{applyTheme('neon',false)}
+themePicker.addEventListener('change',()=>applyTheme(themePicker.value));
+
 
 function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 function dateLocal(date=new Date()){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
@@ -800,14 +902,24 @@ function showBillModal(customerId,billId){
 }
 $('modalMarkPaid').addEventListener('click',()=>{if(modalTarget){markPaid(modalTarget.customerId,modalTarget.billId);closeModal('reminderModal')}});
 function switchView(view){
- const dash=view==='dashboard';
- $('dashboardPage').hidden=!dash;$('customersPage').hidden=dash;
- $('tabDashboard').classList.toggle('active',dash);$('tabCustomers').classList.toggle('active',!dash);
- $('tabDashboard').setAttribute('aria-selected',String(dash));$('tabCustomers').setAttribute('aria-selected',String(!dash));
- $('fabAdd').style.display=dash?'none':'block';
- if(!dash){render();}
+ const dash=view==='dashboard', cust=view==='customers', cal=view==='calendar';
+ $('dashboardPage').hidden=!dash;$('customersPage').hidden=!cust;$('calendarPage').hidden=!cal;
+ for(const [id,on] of [['tabDashboard',dash],['tabCustomers',cust],['tabCalendar',cal]]){$(id).classList.toggle('active',on);$(id).setAttribute('aria-selected',String(on))}
+ $('fabAdd').style.display=cust?'block':'none';
+ if(cust)render();if(cal)renderBillingCalendar();
  window.scrollTo({top:0,behavior:'smooth'});
 }
+let calCursor=new Date();calCursor.setDate(1);let calSelected=dateLocal(new Date());
+function billingEvents(){const events={};for(const c of customers){for(const b of c.bills){const when=billStatus(b)==='paid'?b.period:reminderDue(b);(events[when]??=[]).push({customer:c,bill:b,paid:billStatus(b)==='paid'})}}return events}
+function renderBillingCalendar(){
+ const yr=calCursor.getFullYear(),mo=calCursor.getMonth(),events=billingEvents(),first=new Date(yr,mo,1),offset=(first.getDay()+6)%7,total=Math.ceil((offset+new Date(yr,mo+1,0).getDate())/7)*7;
+ $('calMonth').textContent=calCursor.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+ const names=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];let html=names.map(n=>`<div class="cal-dayname">${n}</div>`).join('');const today=dateLocal(new Date());
+ for(let i=0;i<total;i++){const d=new Date(yr,mo,1-offset+i),key=dateLocal(d),arr=events[key]||[],classes=['cal-day'];if(d.getMonth()!==mo)classes.push('outside');if(key===today)classes.push('today');if(key===calSelected)classes.push('selected');html+=`<button type="button" class="${classes.join(' ')}" data-caldate="${key}" ${arr.length?'':'aria-label="'+key+' tidak ada tagihan"'}><span class="cal-num">${d.getDate()}</span><span class="cal-dots">${arr.slice(0,7).map(e=>`<i class="cal-dot ${e.paid?'paid':''}" title="${e.paid?'Lunas':'Belum lunas'}"></i>`).join('')}</span></button>`}
+ $('billingCalendar').innerHTML=html;$('calSelectedTitle').textContent='Tagihan · '+formatDate(calSelected);
+ const selected=events[calSelected]||[]; $('calSelectedBills').innerHTML=selected.length?selected.map(({customer:c,bill:b,paid})=>`<article class="customer ${paid?'is-cash':'is-debt'}"><div class="person"><div><h3>${escapeHtml(c.name)}</h3><span class="badge ${paid?'cash':''}">${paid?'LUNAS':'BELUM LUNAS'}</span><div class="details"><span>Nominal</span><span>:</span><b class="amount">${money(b.amount)}</b><span>Periode</span><span>:</span><b>${formatDate(b.period)}</b></div></div></div></article>`).join(''):'<div class="empty">Tidak ada tagihan pada tanggal ini.</div>';
+}
+$('calPrev').addEventListener('click',()=>{calCursor.setMonth(calCursor.getMonth()-1);renderBillingCalendar()});$('calNext').addEventListener('click',()=>{calCursor.setMonth(calCursor.getMonth()+1);renderBillingCalendar()});$('billingCalendar').addEventListener('click',e=>{const b=e.target.closest('[data-caldate]');if(b){calSelected=b.dataset.caldate;renderBillingCalendar()}});
 document.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>switchView(btn.dataset.view)));
 $('addCustomerBtn').addEventListener('click',()=>openForm());
 $('fabAdd').addEventListener('click',()=>openForm());
@@ -983,6 +1095,24 @@ $('restoreBtn').addEventListener('click',()=>$('restoreFile').click());
 $('restoreFile').addEventListener('change',e=>restoreFile(e.target.files?.[0]));
 
 loadData();render();switchView('dashboard');updateClock();setInterval(updateClock,1000);
+})();
+</script>
+<script>
+/* Dismiss the startup splash after the page and app initialization have settled. */
+(function(){
+  const splash=document.getElementById('mw-startup');
+  if(!splash)return;
+  let dismissed=false;
+  const dismiss=()=>{
+    if(dismissed)return; dismissed=true;
+    splash.classList.add('is-leaving');
+    window.setTimeout(()=>splash.remove(),480);
+  };
+  const onReady=()=>window.setTimeout(dismiss,1050);
+  if(document.readyState==='complete')onReady();
+  else window.addEventListener('load',onReady,{once:true});
+  /* Safety fallback for browsers/extensions that delay the load event. */
+  window.setTimeout(dismiss,7000);
 })();
 </script>
 </body></html>
