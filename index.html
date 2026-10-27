@@ -920,6 +920,25 @@ body[data-theme="full-comic"]{font-size:15.5px;line-height:1.55}
 [data-theme="full-comic"] ::-webkit-scrollbar-thumb{background:var(--ink)}
 [data-theme="full-comic"] .data-note a{color:#1d4ed8}
 
+/* ── Restore modal ── */
+.restore-error{background:var(--danger-soft);border:1px solid var(--danger);border-radius:var(--radius);padding:12px 14px;font-size:13.5px;color:var(--text-primary);line-height:1.5;margin-bottom:12px}
+.restore-sub{font-size:12px;color:var(--text-secondary);margin-top:2px}
+.restore-list{margin:8px 0 0 18px;list-style:disc;font-size:13px;line-height:1.5;color:var(--text-primary)}
+.restore-note{font-size:13px;color:var(--text-secondary);line-height:1.55;margin:10px 0}
+.restore-note strong{color:var(--text-primary)}
+.reminder-banner .restore-list{margin-top:0;color:var(--reminder-text);font-weight:600}
+.btn-danger{flex:1.4;padding:12px;border-radius:var(--radius);font-size:14px;font-weight:700;background:var(--danger-solid);color:var(--on-solid);border:1px solid var(--danger-solid);cursor:pointer;transition:all .2s}
+.btn-danger:hover{filter:brightness(1.12)}
+#restoreBody .detail-period-row{gap:12px;align-items:flex-start}
+#restoreBody .detail-period-label{flex-shrink:0}
+#restoreBody .detail-period-value{text-align:right;min-width:0;overflow-wrap:anywhere}
+#restoreFooter{flex-wrap:wrap}
+#restoreFooter button{min-width:92px}
+[data-theme="full-comic"] .restore-error{border:2px solid var(--ink);background:#fecaca;color:var(--ink)}
+[data-theme="full-comic"] #restoreFooter .btn-save{background:var(--secondary)}
+[data-theme="full-comic"] #restoreFooter .btn-save:hover{background:#1e40af}
+[data-theme="full-comic"] .btn-danger{font-weight:800;text-shadow:1px 1px 0 rgba(0,0,0,.35)}
+
 /* Mobile (Android) comfort */
 @media(max-width:480px){
   .app-header{flex-wrap:wrap;row-gap:8px}
@@ -1256,6 +1275,18 @@ body[data-theme="full-comic"]{font-size:15.5px;line-height:1.55}
       <button class="btn-cancel" onclick="closeEditModal()">Batal</button>
       <button class="btn-save" onclick="saveEditCustomer()">💾 Simpan Perubahan</button>
     </div>
+  </div>
+</div>
+
+<!-- Modal: Restore Data (pratinjau, konfirmasi, dan pesan kesalahan) -->
+<div class="modal-overlay" id="restoreModalOverlay">
+  <div class="modal" id="restoreModal">
+    <div class="modal-head">
+      <span class="modal-title" id="restoreTitle">Restore Data</span>
+      <button class="modal-close" onclick="closeRestoreModal()">×</button>
+    </div>
+    <div class="modal-body" id="restoreBody"></div>
+    <div class="modal-footer" id="restoreFooter"></div>
   </div>
 </div>
 
@@ -2063,19 +2094,41 @@ document.getElementById('chartToggle').addEventListener('click',function(e){
   renderChart();
 });
 
+// ═══════════════════════════════════════════
 // Backup / Restore
+// ═══════════════════════════════════════════
+// Format JSON backup : { format, version, exportedAt, storageKey, summary, customers:[{id,name,generalNote?,periods:[...]}] }
+// Restore menerima   : (a) envelope versi ini, (b) envelope/format lama dengan "bills"+"status" (debt/cash),
+//                      (c) array pelanggan mentah (backup versi aplikasi sebelumnya), (d) CSV (kolom dibaca berdasarkan nama header).
+// Alur restore       : baca -> validasi SELURUH data -> pratinjau & konfirmasi (Gabungkan / Ganti Semua) -> simpan.
+//                      Jika validasi atau penyimpanan gagal, data yang sudah ada tidak diubah.
+const BACKUP_FORMAT='MikasaWirelessLedger';
+const BACKUP_VERSION=2;
+const PRE_RESTORE_KEY='mikasa-wifi-customers-prerestore';
+const MAX_RESTORE_BYTES=15*1024*1024;
+const CSV_HEADER=['Nama','Tanggal','Nominal','Status','Catatan','ID Pelanggan','ID Periode','Dibuat','Nominal Tagihan','Nominal Dibayar','Catatan Pelanggan'];
+let pendingRestore=null;
+
+class RestoreError extends Error{}
+
 function backupJSON(){
-  const blob=new Blob([JSON.stringify(customers,null,2)],{type:'application/json'});
+  const payload={
+    format:BACKUP_FORMAT,version:BACKUP_VERSION,exportedAt:new Date().toISOString(),storageKey:STORAGE_KEY,
+    summary:{customers:customers.length,periods:customers.reduce((s,c)=>s+getAllPeriods(c).length,0)},
+    customers:customers
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   downloadBlob(blob,'mikasa-wifi-backup-'+todayStr()+'.json');
 }
+function csvCell(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}
 function backupCSV(){
-  let csv='Nama,Tanggal,Nominal,Status,Catatan\n';
+  const rows=[CSV_HEADER.map(csvCell).join(',')];
   customers.forEach(c=>{
     getAllPeriods(c).forEach(p=>{
-      csv+='"'+c.name+'","'+p.startDate+'","'+(p.amount||p.paidAmount)+'","'+(p.paid?'Lunas':'Utang')+'","'+(p.note||'')+'"\n';
+      rows.push([c.name,p.startDate,(p.amount||p.paidAmount||0),p.paid?'Lunas':'Utang',p.note||'',c.id,p.id,p.createdAt||'',p.amount||0,p.paidAmount||0,c.generalNote||''].map(csvCell).join(','));
     });
   });
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const blob=new Blob(['﻿'+rows.join('\r\n')+'\r\n'],{type:'text/csv;charset=utf-8'});
   downloadBlob(blob,'mikasa-wifi-backup-'+todayStr()+'.csv');
 }
 function downloadBlob(blob,name){
@@ -2088,42 +2141,344 @@ function downloadBlob(blob,name){
   dl.href=url;dl.download=name;note.style.display='block';
   setTimeout(()=>note.style.display='none',8000);
 }
+
+// ── Pembersih & validator nilai ──────────────
+function rsPad(n){return String(n).padStart(2,'0');}
+function rsDate(v){
+  if(typeof v!=='string')return null;
+  const s=v.trim();let m,y,mo,d;
+  if((m=s.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})(?:[T\s].*)?$/))){y=+m[1];mo=+m[2];d=+m[3];}
+  else if((m=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})$/))){d=+m[1];mo=+m[2];y=+m[3];}
+  else return null;
+  const dt=new Date(Date.UTC(y,mo-1,d));
+  if(dt.getUTCFullYear()!==y||dt.getUTCMonth()!==mo-1||dt.getUTCDate()!==d||y<1990||y>2200)return null;
+  return y+'-'+rsPad(mo)+'-'+rsPad(d);
+}
+function rsAmount(v){
+  if(typeof v==='number')return(isFinite(v)&&v>=0&&v<=1e12)?Math.round(v):null;
+  if(typeof v!=='string')return null;
+  const s=v.replace(/rp/ig,'').replace(/\s/g,'');
+  if(/^\d+$/.test(s))return parseInt(s,10);
+  if(/^\d{1,3}([.,]\d{3})+$/.test(s))return parseInt(s.replace(/[.,]/g,''),10);
+  if(/^\d+[.,]\d{1,2}$/.test(s))return Math.round(parseFloat(s.replace(',','.')));
+  return null;
+}
+function rsStatus(v){
+  if(typeof v!=='string')return null;
+  const s=v.trim().toLowerCase();
+  if(['lunas','cash','paid','tunai','lunas/cash','bayar cash'].indexOf(s)>=0)return 'paid';
+  if(['utang','hutang','debt','unpaid','belum lunas','belum bayar'].indexOf(s)>=0)return 'debt';
+  return null;
+}
+function rsBool(v){
+  if(v===true||v===1||v==='true'||v==='1')return true;
+  if(v===false||v===0||v==='false'||v==='0'||v===''||v==null)return false;
+  return null;
+}
+function rsCreated(v){
+  let t=null;
+  if(typeof v==='number'&&isFinite(v))t=v;
+  else if(typeof v==='string'&&v.trim()){const n=Date.parse(v);if(!isNaN(n))t=n;}
+  const d=t===null?new Date():new Date(t);
+  return isNaN(d.getTime())?new Date().toISOString():d.toISOString();
+}
+function rsId(v,used,prefix,report,label){
+  const s=(typeof v==='string'||typeof v==='number')?String(v):'';
+  if(s&&/^[A-Za-z0-9_-]{1,64}$/.test(s)){
+    if(!used.has(s)){used.add(s);return s;}
+    report.warn(label+': ID ganda di dalam file, dibuatkan ID baru');
+  }else if(s){report.warn(label+': ID berisi karakter tidak aman, dibuatkan ID baru');}
+  let id;
+  do{id=prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}while(used.has(id));
+  used.add(id);return id;
+}
+function rsReport(){
+  return{errors:[],warnings:new Map(),
+    err(m){if(this.errors.length<200)this.errors.push(m);},
+    warn(m){this.warnings.set(m,(this.warnings.get(m)||0)+1);}};
+}
+
+// ── Normalisasi (format sekarang + format lama "bills") ──
+function rsNormalize(rawList,report){
+  const out=[],usedC=new Set(),usedP=new Set();
+  rawList.forEach((c,ci)=>{
+    const label='Pelanggan #'+(ci+1);
+    if(!c||typeof c!=='object'||Array.isArray(c)){report.err(label+': bukan data pelanggan yang valid.');return;}
+    const name=typeof c.name==='string'?c.name.trim():(typeof c.name==='number'?String(c.name):'');
+    if(!name){report.err(label+': nama pelanggan kosong.');return;}
+    const L=label+' "'+name.slice(0,30)+'"';
+    const rawP=Array.isArray(c.periods)?c.periods:(Array.isArray(c.bills)?c.bills:null);
+    if(!rawP){report.err(L+': daftar periode ("periods" atau "bills") tidak ditemukan.');return;}
+    const periods=[];
+    rawP.forEach((p,pi)=>{
+      const PL=L+', periode #'+(pi+1)+(p&&p._line?' (baris CSV '+p._line+')':'');
+      if(!p||typeof p!=='object'||Array.isArray(p)){report.err(PL+': data periode tidak valid.');return;}
+      const rawDate=p.startDate!==undefined?p.startDate:(p.period!==undefined?p.period:p.date);
+      const date=rsDate(rawDate);
+      if(!date){report.err(PL+': tanggal tidak valid ('+JSON.stringify(rawDate===undefined?null:rawDate)+').');return;}
+      let amount,paidAmount,paid;
+      if(typeof p.status==='string'&&p.paid===undefined){
+        const st=rsStatus(p.status);
+        if(!st){report.err(PL+': status "'+String(p.status).slice(0,20)+'" tidak dikenal (harus Lunas/Utang atau cash/debt).');return;}
+        const a=rsAmount(p.amount);
+        if(a===null){report.err(PL+': nominal tidak valid ('+JSON.stringify(p.amount)+').');return;}
+        if(st==='paid'){paid=true;amount=0;paidAmount=a;}else{paid=false;amount=a;paidAmount=0;}
+        if(a===0)report.warn('Periode bernominal Rp 0 dipertahankan apa adanya');
+      }else{
+        paid=rsBool(p.paid);
+        if(paid===null){report.err(PL+': status lunas ("paid") tidak valid.');return;}
+        amount=rsAmount(p.amount===undefined?0:p.amount);
+        paidAmount=rsAmount(p.paidAmount===undefined?0:p.paidAmount);
+        if(amount===null||paidAmount===null){report.err(PL+': nominal tidak valid (amount='+JSON.stringify(p.amount===undefined?null:p.amount)+', paidAmount='+JSON.stringify(p.paidAmount===undefined?null:p.paidAmount)+').');return;}
+        if(paid&&paidAmount===0&&amount>0){paidAmount=amount;report.warn('Periode lunas tanpa nominal bayar dilengkapi dari nominal tagihan');}
+        if(amount===0&&paidAmount===0)report.warn('Periode bernominal Rp 0 dipertahankan apa adanya');
+      }
+      periods.push({
+        id:rsId(p.id,usedP,'per_',report,'Periode'),
+        startDate:date,amount:amount,paid:paid,paidAmount:paidAmount,
+        note:p.note==null?'':String(p.note),
+        createdAt:rsCreated(p.createdAt)
+      });
+    });
+    if(rawP.length===0)report.warn('Pelanggan tanpa periode tetap dipulihkan');
+    const cust={id:rsId(c.id,usedC,'cust_',report,'Pelanggan'),name:name,periods:periods};
+    const gn=c.generalNote!==undefined?c.generalNote:c.note;
+    if(typeof gn==='string'&&gn.trim())cust.generalNote=gn.trim();
+    out.push(cust);
+  });
+  return out;
+}
+
+// ── Parser CSV (kutip ganda, CRLF, baris baru dalam sel, ; atau ,) ──
+function rsParseCSV(text,delim){
+  const rows=[];let row=[],cur='',q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){
+      if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}
+      else cur+=ch;
+    }else if(ch==='"'){q=true;}
+    else if(ch===delim){row.push(cur);cur='';}
+    else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cur);cur='';rows.push(row);row=[];}
+    else cur+=ch;
+  }
+  if(q)throw new RestoreError('File CSV rusak: ada tanda kutip (") yang tidak ditutup.');
+  if(cur!==''||row.length){row.push(cur);rows.push(row);}
+  return rows.filter(r=>r.some(c=>String(c).trim()!==''));
+}
+function rsCSVToRaw(text,report){
+  const firstLine=text.split(/\r\n|\n|\r/)[0]||'';
+  const delim=(firstLine.split(';').length>firstLine.split(',').length)?';':',';
+  const rows=rsParseCSV(text,delim);
+  if(rows.length<2)throw new RestoreError('File CSV tidak berisi data (hanya header atau kosong).');
+  const keymap={nama:'name',name:'name',pelanggan:'name',namapelanggan:'name',
+    tanggal:'date',tanggalmulai:'date',startdate:'date',date:'date',periode:'date',period:'date',
+    nominal:'amount',jumlah:'amount',amount:'amount',status:'status',
+    catatan:'note',note:'note',keterangan:'note',
+    idpelanggan:'cid',customerid:'cid',idperiode:'pid',periodid:'pid',billid:'pid',
+    dibuat:'created',createdat:'created',nominaltagihan:'amt',nominaldibayar:'paidAmt',catatanpelanggan:'gnote'};
+  const idx={};
+  rows[0].forEach((h,i)=>{const k=keymap[String(h).replace(/^﻿/,'').toLowerCase().replace(/[^a-z]/g,'')];if(k&&idx[k]===undefined)idx[k]=i;});
+  const missing=[['name','Nama'],['date','Tanggal'],['amount','Nominal'],['status','Status']].filter(x=>idx[x[0]]===undefined).map(x=>x[1]);
+  if(missing.length)throw new RestoreError('Kolom wajib CSV tidak ditemukan: '+missing.join(', ')+'. Header yang terbaca: '+rows[0].map(h=>String(h).replace(/^﻿/,'')).join(' | ')+'.');
+  const hasSplit=idx.amt!==undefined&&idx.paidAmt!==undefined;
+  const groups=new Map();
+  rows.slice(1).forEach((r,ri)=>{
+    const line=ri+2;
+    const get=k=>(idx[k]===undefined||r[idx[k]]===undefined)?'':String(r[idx[k]]);
+    const name=get('name').trim();
+    if(!name){report.err('Baris CSV '+line+': nama pelanggan kosong.');return;}
+    const cid=get('cid').trim();
+    const key=cid?'id:'+cid:'n:'+name.toLowerCase();
+    if(!groups.has(key))groups.set(key,{id:cid||undefined,name:name,generalNote:get('gnote'),periods:[]});
+    const g=groups.get(key);
+    if(!g.generalNote&&get('gnote'))g.generalNote=get('gnote');
+    const base={_line:line,id:get('pid').trim()||undefined,period:get('date'),note:get('note'),createdAt:get('created')};
+    if(hasSplit){
+      const st=rsStatus(get('status'));
+      if(!st){report.err('Baris CSV '+line+': status "'+get('status').slice(0,20)+'" tidak dikenal (harus Lunas atau Utang).');return;}
+      g.periods.push(Object.assign(base,{startDate:undefined,amount:get('amt').trim()||'0',paidAmount:get('paidAmt').trim()||'0',paid:st==='paid'}));
+    }else{
+      let amt=get('amount').trim();
+      if(amt==='')amt='0';
+      g.periods.push(Object.assign(base,{amount:amt,status:get('status')}));
+    }
+  });
+  return Array.from(groups.values());
+}
+
+// ── Baca file → hasil tervalidasi (tidak menyentuh data aplikasi) ──
+function rsParseFile(text,fileName){
+  text=String(text||'').replace(/^﻿/,'');
+  const trimmed=text.trim();
+  if(!trimmed)throw new RestoreError('File kosong.');
+  const report=rsReport();
+  const lower=String(fileName||'').toLowerCase();
+  let raw,source;
+  if(trimmed[0]==='{'||trimmed[0]==='['){
+    let data;
+    try{data=JSON.parse(trimmed);}
+    catch(e){const pm=String(e&&e.message).match(/position (\d+)/);throw new RestoreError('File JSON rusak atau terpotong, tidak bisa dibaca'+(pm?' (kesalahan di sekitar karakter ke-'+pm[1]+' dari '+trimmed.length+')':'')+'. Kemungkinan file tidak lengkap atau sudah diedit.');}
+    if(Array.isArray(data)){raw=data;source='JSON — daftar pelanggan (versi aplikasi sebelumnya)';}
+    else if(data&&typeof data==='object'){
+      if(data.format!==undefined&&data.format!==BACKUP_FORMAT)throw new RestoreError('File ini bukan backup Mikasa Wireless (format: "'+String(data.format).slice(0,40)+'").');
+      if(typeof data.version==='number'&&data.version>BACKUP_VERSION)throw new RestoreError('Backup dibuat oleh versi aplikasi yang lebih baru (versi '+data.version+'). Perbarui aplikasi terlebih dahulu.');
+      if(!Array.isArray(data.customers))throw new RestoreError('Data pelanggan ("customers") tidak ditemukan di dalam file JSON.');
+      raw=data.customers;
+      const legacy=raw.some(c=>c&&typeof c==='object'&&!Array.isArray(c.periods)&&Array.isArray(c.bills));
+      source='JSON — '+(data.format||'tanpa label')+' v'+(data.version===undefined?'?':data.version)+(legacy?' (format lama, dikonversi otomatis)':'');
+      if(data.exportedAt)source+=', dibuat '+String(data.exportedAt).slice(0,10);
+      if(data.summary&&typeof data.summary.customers==='number'&&data.summary.customers!==raw.length)
+        throw new RestoreError('Isi backup tidak lengkap: ringkasan menyebut '+data.summary.customers+' pelanggan tetapi file hanya berisi '+raw.length+'.');
+    }else throw new RestoreError('Struktur JSON tidak dikenali.');
+  }else if(/\.csv$/.test(lower)||/(^|[,;"\s])(nama|name)\s*["]?\s*[,;]/i.test(trimmed.split(/\r?\n/)[0]||'')){
+    raw=rsCSVToRaw(text,report);source='CSV';
+  }else{
+    throw new RestoreError('Format file tidak dikenali. Gunakan file .json atau .csv hasil Backup aplikasi ini.');
+  }
+  if(raw.length===0)throw new RestoreError('File tidak berisi data pelanggan.');
+  const list=rsNormalize(raw,report);
+  return{report:report,customers:list,source:source};
+}
+
+// ── Ringkasan & penggabungan ──────────────────
+function rsStats(list){
+  let periods=0,unpaid=0,paid=0,debt=0,paidSum=0;
+  list.forEach(c=>getAllPeriods(c).forEach(p=>{periods++;if(p.paid){paid++;paidSum+=(p.paidAmount||p.amount);}else{unpaid++;debt+=p.amount;}}));
+  return{customers:list.length,periods:periods,unpaid:unpaid,paid:paid,debt:debt,paidSum:paidSum};
+}
+function rsSig(p){return [p.startDate,p.amount,p.paid?1:0,p.paidAmount,p.note||''].join('|');}
+function rsMerge(existing,incoming){
+  const base=JSON.parse(JSON.stringify(existing));
+  const byId=new Map(),byName=new Map(),usedP=new Set(),usedC=new Set();
+  base.forEach(c=>{usedC.add(c.id);if(!byId.has(c.id))byId.set(c.id,c);const k=String(c.name).trim().toLowerCase();if(!byName.has(k))byName.set(k,c);getAllPeriods(c).forEach(p=>usedP.add(p.id));});
+  const res={result:base,newCustomers:0,matchedCustomers:0,addedPeriods:0,skippedPeriods:0};
+  const freshId=(set,prefix)=>{let id;do{id=prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}while(set.has(id));set.add(id);return id;};
+  incoming.forEach(ic=>{
+    const target=byId.get(ic.id)||byName.get(String(ic.name).trim().toLowerCase());
+    if(!target){
+      const nc=JSON.parse(JSON.stringify(ic));
+      if(usedC.has(nc.id))nc.id=freshId(usedC,'cust_');else usedC.add(nc.id);
+      nc.periods.forEach(p=>{if(usedP.has(p.id))p.id=freshId(usedP,'per_');else usedP.add(p.id);});
+      base.push(nc);byId.set(nc.id,nc);byName.set(String(nc.name).trim().toLowerCase(),nc);
+      res.newCustomers++;res.addedPeriods+=nc.periods.length;return;
+    }
+    res.matchedCustomers++;
+    if(!target.periods)target.periods=[];
+    const ids=new Map(target.periods.map(p=>[p.id,p]));
+    const sigs=new Map();
+    target.periods.forEach(p=>{const s=rsSig(p);sigs.set(s,(sigs.get(s)||0)+1);});
+    ic.periods.forEach(p=>{
+      const s=rsSig(p);
+      if(ids.has(p.id)){const es=rsSig(ids.get(p.id));if((sigs.get(es)||0)>0)sigs.set(es,sigs.get(es)-1);res.skippedPeriods++;return;}
+      if((sigs.get(s)||0)>0){sigs.set(s,sigs.get(s)-1);res.skippedPeriods++;return;}
+      const np=JSON.parse(JSON.stringify(p));
+      if(usedP.has(np.id))np.id=freshId(usedP,'per_');else usedP.add(np.id);
+      target.periods.push(np);res.addedPeriods++;
+    });
+    if(!target.generalNote&&ic.generalNote)target.generalNote=ic.generalNote;
+  });
+  return res;
+}
+
+// ── Modal restore ─────────────────────────────
+function rsMoney(n){return formatRp(n);}
+function rsOpenModal(title,bodyHtml,footerHtml){
+  document.getElementById('restoreTitle').textContent=title;
+  document.getElementById('restoreBody').innerHTML=bodyHtml;
+  document.getElementById('restoreFooter').innerHTML=footerHtml;
+  document.getElementById('restoreModalOverlay').classList.add('show');
+}
+function closeRestoreModal(){
+  pendingRestore=null;
+  document.getElementById('restoreModalOverlay').classList.remove('show');
+}
+function showRestoreError(fileName,errors,source){
+  pendingRestore=null;
+  const shown=errors.slice(0,8);
+  const more=errors.length>shown.length?'<li>… dan '+(errors.length-shown.length)+' masalah lain.</li>':'';
+  rsOpenModal('⚠ Restore Dibatalkan',
+    '<div class="restore-error"><strong>File "'+esc(fileName||'')+'" tidak bisa dipulihkan.</strong>'+(source?'<div class="restore-sub">'+esc(source)+'</div>':'')+
+    '<ul class="restore-list">'+shown.map(e=>'<li>'+esc(e)+'</li>').join('')+more+'</ul></div>'+
+    '<p class="restore-note">✓ Data pelanggan Anda yang sekarang <strong>tidak diubah sedikit pun</strong>. Perbaiki file lalu coba lagi, atau gunakan file hasil Backup JSON dari aplikasi ini.</p>',
+    '<button class="btn-cancel" onclick="closeRestoreModal()">Tutup</button>');
+}
+function showRestorePreview(fileName,res){
+  const cur=rsStats(customers),inc=rsStats(res.customers);
+  const hasExisting=customers.length>0;
+  const plan=hasExisting?rsMerge(customers,res.customers):null;
+  pendingRestore={customers:res.customers,fileName:fileName};
+  const warns=Array.from(res.report.warnings.entries()).slice(0,5).map(w=>'<li>'+esc(w[0])+(w[1]>1?' (×'+w[1]+')':'')+'</li>').join('');
+  const row=(l,v)=>'<div class="detail-period-row"><span class="detail-period-label">'+l+'</span><span class="detail-period-value">'+v+'</span></div>';
+  let body='<div class="detail-period-info">'+
+    row('File',esc(fileName))+row('Format',esc(res.source))+
+    row('Isi file',inc.customers+' pelanggan · '+inc.periods+' periode')+
+    row('Belum lunas',inc.unpaid+' periode · '+rsMoney(inc.debt))+
+    row('Lunas / cash',inc.paid+' periode · '+rsMoney(inc.paidSum))+'</div>';
+  if(hasExisting){
+    body+='<div class="detail-period-info">'+row('Data sekarang',cur.customers+' pelanggan · '+cur.periods+' periode')+
+      row('Total utang sekarang',rsMoney(cur.debt))+'</div>'+
+      '<p class="restore-note"><strong>Gabungkan</strong> — data sekarang tetap, ditambah <strong>'+plan.newCustomers+' pelanggan baru</strong> dan <strong>'+plan.addedPeriods+' periode baru</strong>; '+plan.skippedPeriods+' periode yang sudah ada dilewati (tidak diduplikasi).</p>'+
+      '<div class="restore-error"><strong>Ganti Semua</strong> menghapus '+cur.customers+' pelanggan yang ada sekarang dan menggantinya dengan isi file. Tindakan ini tidak bisa dibatalkan — lakukan Backup JSON dulu bila perlu.</div>';
+  }else{
+    body+='<p class="restore-note">Belum ada data di aplikasi — seluruh isi file akan dipulihkan.</p>';
+  }
+  if(warns)body+='<div class="reminder-banner" style="margin-top:10px"><span class="rem-icon">ℹ️</span><ul class="restore-list">'+warns+'</ul></div>';
+  const footer=hasExisting
+    ?'<button class="btn-cancel" onclick="closeRestoreModal()">Batal</button><button class="btn-save" onclick="applyRestore(\'merge\')">Gabungkan</button><button class="btn-danger" onclick="applyRestore(\'replace\')">Ganti Semua</button>'
+    :'<button class="btn-cancel" onclick="closeRestoreModal()">Batal</button><button class="btn-save" onclick="applyRestore(\'replace\')">Pulihkan Data</button>';
+  rsOpenModal('Restore Data',body,footer);
+}
+function applyRestore(mode){
+  const p=pendingRestore;
+  if(!p)return;
+  const old=customers;
+  let next,msg;
+  if(mode==='merge'){
+    const m=rsMerge(old,p.customers);
+    next=m.result;
+    msg='Data digabungkan: +'+m.newCustomers+' pelanggan, +'+m.addedPeriods+' periode, '+m.skippedPeriods+' dilewati (sudah ada).';
+  }else{
+    if(old.length>0&&!confirm('Yakin mengganti SEMUA data ('+old.length+' pelanggan) dengan isi file "'+p.fileName+'"?\n\nTindakan ini tidak bisa dibatalkan.'))return;
+    next=p.customers;
+    msg='Data dipulihkan: '+next.length+' pelanggan, '+rsStats(next).periods+' periode.';
+  }
+  try{
+    const json=JSON.stringify(next);
+    const prev=localStorage.getItem(STORAGE_KEY);
+    if(prev!==null){try{localStorage.setItem(PRE_RESTORE_KEY,JSON.stringify({savedAt:new Date().toISOString(),data:prev}));}catch(e){}}
+    localStorage.setItem(STORAGE_KEY,json);
+    if(localStorage.getItem(STORAGE_KEY)!==json)throw new Error('data tersimpan tidak sama dengan yang ditulis');
+  }catch(err){
+    customers=old;
+    try{const k=localStorage.getItem(STORAGE_KEY);if(k!==null&&JSON.stringify(old)!==k){localStorage.setItem(STORAGE_KEY,JSON.stringify(old));}}catch(e2){}
+    showRestoreError(p.fileName,['Penyimpanan ke perangkat gagal ('+(err&&err.message?err.message:'penyimpanan penuh atau diblokir')+'). Data lama Anda tetap utuh dan tidak berubah.']);
+    return;
+  }
+  customers=next;
+  closeRestoreModal();
+  renderAll();
+  showToast(msg,'success');
+}
 function restoreData(ev){
-  const file=ev.target.files[0];if(!file)return;
+  const input=ev.target;
+  const file=input.files&&input.files[0];if(!file)return;
+  const done=()=>{try{input.value='';}catch(e){}};
+  if(file.size===0){showRestoreError(file.name,['File kosong (0 byte).']);done();return;}
+  if(file.size>MAX_RESTORE_BYTES){showRestoreError(file.name,['File terlalu besar (maksimum 15 MB).']);done();return;}
   const reader=new FileReader();
   reader.onload=function(e){
     try{
-      if(file.name.endsWith('.json')){
-        const data=JSON.parse(e.target.result);
-        if(Array.isArray(data)){customers=data;saveToStorage();renderAll();showToast('Data JSON dipulihkan ('+data.length+' pelanggan).','success');}
-        else showToast('Format JSON tidak valid.','error');
-      }else if(file.name.endsWith('.csv')){
-        parseCSVRestore(e.target.result);
-      }else showToast('File tidak dikenali.','error');
-    }catch(err){showToast('Gagal memproses file: '+err.message,'error');}
+      const res=rsParseFile(e.target.result,file.name);
+      if(res.report.errors.length)showRestoreError(file.name,res.report.errors,res.source);
+      else showRestorePreview(file.name,res);
+    }catch(err){
+      showRestoreError(file.name,[err instanceof RestoreError?err.message:'Kesalahan tak terduga saat membaca file: '+(err&&err.message?err.message:err)]);
+    }
+    done();
   };
+  reader.onerror=function(){showRestoreError(file.name,['File tidak bisa dibaca (izin ditolak atau file bermasalah).']);done();};
   reader.readAsText(file);
-  ev.target.value='';
-}
-function parseCSVRestore(text){
-  const lines=text.split('\n').filter(l=>l.trim());
-  if(lines.length<2){showToast('CSV kosong.','error');return;}
-  const restored={};
-  for(let i=1;i<lines.length;i++){
-    const cols=parseCSVLine(lines[i]);
-    if(cols.length<4)continue;
-    const[name,date,amount,status,note]=cols;
-    if(!restored[name]){restored[name]={id:generateId(),name:name,periods:[]};}
-    restored[name].periods.push({
-      id:'per_'+Date.now()+'_'+i,startDate:date,
-      amount:status==='Utang'?parseInt(amount)||0:0,
-      paid:status==='Lunas',paidAmount:status==='Lunas'?parseInt(amount)||0:0,
-      note:note||'',createdAt:new Date().toISOString()
-    });
-  }
-  customers=Object.values(restored);
-  saveToStorage();renderAll();
-  showToast('Data CSV dipulihkan ('+customers.length+' pelanggan).','success');
 }
 function parseCSVLine(line){
   const result=[];let current='';let inQuotes=false;
