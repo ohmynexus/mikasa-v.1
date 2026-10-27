@@ -530,11 +530,13 @@ body{background:radial-gradient(ellipse at 15% 0%,#241039 0%,transparent 37%),ra
   <div class="formquote"><div class="orb">✦</div><div>“Setiap catatan yang rapi membuat sistem lebih kuat.”<br><b>— SYSTEM MESSAGE —</b></div></div>
   <form id="billForm">
    <label for="customerName">♙ Nama Pelanggan</label><input id="customerName" required maxlength="90" placeholder="Nama pelanggan">
+   <div id="billingFields">
    <label>Mode Pencatatan</label><div class="mode-row"><button type="button" class="mode-btn active" data-mode="debt">🔴 Catat Utang (Belum Bayar)</button><button type="button" class="mode-btn" data-mode="cash">💵 Bayar Cash (Lunas)</button></div>
    <label for="billAmount">▣ Jumlah Utang (Nominal)</label><input id="billAmount" type="number" inputmode="numeric" min="0" step="1000" required placeholder="Nominal dalam rupiah">
    <div class="quick"><button type="button" data-amount="50000">50rb</button><button type="button" data-amount="100000">100rb</button><button type="button" data-amount="150000">150rb</button><button type="button" data-amount="200000">200rb</button><button type="button" data-amount="1000000">1jt</button></div>
    <label for="billDate">▦ Tanggal Mulai Periode</label><input id="billDate" type="date" required>
    <label for="billNote">▤ Catatan Tambahan</label><textarea id="billNote" maxlength="500" placeholder="Opsional"></textarea>
+   </div>
    <div class="form-actions"><button type="button" class="quiet" data-close="formModal">Batal</button><button class="primary" type="submit">＋ Simpan</button></div>
   </form>
  </div>
@@ -711,9 +713,15 @@ function render(){
 function openForm({customerId=null,billId=null,mode='debt'}={}){
  formContext={customerId,billId,mode};
  const c=customers.find(x=>x.id===customerId),bill=c?.bills.find(x=>x.id===billId);
- $('formTitle').textContent=billId?'Edit Periode':customerId?'Tambah Utang / Cash':'Tambah Pelanggan';
+ $('formTitle').textContent=formContext.mode==='rename'?'Edit Nama Pelanggan':billId?'Edit Periode':customerId?'Tambah Utang / Cash':'Tambah Pelanggan';
+ $('billingFields').hidden=formContext.mode==='rename';
  $('customerName').value=c?.name||'';
- $('customerName').disabled=!!billId;
+ // Nama tetap dapat dikoreksi saat mengedit periode.
+ $('customerName').disabled=false;
+ $('customerName').readOnly=false;
+ $('customerName').setAttribute('aria-label',formContext.mode==='rename'?'Nama pelanggan baru':'Nama pelanggan');
+ $('billAmount').required=formContext.mode!=='rename';
+ $('billDate').required=formContext.mode!=='rename';
  $('billAmount').value=bill?bill.amount:'';
  $('billDate').value=bill?.period||dateLocal();
  $('billNote').value=bill?.note||'';
@@ -734,11 +742,23 @@ function addBill(c,bill){c.bills.push(bill);selectedBill[c.id]=bill.id}
 function saveForm(ev){
  ev.preventDefault();
  const name=$('customerName').value.trim(),amount=Number($('billAmount').value),period=$('billDate').value,note=$('billNote').value.trim();
+ if(formContext.mode==='rename'){
+  const c=findCustomer(formContext.customerId);if(!c)return;
+  if(!name){alert('Nama pelanggan tidak boleh kosong.');$('customerName').focus();return}
+  if(name.length>90){alert('Nama maksimal 90 karakter.');$('customerName').focus();return}
+  const duplicate=customers.some(x=>x.id!==c.id&&x.name.trim().toLocaleLowerCase('id-ID')===name.toLocaleLowerCase('id-ID'));
+  if(duplicate){alert('Nama tersebut sudah digunakan pelanggan lain. Gunakan nama yang berbeda.');$('customerName').focus();return}
+  c.name=name;persist();closeModal('formModal');render();return;
+ }
  if(!name||!period||!Number.isFinite(amount)||amount<0){alert('Lengkapi nama, nominal, dan tanggal yang valid.');return}
+ if(name.length>90){alert('Nama maksimal 90 karakter.');$('customerName').focus();return}
  let c,bill;
  if(formContext.billId){
   c=findCustomer(formContext.customerId);bill=c?.bills.find(x=>x.id===formContext.billId);if(!c||!bill)return;
-  bill.period=period;bill.amount=amount;bill.note=note;bill.status=formContext.mode==='cash'?'cash':'debt';
+  const duplicateName=customers.some(x=>x.id!==c.id&&x.name.trim().toLocaleLowerCase('id-ID')===name.toLocaleLowerCase('id-ID'));
+  if(duplicateName){alert('Nama tersebut sudah digunakan pelanggan lain. Gunakan nama yang berbeda.');$('customerName').focus();return}
+  // Koreksi identitas pelanggan dan nominal pada periode yang dipilih saja.
+  c.name=name;bill.period=period;bill.amount=amount;bill.note=note;bill.status=formContext.mode==='cash'?'cash':'debt';
  }else{
   c=formContext.customerId?findCustomer(formContext.customerId):mergeOrCreate(name);
   if(!c){alert('Pelanggan tidak ditemukan.');return}
@@ -761,14 +781,11 @@ function removeBill(customerId,billId){
 }
 function renameCustomer(id){
  const c=findCustomer(id);if(!c)return;
- const entered=prompt('Ubah nama pelanggan:',c.name);
- if(entered===null)return;
- const name=entered.trim();
- if(!name){alert('Nama pelanggan tidak boleh kosong.');return}
- if(name.length>90){alert('Nama maksimal 90 karakter.');return}
- const duplicate=customers.some(x=>x.id!==id&&x.name.trim().toLocaleLowerCase('id-ID')===name.toLocaleLowerCase('id-ID'));
- if(duplicate){alert('Nama tersebut sudah digunakan pelanggan lain. Gunakan nama yang berbeda.');return}
- c.name=name;persist();render();
+ // Tombol Edit pada kartu pelanggan membuka modal edit periode terakhir,
+ // sehingga nama dan nominal periode dapat dikoreksi dalam form asli.
+ const bill=latestBill(c);
+ if(bill){openForm({customerId:id,billId:bill.id});}
+ else{openForm({customerId:id,mode:'rename'});}
 }
 function removeCustomer(id){const c=findCustomer(id);if(!c)return;if(!confirm(`Hapus pelanggan ${c.name} beserta seluruh riwayatnya?`))return;customers=customers.filter(x=>x.id!==id);expanded.delete(id);delete selectedBill[id];persist();render()}
 function showBillModal(customerId,billId){
