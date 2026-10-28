@@ -3,262 +3,282 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b0910">
-<title>Utang WiFi Mikasa | Dashboard</title>
+<meta name="theme-color" content="#050b14">
+<title>MIKASA WIRELESS | Retention Flow</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/png" href="./assets/icon-192.png">
 <link rel="apple-touch-icon" href="./assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
-<script>try{var _t=localStorage.getItem('mikasa.theme');if(_t)document.documentElement.setAttribute('data-theme',_t)}catch(e){}</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-/* ============ THEME ENGINE: 4 TEMA ASLI ============ */
-:root,[data-theme="purple"]{
-  --bg:#0b0910;--side:#100c18;--card:#171221;--card2:#1d1730;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.15);
-  --acc1:#a78bfa;--acc2:#f472b6;--soft1:rgba(167,139,250,.15);--soft2:rgba(244,114,182,.12);
-  --text:#efeaf7;--muted:#9a8fb0;--inp:#100c18;--thead-fg:#a79bc0;--td:#d9d2e6;--btnfg:#1b1030;
-  --ok:#34d399;--warn:#fb7185;--shadow:0 14px 40px -18px rgba(0,0,0,.65);
-  --bw:1px;--bcol:var(--line);--rad:18px;--font-ui:'Plus Jakarta Sans';color-scheme:dark;
+:root{
+  --bg:#050b14;--bg2:#0a1220;--side:#070d18;--card:rgba(10,22,40,.65);--card2:rgba(15,30,55,.55);
+  --line:rgba(0,212,255,.15);--line2:rgba(0,212,255,.3);
+  --acc1:#00d4ff;--acc2:#00ffaa;--soft1:rgba(0,212,255,.12);--soft2:rgba(0,255,170,.12);
+  --text:#e8f4ff;--muted:#7a8ea6;--inp:rgba(5,11,20,.8);--btnfg:#050b14;
+  --ok:#00ffaa;--warn:#ff4757;--shadow:0 8px 32px rgba(0,0,0,.4);
+  --bw:1px;--bcol:var(--line);--rad:14px;--font-ui:'Inter',system-ui,sans-serif;color-scheme:dark;
 }
-[data-theme="midnight"]{
-  --bg:#080d16;--side:#0b1220;--card:#0f1622;--card2:#141d2e;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.15);
-  --acc1:#38bdf8;--acc2:#818cf8;--soft1:rgba(56,189,248,.14);--soft2:rgba(129,140,248,.13);
-  --text:#e6eef8;--muted:#8496ad;--inp:#0b1220;--thead-fg:#93a5bd;--td:#cfd9e6;--btnfg:#082032;
-  --ok:#34d399;--warn:#fb7185;--shadow:0 14px 40px -18px rgba(0,0,0,.65);
-  --bw:1px;--bcol:var(--line);--rad:18px;--font-ui:'Plus Jakarta Sans';color-scheme:dark;
-}
-[data-theme="light"]{
-  --bg:#f5f6f8;--side:#ffffff;--card:#ffffff;--card2:#f8fafc;--line:rgba(15,23,42,.09);--line2:rgba(15,23,42,.17);
-  --acc1:#e11d48;--acc2:#64748b;--soft1:rgba(225,29,72,.09);--soft2:rgba(100,116,139,.1);
-  --text:#0f172a;--muted:#64748b;--inp:#ffffff;--thead-fg:#64748b;--td:#334155;--btnfg:#ffffff;
-  --ok:#059669;--warn:#e11d48;--shadow:0 14px 40px -22px rgba(15,23,42,.28);
-  --bw:1px;--bcol:var(--line);--rad:18px;--font-ui:'Plus Jakarta Sans';color-scheme:light;
-}
-[data-theme="comic"]{
-  --bg:#fffbea;--side:#ffffff;--card:#ffffff;--card2:#fff8dc;--line:#141414;--line2:#141414;
-  --acc1:#f43f5e;--acc2:#facc15;--soft1:rgba(250,204,21,.25);--soft2:rgba(244,63,94,.12);
-  --text:#141414;--muted:#4b4b4b;--inp:#ffffff;--thead-fg:#141414;--td:#222;--btnfg:#141414;
-  --ok:#16a34a;--warn:#e11d48;--shadow:6px 6px 0 #141414;
-  --bw:2.5px;--bcol:#141414;--rad:12px;--font-ui:'Comic Neue';color-scheme:light;
-}
-/* ============ BASE ============ */
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font:400 14px/1.55 var(--font-ui),system-ui,sans-serif;min-height:100vh;
-  transition:background .4s,color .4s}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;
-  background:radial-gradient(55% 38% at 80% -8%,var(--soft1),transparent 70%),radial-gradient(40% 30% at 6% 108%,var(--soft2),transparent 70%)}
-[data-theme="comic"] body::before{background-image:radial-gradient(rgba(20,20,20,.1) 1.2px,transparent 1.2px);background-size:16px 16px}
+body{background:var(--bg);color:var(--text);font:400 14px/1.55 var(--font-ui);min-height:100vh;
+  background-image:radial-gradient(ellipse at top left,rgba(0,212,255,.08),transparent 50%),
+                   radial-gradient(ellipse at bottom right,rgba(0,255,170,.06),transparent 50%)}
 button{font-family:inherit}
-.app{display:flex;min-height:100vh;position:relative;z-index:1}
-/* ============ SIDEBAR ============ */
-.side{width:238px;flex:none;background:var(--side);border-right:var(--bw) solid var(--bcol);padding:20px 14px;
-  display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
-.slogo{display:flex;align-items:center;gap:11px;padding:2px 8px 18px}
-.logo{width:42px;height:42px;border-radius:13px;flex:none;background:var(--bg);border:var(--bw) solid var(--acc1);
-  display:grid;place-items:center;position:relative;box-shadow:0 0 16px -6px var(--acc1)}
-.logo svg{width:22px;height:22px;stroke:var(--acc1);fill:none;stroke-width:2;stroke-linecap:round}
-.slogo b{font-size:13px;font-weight:800;letter-spacing:.08em}
-.slogo small{display:block;font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
-.navi{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:11px 14px;border:none;border-radius:12px;
-  background:none;color:var(--muted);font:600 13px var(--font-ui);cursor:pointer;transition:.22s;position:relative}
-.navi svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.navi:hover{color:var(--text);background:var(--card2)}
-.navi.active{background:var(--soft1);color:var(--text)}
-.navi.active::before{content:'';position:absolute;left:2px;top:22%;bottom:22%;width:3px;border-radius:3px;background:var(--acc1)}
-.navi .bdg{margin-left:auto;padding:2px 8px;border-radius:999px;background:var(--soft1);color:var(--acc1);font:700 10px 'JetBrains Mono',monospace}
-.navi.add{background:var(--acc1);color:var(--btnfg);font-weight:800;justify-content:center;margin-top:8px;box-shadow:0 10px 24px -12px var(--acc1)}
-.navi.add:hover{filter:brightness(1.1);color:var(--btnfg)}
-.side-foot{margin-top:auto;padding:14px 8px 0;border-top:var(--bw) solid var(--bcol)}
-.themes{display:flex;gap:8px;margin-bottom:10px}
-.thdot{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:.2s;
-  background:linear-gradient(135deg,var(--d1),var(--d2))}
-.thdot:hover{transform:scale(1.15)}
-.thdot.active{border-color:var(--text);box-shadow:0 0 10px var(--d1)}
-.side-foot small{font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
-/* ============ MAIN ============ */
-.main{flex:1;min-width:0;padding:0 clamp(14px,3vw,30px) 90px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:22px 2px 6px}
-.greet h2{font-size:19px;font-weight:800}
-.greet p{font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+.app{display:flex;min-height:100vh}
+
+.side{width:72px;flex:none;background:var(--side);border-right:1px solid var(--line);padding:16px 0;
+  display:flex;flex-direction:column;align-items:center;gap:6px;position:sticky;top:0;height:100vh}
+.slogo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--acc1),var(--acc2));
+  display:grid;place-items:center;font:900 18px var(--font-ui);color:var(--bg);margin-bottom:16px;
+  box-shadow:0 0 20px rgba(0,212,255,.4)}
+.snav{width:44px;height:44px;border-radius:12px;border:none;background:transparent;color:var(--muted);
+  cursor:pointer;display:grid;place-items:center;transition:.2s;position:relative}
+.snav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.snav:hover{background:var(--card2);color:var(--text)}
+.snav.active{background:var(--soft1);color:var(--acc1);box-shadow:inset 0 0 0 1px var(--line2)}
+.snav .bdg{position:absolute;top:6px;right:6px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;
+  background:var(--acc1);color:var(--bg);font:700 9px 'JetBrains Mono',monospace;display:grid;place-items:center}
+.snav.add{background:linear-gradient(135deg,var(--acc1),var(--acc2));color:var(--bg);margin-top:auto}
+.snav.add:hover{filter:brightness(1.15)}
+.sfoot{font:700 8px var(--font-ui);letter-spacing:.15em;color:var(--muted);text-transform:uppercase;padding:12px 0}
+
+.main{flex:1;min-width:0;padding:24px 28px 100px}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.greet h1{font-size:32px;font-weight:900;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#fff 40%,var(--acc1));-webkit-background-clip:text;background-clip:text;color:transparent}
+.greet h1 span{color:var(--acc1)}
+.greet p{font-size:13px;color:var(--muted);margin-top:4px}
+.greet .tag{font-size:11px;color:var(--muted);margin-top:6px;max-width:420px;line-height:1.5}
 .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.sys-pill{display:flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;border:var(--bw) solid var(--bcol);
-  background:var(--card);font:700 10px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--ok)}
-.sys-pill i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 1.6s infinite}
+.mrr-card{min-width:220px;padding:14px 18px;border-radius:var(--rad);
+  background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(0,255,170,.08));
+  border:1px solid var(--line2);box-shadow:0 0 30px rgba(0,212,255,.15)}
+.mrr-card .l{font:700 10px var(--font-ui);letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.mrr-card .v{font:800 26px 'JetBrains Mono',monospace;color:#fff;margin-top:2px}
+.mrr-card .d{font:600 11px var(--font-ui);color:var(--ok);margin-top:2px}
+.sys-pill{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;
+  border:1px solid var(--line);background:var(--card);font:700 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--ok)}
+.sys-pill i{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 1.6s infinite}
 @keyframes pulse{50%{opacity:.35}}
-.clockchip{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:var(--bw) solid var(--bcol);
+.clockchip{padding:7px 14px;border-radius:999px;border:1px solid var(--line);
   background:var(--card);font:700 13px 'JetBrains Mono',monospace;color:var(--acc1)}
-/* ============ KPI ============ */
-.kpis{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(172px,1fr));margin:16px 0}
-.kpi{background:var(--card);border:var(--bw) solid var(--bcol);border-radius:var(--rad);padding:16px;position:relative;
-  overflow:hidden;box-shadow:var(--shadow);animation:fadeUp .5s both;animation-delay:var(--d,0s);transition:transform .25s}
-.kpi:hover{transform:translateY(-3px)}
-.kpi-lbl{font-size:9.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;font-weight:700}
-.kpi-ico{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:10px;background:var(--soft1);display:grid;place-items:center}
-.kpi-ico svg{width:15px;height:15px;stroke:var(--acc1);fill:none;stroke-width:2;stroke-linecap:round}
-.kpi-val{display:flex;align-items:baseline;gap:6px;margin-top:8px;font:700 23px 'JetBrains Mono',monospace;color:var(--text)}
-.kpi-val small{font:600 11px var(--font-ui);color:var(--muted)}
-.spark{width:100%;height:26px;margin-top:10px;display:block}
-/* ============ CARD & CHART ============ */
-.card{background:var(--card);border:var(--bw) solid var(--bcol);border-radius:var(--rad);padding:clamp(16px,2.2vw,22px);
-  margin-bottom:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.card h2{font-size:11.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:20px;
+  margin-bottom:16px;backdrop-filter:blur(10px);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--acc1),transparent)}
+.card h2{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px}
 .card h2 .mk{width:8px;height:8px;border-radius:2px;background:linear-gradient(135deg,var(--acc1),var(--acc2));flex:none}
 .note{font-size:11.5px;color:var(--muted);border-left:2px solid var(--acc1);padding-left:10px;margin-top:12px;line-height:1.6}
-.chart{width:100%}
-.chart svg{width:100%;height:auto;display:block}
-.charts-2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:16px}
-.chart-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:700}
-.chart-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px}
-.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-.donutsvg{max-width:160px;margin:0 auto}
-.cx{font:600 8px 'JetBrains Mono',monospace;fill:var(--muted)}
-.cv{font:700 8px 'JetBrains Mono',monospace;fill:var(--text)}
-.dv{font:700 15px 'JetBrains Mono',monospace;fill:var(--text)}
-.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.1s .1s cubic-bezier(.4,0,.2,1) forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-.grow{transform-box:fill-box;transform-origin:bottom;animation:grow .7s cubic-bezier(.2,.8,.2,1) both}
-@keyframes grow{from{transform:scaleY(0)}}
-.danim{animation:donut 1s cubic-bezier(.4,0,.2,1) both}
-@keyframes donut{from{stroke-dasharray:0 300}}
-.rangebtns{display:flex;gap:6px;margin-left:auto}
-.rbtn{padding:6px 12px;border-radius:999px;border:var(--bw) solid var(--bcol);background:var(--card2);color:var(--muted);
-  font:700 10px 'JetBrains Mono',monospace;cursor:pointer;transition:.2s}
-.rbtn.active{background:var(--soft1);color:var(--acc1);border-color:var(--acc1)}
-/* ============ INFO SISTEM ============ */
-.sysgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-.sysitem{padding:11px 13px;border-radius:12px;background:var(--card2);border:var(--bw) solid var(--bcol)}
-.sysitem .l{font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700}
-.sysitem .v{font:700 13px 'JetBrains Mono',monospace;color:var(--text);margin-top:3px}
-.sysitem .v.ok{color:var(--ok)} .sysitem .v.warn{color:var(--warn)}
-/* ============ PELANGGAN ============ */
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
-.chip{padding:7px 14px;border-radius:999px;border:var(--bw) solid var(--bcol);background:var(--card2);color:var(--muted);
-  font:700 11px var(--font-ui);cursor:pointer;transition:.2s}
-.chip.active{background:var(--soft1);color:var(--acc1);border-color:var(--acc1)}
-.cust{border:var(--bw) solid var(--bcol);border-radius:14px;background:var(--card2);margin-bottom:12px;overflow:hidden}
-.cust-head{display:flex;align-items:center;gap:12px;padding:13px 15px;flex-wrap:wrap;cursor:pointer;transition:background .15s}
+
+.chart-big{width:100%;height:220px}
+.chart-big svg{width:100%;height:100%;display:block}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:10px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.kpis{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:16px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:16px;
+  backdrop-filter:blur(10px);box-shadow:var(--shadow);transition:.25s}
+.kpi:hover{border-color:var(--line2);transform:translateY(-2px)}
+.kpi-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.kpi-ico{width:40px;height:40px;border-radius:12px;background:var(--soft1);border:1px solid var(--line2);
+  display:grid;place-items:center}
+.kpi-ico svg{width:20px;height:20px;stroke:var(--acc1);fill:none;stroke-width:1.8;stroke-linecap:round}
+.kpi-lbl{font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700}
+.kpi-val{font:800 28px 'JetBrains Mono',monospace;color:#fff;margin-top:4px}
+.kpi-val small{font:600 12px var(--font-ui);color:var(--muted);margin-left:4px}
+.kpi-delta{font:700 11px var(--font-ui);color:var(--ok);margin-top:4px}
+.kpi-delta.down{color:var(--warn)}
+.spark{width:100%;height:32px;margin-top:8px;display:block}
+
+.grid2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:16px 0}
+
+.donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.donutsvg{width:180px;height:180px;flex:none}
+.donut-info .big{font:800 36px 'JetBrains Mono',monospace;color:#fff}
+.donut-info .big small{font:600 14px var(--font-ui);color:var(--muted);display:block;margin-top:2px}
+.donut-info .row{display:flex;align-items:center;gap:8px;margin-top:8px;font:600 12px var(--font-ui)}
+.donut-info .row .sw{width:12px;height:12px;border-radius:3px}
+.donut-info .row .v{font:700 14px 'JetBrains Mono',monospace;color:var(--text);margin-left:auto}
+
+.driver{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.driver:last-child{border-bottom:none}
+.driver-ico{width:36px;height:36px;border-radius:10px;background:var(--soft1);border:1px solid var(--line2);
+  display:grid;place-items:center;flex:none}
+.driver-ico svg{width:18px;height:18px;stroke:var(--acc1);fill:none;stroke-width:1.8;stroke-linecap:round}
+.driver-info{flex:1;min-width:0}
+.driver-info .n{font:700 12px var(--font-ui);color:var(--text);margin-bottom:5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.driver-bar{height:6px;border-radius:3px;background:var(--card2);overflow:hidden}
+.driver-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc1),var(--acc2));border-radius:3px;
+  transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.driver-val{font:700 13px 'JetBrains Mono',monospace;color:var(--acc1);min-width:80px;text-align:right}
+
+.insight{background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(0,255,170,.05));
+  border:1px solid var(--line2);border-radius:var(--rad);padding:20px;display:flex;align-items:center;gap:20px;
+  flex-wrap:wrap;margin:16px 0}
+.insight-ico{width:80px;height:80px;flex:none;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--acc1),var(--acc2));border-radius:16px;
+  box-shadow:0 0 30px rgba(0,212,255,.4)}
+.insight-ico svg{width:44px;height:44px;stroke:var(--bg);fill:none;stroke-width:2;stroke-linecap:round}
+.insight-txt h3{font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--acc1);margin-bottom:6px}
+.insight-txt p{font-size:13px;color:var(--muted);line-height:1.6;max-width:500px}
+.insight-btn{margin-left:auto;padding:10px 18px;border-radius:10px;border:1px solid var(--line2);
+  background:var(--card2);color:var(--acc1);font:700 11px var(--font-ui);letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;transition:.2s}
+.insight-btn:hover{background:var(--soft1)}
+
+.filterbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chips,.sortbtns,.rangebtns{display:flex;gap:6px;flex-wrap:wrap}
+.chip,.sbtn,.rbtn{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card2);color:var(--muted);
+  font:700 10.5px var(--font-ui);cursor:pointer;transition:.2s;text-transform:uppercase;letter-spacing:.04em}
+.chip.active,.sbtn.active,.rbtn.active{background:var(--soft1);color:var(--acc1);border-color:var(--line2);
+  box-shadow:0 0 12px rgba(0,212,255,.2)}
+.sbtn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;vertical-align:-2px;margin-right:3px}
+.sortbtns{margin-left:auto}
+.searchwrap{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);
+  border-radius:12px;background:var(--inp);margin-bottom:12px;transition:.2s}
+.searchwrap:focus-within{border-color:var(--acc1);box-shadow:0 0 0 3px var(--soft1)}
+.searchwrap svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;flex:none}
+.searchwrap input{border:none;background:transparent;box-shadow:none!important;padding:0;width:100%;
+  font:500 13px var(--font-ui);color:var(--text)}
+.searchwrap input:focus{outline:none;box-shadow:none!important}
+.searchwrap .clr{border:none;background:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 4px}
+
+.cust{border:1px solid var(--line);border-radius:13px;background:var(--card2);margin-bottom:10px;overflow:hidden;
+  backdrop-filter:blur(6px)}
+.cust-head{display:flex;align-items:center;gap:12px;padding:13px 15px;flex-wrap:wrap;cursor:pointer;transition:.15s}
 .cust-head:hover{background:var(--soft1)}
-.cav{width:40px;height:40px;border-radius:12px;flex:none;display:grid;place-items:center;background:var(--soft1);
-  font:800 15px var(--font-ui);color:var(--acc1)}
-.cust-head b{font-size:14px}
-.cust-head .sub{font-size:11px;color:var(--muted)}
-.cust-head .amt{margin-left:auto;font:700 14px 'JetBrains Mono',monospace;color:var(--warn)}
+.cav{width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--acc1),var(--acc2));color:var(--bg);font:900 15px var(--font-ui)}
+.cust-head b{font-size:14px;font-weight:700;color:#fff}
+.cust-head .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.cust-head .amt{margin-left:auto;font:800 15px 'JetBrains Mono',monospace;color:var(--warn)}
 .cust-head .amt.zero{color:var(--ok)}
-.prow{display:flex;align-items:center;gap:10px;padding:10px 15px;border-top:var(--bw) solid var(--bcol);cursor:pointer;
-  transition:background .15s;flex-wrap:wrap}
+.prow{display:flex;align-items:center;gap:10px;padding:10px 15px;border-top:1px solid var(--line);cursor:pointer;
+  transition:.15s;flex-wrap:wrap}
 .prow:hover{background:var(--soft1)}
-.prow .dt{font:600 11.5px 'JetBrains Mono',monospace;color:var(--muted);min-width:96px}
-.prow .nm{font-size:12px;color:var(--td);flex:1;min-width:110px}
-.prow .am{font:700 12.5px 'JetBrains Mono',monospace;color:var(--text)}
+.prow .dt{font:600 11px 'JetBrains Mono',monospace;color:var(--muted);min-width:90px}
+.prow .nm{font-size:12px;color:var(--text);flex:1;min-width:100px}
+.prow .am{font:700 12px 'JetBrains Mono',monospace;color:#fff}
 .acts{display:flex;gap:4px}
-.act{min-width:28px;height:28px;padding:0 7px;border-radius:8px;border:var(--bw) solid var(--line2);background:var(--card);
-  color:var(--acc1);cursor:pointer;font-size:12px;line-height:1;transition:.2s}
+.act{min-width:28px;height:28px;padding:0 7px;border-radius:8px;border:1px solid var(--line);background:var(--card);
+  color:var(--acc1);cursor:pointer;font-size:12px;line-height:1;transition:.2s;display:grid;place-items:center}
 .act.ok{border-color:var(--ok);color:var(--ok)}
 .act.del{border-color:var(--warn);color:var(--warn)}
 .act:hover{filter:brightness(1.3)}
-/* ---- BANNER PENGINGAT OTOMATIS ---- */
-.remind{margin:2px 15px 12px;padding:9px 12px;border-radius:10px;border:var(--bw) solid var(--warn);
-  background:var(--soft2);color:var(--warn);font:700 11px/1.5 var(--font-ui);letter-spacing:.02em;
+.remind{margin:4px 15px 12px;padding:10px 13px;border-radius:10px;border:1px solid var(--warn);
+  background:rgba(255,71,87,.08);color:var(--warn);font:700 11px/1.5 var(--font-ui);
   animation:remPulse 2.4s ease-in-out infinite}
 .remind.due{background:var(--warn);color:#fff;animation-duration:1.3s}
-@keyframes remPulse{50%{box-shadow:0 0 0 5px var(--soft2)}}
-.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10.5px;font-weight:700;border:var(--bw) solid}
-.pill-belum{color:var(--warn);border-color:var(--warn);background:var(--soft2)}
-.pill-lunas{color:var(--ok);border-color:var(--ok);background:var(--soft1)}
-.empty{text-align:center;color:var(--muted);padding:34px 16px;font-size:13px}
-.empty .big{font-size:34px;display:block;margin-bottom:8px}
-/* ============ MODAL RIWAYAT PELANGGAN ============ */
-.histhead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.histhead b{font-size:15px}
-.histhead .sub{font-size:11px;color:var(--muted)}
-#histList .prow{border:var(--bw) solid var(--bcol);border-radius:12px;margin-bottom:4px;background:var(--card2)}
-#histList .remind{margin:0 0 10px}
-/* ============ KALENDER ============ */
-.calhead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.calnav{width:34px;height:34px;border-radius:10px;border:var(--bw) solid var(--bcol);background:var(--card2);color:var(--text);
-  cursor:pointer;font-size:16px;transition:.2s}
-.calnav:hover{background:var(--soft1);color:var(--acc1)}
-#calLabel{font:800 14px var(--font-ui);letter-spacing:.06em;text-transform:capitalize;flex:1;text-align:center}
-.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.caldow{text-align:center;font:700 9px var(--font-ui);letter-spacing:.12em;color:var(--muted);text-transform:uppercase;padding:4px 0}
-.calday{aspect-ratio:1;border-radius:11px;border:var(--bw) solid var(--bcol);background:var(--card2);display:flex;
-  flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:.2s;font:600 12px 'JetBrains Mono',monospace;color:var(--td)}
-.calday:hover{background:var(--soft1)}
+@keyframes remPulse{50%{box-shadow:0 0 0 4px rgba(255,71,87,.15)}}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;border:1px solid}
+.pill-belum{color:var(--warn);border-color:var(--warn);background:rgba(255,71,87,.1)}
+.pill-lunas{color:var(--ok);border-color:var(--ok);background:rgba(0,255,170,.1)}
+.empty{text-align:center;color:var(--muted);padding:32px 14px;font-size:13px}
+
+.calhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.calnav{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);
+  cursor:pointer;font-size:16px;transition:.2s;display:grid;place-items:center}
+.calnav:hover{background:var(--soft1);color:var(--acc1);border-color:var(--line2)}
+#calLabel{font:800 14px var(--font-ui);letter-spacing:.04em;text-transform:capitalize;flex:1;text-align:center;color:#fff}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.caldow{text-align:center;font:700 9px var(--font-ui);letter-spacing:.1em;color:var(--muted);text-transform:uppercase;padding:4px 0}
+.calday{aspect-ratio:1;border-radius:10px;border:1px solid var(--line);background:var(--card2);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:.2s;
+  font:600 11px 'JetBrains Mono',monospace;color:var(--text)}
+.calday:hover{background:var(--soft1);border-color:var(--line2)}
 .calday.blank{border-color:transparent;background:transparent;cursor:default}
-.calday.today{border-color:var(--acc1);color:var(--acc1)}
+.calday.today{border-color:var(--acc1);color:var(--acc1);box-shadow:0 0 12px rgba(0,212,255,.3)}
 .calday.sel{background:var(--soft1);border-color:var(--acc1)}
-.calday .dot{width:7px;height:7px;border-radius:50%}
+.calday .dot{width:6px;height:6px;border-radius:50%}
 .dot-belum{background:var(--warn);box-shadow:0 0 6px var(--warn)}
 .dot-lunas{background:var(--ok);box-shadow:0 0 6px var(--ok)}
-/* ============ FORM & MODAL ============ */
-.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-label{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
-input,select,textarea{width:100%;padding:11px 12px;border-radius:11px;border:var(--bw) solid var(--bcol);background:var(--inp);
-  color:var(--text);font:500 14px 'JetBrains Mono',monospace;transition:.2s;resize:vertical}
+
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+label{display:block;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:700}
+input,select,textarea{width:100%;padding:10px 11px;border-radius:10px;border:1px solid var(--line);background:var(--inp);
+  color:var(--text);font:500 13px 'JetBrains Mono',monospace;transition:.2s;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc1);box-shadow:0 0 0 3px var(--soft1)}
 input[type=file]{display:none}
-.modecards{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-.modecard{padding:12px;border-radius:12px;border:var(--bw) solid var(--bcol);background:var(--card2);cursor:pointer;
-  text-align:center;font:700 12px var(--font-ui);color:var(--muted);transition:.2s}
-.modecard.active-m-utang{border-color:var(--warn);color:var(--warn);background:var(--soft2)}
-.modecard.active-m-cash{border-color:var(--ok);color:var(--ok);background:var(--soft1)}
-.qchips{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
-.qchip{padding:6px 12px;border-radius:999px;border:var(--bw) solid var(--bcol);background:var(--card2);color:var(--muted);
-  font:700 11px 'JetBrains Mono',monospace;cursor:pointer;transition:.2s}
+.modecards{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.modecard{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card2);cursor:pointer;
+  text-align:center;font:700 11px var(--font-ui);color:var(--muted);transition:.2s}
+.modecard.active-m-utang{border-color:var(--warn);color:var(--warn);background:rgba(255,71,87,.08)}
+.modecard.active-m-cash{border-color:var(--ok);color:var(--ok);background:rgba(0,255,170,.08)}
+.qchips{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.qchip{padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card2);color:var(--muted);
+  font:700 10px 'JetBrains Mono',monospace;cursor:pointer;transition:.2s}
 .qchip:hover,.qchip.active{border-color:var(--acc1);color:var(--acc1);background:var(--soft1)}
-.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.btn{padding:12px 20px;border-radius:11px;border:var(--bw) solid transparent;cursor:pointer;transition:.2s;
-  font:800 12px var(--font-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{padding:10px 18px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:.2s;
+  font:800 11px var(--font-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
 .btn:active{transform:scale(.97)}
-.btn-primary{background:var(--acc1);color:var(--btnfg);box-shadow:0 10px 26px -12px var(--acc1)}
+.btn-primary{background:linear-gradient(135deg,var(--acc1),var(--acc2));color:var(--btnfg);box-shadow:0 8px 22px rgba(0,212,255,.3)}
 .btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
-.btn-ok{background:var(--ok);color:#04241a}
-.btn-ghost{background:transparent;border-color:var(--line2);color:var(--muted)}
+.btn-ok{background:var(--ok);color:var(--btnfg)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--muted)}
 .btn-ghost:hover{color:var(--text);border-color:var(--acc1)}
 .btn-del{background:transparent;border-color:var(--warn);color:var(--warn)}
-.btn-del:hover{background:var(--soft2)}
-.overlay{position:fixed;inset:0;background:rgba(5,6,10,.62);backdrop-filter:blur(6px);z-index:80;display:none;
+.btn-del:hover{background:rgba(255,71,87,.1)}
+
+.dmgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.dmbtn{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 10px;border-radius:11px;
+  border:1px solid var(--line);background:var(--card2);color:var(--text);cursor:pointer;
+  font:700 10.5px var(--font-ui);letter-spacing:.06em;text-transform:uppercase;transition:.2s;min-height:44px}
+.dmbtn:hover{background:var(--soft1);border-color:var(--acc1);color:var(--acc1)}
+.dmbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.dmbtn input[type=file]{display:none}
+@media (max-width:420px){.dmgrid{grid-template-columns:1fr 1fr}.dmbtn:last-child{grid-column:1/-1}}
+
+.overlay{position:fixed;inset:0;background:rgba(5,11,20,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:80;display:none;
   align-items:flex-end;justify-content:center;padding:0}
 .overlay.show{display:flex}
-.modal{width:min(560px,100%);max-height:92vh;overflow:auto;background:var(--card);border:var(--bw) solid var(--bcol);
-  border-radius:22px 22px 0 0;padding:22px;animation:slideUp .35s cubic-bezier(.2,.8,.2,1)}
-@media(min-width:640px){.overlay{padding:24px;align-items:center}.modal{border-radius:22px}}
-@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
-.modal h3{font-size:14px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px;
-  display:flex;align-items:center;gap:8px}
-.modal h3 .mk{width:8px;height:8px;border-radius:2px;background:linear-gradient(135deg,var(--acc1),var(--acc2))}
-.dgrid{display:grid;gap:9px}
-.drow{display:flex;justify-content:space-between;gap:12px;padding:10px 13px;border-radius:11px;background:var(--card2);border:var(--bw) solid var(--bcol)}
-.drow .l{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;align-self:center}
-.drow .v{font:700 12.5px 'JetBrains Mono',monospace;color:var(--text);text-align:right}
-/* ============ SEKSI / BOTTOM NAV / TOAST ============ */
+.modal{width:min(540px,100%);max-height:90vh;overflow:auto;background:var(--bg2);border:1px solid var(--line2);
+  border-radius:20px 20px 0 0;padding:22px;animation:slideUp .3s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 0 40px rgba(0,212,255,.15)}
+@media(min-width:640px){.overlay{padding:20px;align-items:center}.modal{border-radius:20px}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+.modal h3{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:7px;color:#fff}
+.modal h3 .mk{width:7px;height:7px;border-radius:2px;background:linear-gradient(135deg,var(--acc1),var(--acc2))}
+.dgrid{display:grid;gap:8px}
+.drow{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line)}
+.drow .l{font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:700;align-self:center}
+.drow .v{font:700 12px 'JetBrains Mono',monospace;color:#fff;text-align:right}
+
 .sec{display:none}
 .sec.on{display:block}
-.sec.on>*{animation:fadeUp .45s both}
-.sec.on>*:nth-child(2){animation-delay:.06s}
-.sec.on>*:nth-child(3){animation-delay:.12s}
-.sec.on>*:nth-child(4){animation-delay:.18s}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.sec.on>*{animation:fadeUp .4s both}
+.sec.on>*:nth-child(2){animation-delay:.05s}
+.sec.on>*:nth-child(3){animation-delay:.1s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
 .bnav{position:fixed;bottom:0;left:0;right:0;z-index:60;display:none;justify-content:space-around;align-items:center;
-  padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--side);border-top:var(--bw) solid var(--bcol)}
-.bnav button{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--muted);
-  font:700 9.5px var(--font-ui);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:6px 10px;border-radius:12px;transition:.2s}
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));background:var(--side);border-top:1px solid var(--line);
+  backdrop-filter:blur(12px)}
+.bnav button{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:var(--muted);
+  font:700 8.5px var(--font-ui);letter-spacing:.03em;text-transform:uppercase;cursor:pointer;padding:5px 4px;border-radius:10px;transition:.2s;min-width:0;flex:1}
 .bnav button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .bnav button.active{color:var(--acc1);background:var(--soft1)}
-.bnav button.badd{background:var(--acc1);color:var(--btnfg);border-radius:14px;padding:10px 16px}
-footer{margin:26px 0 0;text-align:center;color:var(--muted);font-size:10px;letter-spacing:.14em;text-transform:uppercase;line-height:2}
-footer .tag{color:var(--acc1);font-weight:800;letter-spacing:.24em}
-#toast{position:fixed;left:50%;bottom:86px;transform:translate(-50%,20px);z-index:99;opacity:0;pointer-events:none;
-  padding:12px 22px;border-radius:12px;border:var(--bw) solid var(--acc1);background:var(--card);color:var(--text);
-  font:700 12.5px var(--font-ui);box-shadow:0 0 30px -10px var(--acc1);transition:.3s}
+.bnav button.badd{background:linear-gradient(135deg,var(--acc1),var(--acc2));color:var(--bg);border-radius:10px;padding:8px 10px;font-weight:800;flex:1.3}
+
+footer{margin:24px 0 0;text-align:center;color:var(--muted);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;line-height:1.8}
+footer .tag{color:var(--acc1);font-weight:800;letter-spacing:.2em}
+
+#toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,18px);z-index:99;opacity:0;pointer-events:none;
+  padding:10px 20px;border-radius:11px;border:1px solid var(--acc1);background:var(--bg2);color:#fff;
+  font:700 11.5px var(--font-ui);box-shadow:0 0 26px rgba(0,212,255,.4);transition:.3s}
 #toast.show{opacity:1;transform:translate(-50%,0)}
+
 @media (max-width:960px){
   .side{display:none}
   .bnav{display:flex}
-  .topbar{padding-top:14px}
+  .greet h1{font-size:24px}
+  .main{padding:16px 14px 100px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -266,143 +286,155 @@ footer .tag{color:var(--acc1);font-weight:800;letter-spacing:.24em}
 <body>
 <div class="app">
 
-  <!-- ========== SIDEBAR ========== -->
   <aside class="side">
-    <div class="slogo">
-      <div class="logo"><svg viewBox="0 0 24 24"><path d="M2.5 8.5a15 15 0 0 1 19 0"/><path d="M5.5 12a10.5 10.5 0 0 1 13 0"/><path d="M8.5 15.5a6 6 0 0 1 7 0"/><circle cx="12" cy="19" r="1.4" fill="currentColor" stroke="none"/></svg></div>
-      <div><b>MIKASA WIRELESS</b><small>Buku Utang WiFi · Ledger</small></div>
-    </div>
-    <button class="navi active" data-tab="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Halaman Utama</button>
-    <button class="navi" data-tab="customers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M16 5.2a3.4 3.4 0 0 1 0 6.6M18 14.4a6.2 6.2 0 0 1 3.4 5.6"/></svg>Daftar Pelanggan<span class="bdg" id="navCount">0</span></button>
-    <button class="navi" data-tab="calendar"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Kalender Tagihan</button>
-    <button class="navi add" id="btnAddSide">＋ Tambah Pelanggan</button>
-    <div class="side-foot">
-      <div class="themes" role="group" aria-label="Pilih tema">
-        <button class="thdot" data-theme-set="purple" style="--d1:#a78bfa;--d2:#f472b6" title="Neon Purple"></button>
-        <button class="thdot" data-theme-set="midnight" style="--d1:#38bdf8;--d2:#818cf8" title="Midnight Blue"></button>
-        <button class="thdot" data-theme-set="light" style="--d1:#e11d48;--d2:#64748b" title="Light Minimal"></button>
-        <button class="thdot" data-theme-set="comic" style="--d1:#f43f5e;--d2:#facc15" title="Full Comic"></button>
-      </div>
-      <small>Mikasa Wireless · ADM-001</small>
-    </div>
+    <div class="slogo">M</div>
+    <button class="snav active" data-tab="home" title="Dashboard">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    </button>
+    <button class="snav" data-tab="customers" title="Pelanggan">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M16 5.2a3.4 3.4 0 0 1 0 6.6M18 14.4a6.2 6.2 0 0 1 3.4 5.6"/></svg>
+      <span class="bdg" id="navCount">0</span>
+    </button>
+    <button class="snav" data-tab="calendar" title="Kalender">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+    </button>
+    <button class="snav" data-tab="data" title="Data & Backup">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    </button>
+    <button class="snav add" id="btnAddSide" title="Tambah">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <div class="sfoot">MIKASA</div>
   </aside>
 
-  <!-- ========== MAIN ========== -->
   <div class="main">
     <div class="topbar">
-      <div class="greet"><h2>Dashboard Ledger</h2><p id="dateLong">—</p></div>
+      <div class="greet">
+        <h1>MIKASA <span>WIRELESS</span></h1>
+        <p>Keep clients. Keep growing.</p>
+        <p class="tag">A retention-first system that keeps your retainer clients engaged, satisfied, and paying every month. <span id="dateLong">—</span></p>
+      </div>
       <div class="top-right">
+        <div class="mrr-card">
+          <div class="l">TOTAL UTANG AKTIF</div>
+          <div class="v" id="mrrVal">Rp 0</div>
+          <div class="d" id="mrrDelta">↑ 0% vs last month</div>
+        </div>
         <span class="sys-pill"><i></i>SYSTEM ONLINE</span>
         <span class="clockchip"><span id="clock">--:--:--</span></span>
       </div>
     </div>
 
-    <!-- ===== HOME ===== -->
     <section class="sec on" id="sec-home">
       <div class="card">
-        <h2><span class="mk"></span>Info Sistem</h2>
-        <div class="sysgrid">
-          <div class="sysitem"><div class="l">ID Sistem</div><div class="v">ADM-001</div></div>
-          <div class="sysitem"><div class="l">Admin</div><div class="v">Mikasa Wireless</div></div>
-          <div class="sysitem"><div class="l">Status</div><div class="v ok">Aktif</div></div>
-          <div class="sysitem"><div class="l">Perlu Pengingat</div><div class="v warn" id="sysRemind">0 pelanggan</div></div>
-          <div class="sysitem"><div class="l">Total Utang</div><div class="v warn" id="sysDebt">Rp 0</div></div>
-          <div class="sysitem"><div class="l">Cash / Lunas</div><div class="v ok" id="sysCash">Rp 0</div></div>
-        </div>
-      </div>
-
-      <div class="kpis">
-        <div class="kpi" style="--d:0s"><div class="kpi-lbl">Total Pelanggan</div>
-          <div class="kpi-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/></svg></div>
-          <div class="kpi-val"><span id="kCust">0</span><small>orang</small></div>
-          <svg class="spark" id="spCust" viewBox="0 0 100 26" preserveAspectRatio="none"></svg></div>
-        <div class="kpi" style="--d:.05s"><div class="kpi-lbl">Utang Aktif</div>
-          <div class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M12 3v18M8 7h8M8 12h8M8 17h8"/></svg></div>
-          <div class="kpi-val"><span id="kDebt">Rp 0</span></div>
-          <svg class="spark" id="spDebt" viewBox="0 0 100 26" preserveAspectRatio="none"></svg></div>
-        <div class="kpi" style="--d:.1s"><div class="kpi-lbl">Perlu Pengingat</div>
-          <div class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M12 4a6 6 0 0 1 6 6c0 4 2 5 2 5H4s2-1 2-5a6 6 0 0 1 6-6z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg></div>
-          <div class="kpi-val"><span id="kRemind">0</span><small>periode</small></div>
-          <svg class="spark" id="spRemind" viewBox="0 0 100 26" preserveAspectRatio="none"></svg></div>
-        <div class="kpi" style="--d:.15s"><div class="kpi-lbl">Lunas / Cash</div>
-          <div class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
-          <div class="kpi-val"><span id="kLunas">0</span><small>periode</small></div>
-          <svg class="spark" id="spLunas" viewBox="0 0 100 26" preserveAspectRatio="none"></svg></div>
-      </div>
-
-      <div class="card">
-        <h2><span class="mk"></span>Ledger Analytics
-          <span class="rangebtns">
+        <h2><span class="mk"></span>RETENTION OVER TIME
+          <span class="rangebtns" style="margin-left:auto">
             <button class="rbtn" data-range="3">3 BULAN</button>
             <button class="rbtn active" data-range="6">6 BULAN</button>
             <button class="rbtn" data-range="12">12 BULAN</button>
           </span>
         </h2>
-        <div class="chart" id="stackChart"></div>
+        <div class="chart-big" id="lineChart"></div>
         <div class="chart-legend">
-          <span><i class="sw" style="background:var(--warn)"></i>Menunggak (belum lunas)</span>
-          <span><i class="sw" style="background:var(--ok)"></i>Lunas / Cash</span>
+          <span><i class="sw" style="background:var(--acc1)"></i>Akumulasi Utang</span>
+          <span><i class="sw" style="background:var(--acc2)"></i>Lunas</span>
         </div>
-        <div class="sysgrid" style="margin-top:14px">
-          <div class="sysitem"><div class="l">Total Utang Tercatat</div><div class="v" id="anTotal">Rp 0</div></div>
-          <div class="sysitem"><div class="l">Pelanggan Menunggak</div><div class="v warn" id="anNunggak">0 orang</div></div>
-          <div class="sysitem"><div class="l">Rasio Lunas / Cash</div><div class="v ok" id="anRatio">0%</div></div>
-        </div>
-        <p class="note">Tren berdasarkan tanggal periode yang tersimpan.</p>
       </div>
 
-      <div class="card">
-        <h2><span class="mk"></span>System Summary — Ringkasan Bulan Ini</h2>
-        <div class="charts-2" style="margin-top:0">
-          <div>
-            <div class="chart-title">Rasio Pembayaran Bulan Ini</div>
-            <div class="chart" id="donutChart"></div>
-            <div class="chart-legend" style="justify-content:center"><span><i class="sw" style="background:var(--ok)"></i>Lunas/Cash</span><span><i class="sw" style="background:var(--line)"></i>Belum</span></div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-lbl">Total Pelanggan</div>
+            <div class="kpi-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/></svg></div>
           </div>
-          <div>
-            <div class="chart-title">Statistik Sistem Live</div>
-            <div class="dgrid">
-              <div class="drow"><span class="l">Total Periode</span><span class="v" id="sumPeriod">0</span></div>
-              <div class="drow"><span class="l">Sudah Lunas</span><span class="v" id="sumLunas" style="color:var(--ok)">0</span></div>
-              <div class="drow"><span class="l">Masih Utang</span><span class="v" id="sumDebt" style="color:var(--warn)">Rp 0</span></div>
-              <div class="drow"><span class="l">Total Pelanggan</span><span class="v" id="sumCust">0</span></div>
+          <div class="kpi-val"><span id="kCust">0</span><small>orang</small></div>
+          <div class="kpi-delta" id="kCustD">↑ 0% vs last month</div>
+          <svg class="spark" id="spCust" viewBox="0 0 100 32" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-lbl">Utang Aktif</div>
+            <div class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M12 3v18M8 7h8M8 12h8M8 17h8"/></svg></div>
+          </div>
+          <div class="kpi-val" id="kDebt">Rp 0</div>
+          <div class="kpi-delta" id="kDebtD">↑ 0% vs last month</div>
+          <svg class="spark" id="spDebt" viewBox="0 0 100 32" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-lbl">Perlu Pengingat</div>
+            <div class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M12 4a6 6 0 0 1 6 6c0 4 2 5 2 5H4s2-1 2-5a6 6 0 0 1 6-6z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg></div>
+          </div>
+          <div class="kpi-val"><span id="kRemind">0</span><small>periode</small></div>
+          <div class="kpi-delta down" id="kRemindD">↓ 0% vs last month</div>
+          <svg class="spark" id="spRemind" viewBox="0 0 100 32" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-lbl">Lunas / Cash</div>
+            <div class="kpi-ico"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+          </div>
+          <div class="kpi-val"><span id="kLunas">0</span><small>periode</small></div>
+          <div class="kpi-delta" id="kLunasD">↑ 0% vs last month</div>
+          <svg class="spark" id="spLunas" viewBox="0 0 100 32" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h2><span class="mk"></span>REVENUE RETENTION</h2>
+          <div class="donut-wrap">
+            <svg class="donutsvg" id="donutChart" viewBox="0 0 180 180"></svg>
+            <div class="donut-info">
+              <div class="big" id="donutPct">0%<small>Retained</small></div>
+              <div class="row"><span class="sw" style="background:var(--acc1)"></span>Retained Revenue<span class="v" id="donutRet">Rp 0</span></div>
+              <div class="row"><span class="sw" style="background:var(--warn)"></span>Churned Revenue<span class="v" id="donutChurn">Rp 0</span></div>
             </div>
           </div>
         </div>
-        <p class="note">✦ "Level up your system. Catat setiap periode, lindungi arus kas." — WiFi Management System —</p>
+        <div class="card">
+          <h2><span class="mk"></span>TOP RETENTION DRIVERS</h2>
+          <div id="driversList"></div>
+        </div>
       </div>
 
-      <div class="card">
-        <h2><span class="mk"></span>Data Management</h2>
-        <div class="btnrow" style="margin-top:0">
-          <button class="btn btn-ghost" id="btnJson">💾 Backup JSON</button>
-          <button class="btn btn-ghost" id="btnCsv">📊 Backup CSV</button>
-          <label class="btn btn-ghost" style="margin:0">📂 Restore Data<input type="file" id="fileRestore" accept=".json,application/json"></label>
+      <div class="insight">
+        <div class="insight-ico">
+          <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
         </div>
-        <p class="note">Restore mendukung 3 format: cadangan dashboard baru, cadangan lama <b>MikasaWirelessLedger</b> (<i>customers + bills</i>), dan array datar. Data lama di key <b>wifiDebtCustomers_v4</b> juga dimigrasi otomatis saat aplikasi dibuka.</p>
-        <p class="note"><a href="#" id="dlFallback" style="color:var(--acc1)">Unduh file cadangan</a> — Jika unduhan otomatis tidak berjalan di Preview, ketuk tautan tersebut. Buka aplikasi melalui GitHub Pages/Chrome untuk hasil terbaik.</p>
-        <p class="note">MIKASA WIRELESS · Buku Catat Utang WiFi · Penyimpanan lokal perangkat · Data tidak dikirim ke server.</p>
+        <div class="insight-txt">
+          <h3>RETENTION INSIGHT</h3>
+          <p>You're building strong, lasting client relationships. Keep delivering value and staying proactive. <b id="insightMsg">—</b></p>
+        </div>
+        <button class="insight-btn" id="btnViewAction">View Action Steps ›</button>
       </div>
     </section>
 
-    <!-- ===== PELANGGAN ===== -->
     <section class="sec" id="sec-customers">
       <div class="card">
-        <h2><span class="mk"></span>Daftar Pelanggan
-          <span class="chips">
+        <h2><span class="mk"></span>Daftar Pelanggan</h2>
+        <div class="filterbar">
+          <div class="chips">
             <button class="chip active" data-filter="all">Semua</button>
             <button class="chip" data-filter="belum">Belum Bayar</button>
             <button class="chip" data-filter="lunas">Lunas</button>
             <button class="chip" data-filter="remind">⚠️ Pengingat</button>
-          </span>
-        </h2>
+          </div>
+          <div class="sortbtns">
+            <button class="sbtn active" data-sort="newest"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Terbaru</button>
+            <button class="sbtn" data-sort="oldest"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Terlama</button>
+          </div>
+        </div>
+        <div class="searchwrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input type="search" id="custSearch" placeholder="Cari nama pelanggan…" autocomplete="off">
+          <button class="clr" id="btnSearchClear">✕</button>
+        </div>
         <div id="custList"></div>
-        <p class="note"><b>Klik nama pelanggan</b> untuk membuka riwayat lengkap. Kode warna: banner ⚠️ <b>garis merah</b> = jadwal bayar belum tiba; banner ⚠️ <b>merah solid</b> = jadwal bayar sudah tiba/terlewati ("JADWAL BAYAR TIBA!"). Tombol baris: ✓ hijau = Tandai Lunas, ✎ ungu = Edit, 🗑 merah = Hapus.</p>
-        <p class="note">Pengingat otomatis tanpa jatuh tempo: tagihan belum bayar pada suatu periode ditagihkan pada <b>bulan berikutnya</b> (contoh: periode 1 Oktober → jadwal bayar November).</p>
+        <p class="note"><b>Klik nama pelanggan</b> untuk membuka riwayat lengkap. Tombol baris: ✓ Tandai Lunas, ✎ Edit, 🗑 Hapus.</p>
       </div>
     </section>
 
-    <!-- ===== KALENDER ===== -->
     <section class="sec" id="sec-calendar">
       <div class="card">
         <h2><span class="mk"></span>Kalender Tagihan</h2>
@@ -416,42 +448,54 @@ footer .tag{color:var(--acc1);font-weight:800;letter-spacing:.24em}
           <span><i class="sw dot-belum" style="border-radius:50%"></i>Belum lunas</span>
           <span><i class="sw dot-lunas" style="border-radius:50%"></i>Lunas</span>
         </div>
-        <p class="note">Pilih tanggal yang memiliki penanda untuk melihat daftar tagihan.</p>
       </div>
       <div class="card">
         <h2><span class="mk"></span>Daftar Tagihan <span id="dayLabel" style="color:var(--acc1)"></span></h2>
-        <div id="dayList"><div class="empty"><span class="big">▦</span>Belum ada tanggal dipilih.</div></div>
+        <div id="dayList"><div class="empty">Belum ada tanggal dipilih.</div></div>
+      </div>
+    </section>
+
+    <section class="sec" id="sec-data">
+      <div class="card">
+        <h2><span class="mk"></span>Data Management</h2>
+        <div class="dmgrid">
+          <button class="dmbtn" id="btnJson"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Backup JSON</button>
+          <button class="dmbtn" id="btnCsv"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l3-6 3 4 4-8"/></svg>Backup CSV</button>
+          <label class="dmbtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Restore Data<input type="file" id="fileRestore" accept=".json,application/json"></label>
+        </div>
+        <p class="note">Restore mendukung 3 format: cadangan baru, <b>MikasaWirelessLedger</b>, dan array datar.</p>
+        <p class="note"><a href="#" id="dlFallback" style="color:var(--acc1)">Unduh file cadangan</a></p>
+        <p class="note">MIKASA WIRELESS · Penyimpanan lokal · Data tidak dikirim ke server.</p>
       </div>
     </section>
 
     <footer>
       <div class="tag">MIKASA WIRELESS</div>
-      Buku Catat Utang WiFi · Penyimpanan lokal perangkat · Data tidak dikirim ke server
+      Buku Catat Utang WiFi · Penyimpanan lokal perangkat
     </footer>
   </div>
 </div>
 
-<!-- ========== BOTTOM NAV MOBILE ========== -->
 <nav class="bnav">
-  <button class="active" data-tab="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Utama</button>
-  <button data-tab="customers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M16 5.2a3.4 3.4 0 0 1 0 6.6M18 14.4a6.2 6.2 0 0 1 3.4 5.6"/></svg>Pelanggan</button>
-  <button data-tab="calendar"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Kalender</button>
+  <button class="active" data-tab="home"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Utama</button>
+  <button data-tab="customers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/></svg>Pelanggan</button>
+  <button data-tab="calendar"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18"/></svg>Kalender</button>
+  <button data-tab="data"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Data</button>
   <button class="badd" id="btnAddMob">＋ Tambah</button>
 </nav>
 
-<!-- ========== MODAL FORM ========== -->
 <div class="overlay" id="ovForm">
   <div class="modal">
     <h3><span class="mk"></span><span id="formTitle">Tambah Pelanggan</span></h3>
     <div class="grid" style="grid-template-columns:1fr">
-      <div><label>♙ Nama Pelanggan</label><input type="text" id="fName" placeholder="Nama pelanggan"></div>
+      <div><label>Nama Pelanggan</label><input type="text" id="fName" placeholder="Nama pelanggan"></div>
       <div><label>Mode Pencatatan</label>
         <div class="modecards">
-          <div class="modecard active-m-utang" id="mUtang" data-mode="utang">🔴 Catat Utang (Belum Bayar)</div>
-          <div class="modecard" id="mCash" data-mode="cash">💵 Bayar Cash (Lunas)</div>
+          <div class="modecard active-m-utang" id="mUtang" data-mode="utang">🔴 Catat Utang</div>
+          <div class="modecard" id="mCash" data-mode="cash">💵 Bayar Cash</div>
         </div>
       </div>
-      <div><label>▣ Jumlah Utang (Nominal)</label><input type="number" id="fAmount" min="0" step="1000" placeholder="0">
+      <div><label>Jumlah (Nominal)</label><input type="number" id="fAmount" min="0" step="1000" placeholder="0">
         <div class="qchips">
           <button class="qchip" data-amt="50000">50rb</button>
           <button class="qchip" data-amt="100000">100rb</button>
@@ -460,8 +504,8 @@ footer .tag{color:var(--acc1);font-weight:800;letter-spacing:.24em}
           <button class="qchip" data-amt="1000000">1jt</button>
         </div>
       </div>
-      <div><label>▦ Tanggal Mulai Periode</label><input type="date" id="fDate"></div>
-      <div><label>▤ Catatan Tambahan</label><textarea id="fNote" rows="2" placeholder="Opsional"></textarea></div>
+      <div><label>Tanggal Periode</label><input type="date" id="fDate"></div>
+      <div><label>Catatan</label><textarea id="fNote" rows="2" placeholder="Opsional"></textarea></div>
     </div>
     <div class="btnrow">
       <button class="btn btn-ghost" id="btnFormCancel">Batal</button>
@@ -470,7 +514,6 @@ footer .tag{color:var(--acc1);font-weight:800;letter-spacing:.24em}
   </div>
 </div>
 
-<!-- ========== MODAL DETAIL ========== -->
 <div class="overlay" id="ovDetail">
   <div class="modal">
     <h3><span class="mk"></span>Detail Periode</h3>
@@ -478,30 +521,26 @@ footer .tag{color:var(--acc1);font-weight:800;letter-spacing:.24em}
     <div id="detailRemind"></div>
     <div class="btnrow">
       <button class="btn btn-ghost" id="btnDetailClose">× Tutup</button>
-      <button class="btn btn-ok" id="btnDetailLunas">✓ Tandai Lunas Periode Ini</button>
-      <button class="btn btn-primary" id="btnDetailEdit">✎ Edit Pelanggan</button>
-      <button class="btn btn-del" id="btnDetailDel">🗑 Hapus Periode</button>
+      <button class="btn btn-ok" id="btnDetailLunas">✓ Tandai Lunas</button>
+      <button class="btn btn-primary" id="btnDetailEdit"> Edit</button>
+      <button class="btn btn-del" id="btnDetailDel">🗑 Hapus</button>
     </div>
   </div>
 </div>
 
-<!-- ========== MODAL RIWAYAT PELANGGAN ========== -->
 <div class="overlay" id="ovHistory">
   <div class="modal">
     <h3><span class="mk"></span>Riwayat Pelanggan</h3>
-    <div class="histhead" id="histHead"></div>
-    <div class="sysgrid" id="histStats" style="margin-bottom:14px"></div>
+    <div class="histhead" id="histHead" style="display:flex;align-items:center;gap:10px;margin-bottom:12px"></div>
+    <div class="kpis" id="histStats" style="margin-bottom:12px"></div>
     <div id="histList"></div>
-    <div class="btnrow">
-      <button class="btn btn-ghost" id="btnHistClose">× Tutup</button>
-    </div>
+    <div class="btnrow"><button class="btn btn-ghost" id="btnHistClose">× Tutup</button></div>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-/* ========== LOGIKA LEDGER (＋ RIWAYAT PELANGGAN per klik nama) ========== */
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 const LS_REC='mikasa.records', LS_OLD='wifiDebtCustomers_v4';
 const pad=n=>String(n).padStart(2,'0');
@@ -515,10 +554,16 @@ const isLunas=r=>r.status==='lunas';
 const monthOf=d=>String(d||'').slice(0,7);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-/* ---- PENGINGAT OTOMATIS: periode belum bayar → tagih bulan berikutnya ---- */
+let scrollLockCount=0;
+function lockScroll(){if(scrollLockCount===0){document.body.style.overflow='hidden';document.body.style.position='fixed';document.body.style.width='100%'}scrollLockCount++}
+function unlockScroll(){scrollLockCount=Math.max(0,scrollLockCount-1);if(scrollLockCount===0){document.body.style.overflow='';document.body.style.position='';document.body.style.width=''}}
+function showOverlay(el){el.classList.add('show');lockScroll()}
+function hideOverlay(el){el.classList.remove('show');unlockScroll()}
+function hideAllOverlays(){$$('.overlay.show').forEach(o=>o.classList.remove('show'));scrollLockCount=0;document.body.style.overflow='';document.body.style.position='';document.body.style.width=''}
+
 function reminderInfo(r){
   if(isLunas(r))return null;
-  if(!r.date)return{txt:'⚠️ PENGINGAT: Tagihan ini belum dibayar (jadwal bayar di bulan berikutnya)',arrived:false};
+  if(!r.date)return{txt:'⚠️ PENGINGAT: Tagihan ini belum dibayar',arrived:false};
   const d=new Date(r.date+'T00:00:00');
   const next=new Date(d.getFullYear(),d.getMonth()+1,1);
   const per=d.toLocaleDateString('id-ID',{day:'numeric',month:'long'});
@@ -526,85 +571,59 @@ function reminderInfo(r){
   const arrived=ymNow()>monthOf(r.date);
   return{txt:`⚠️ PENGINGAT: Tagihan Periode ${per} belum dibayar (Jadwal bayar di Bulan ${sched})`,arrived};
 }
-
-/* ---- NORMALISASI & MIGRASI ---- */
 function norm(r){
   if(!r||typeof r!=='object')return null;
-  const name=String(r.name??r.nama??r.customer??r.pelanggan??'').trim();
-  if(!name)return null;
+  const name=String(r.name??r.nama??r.customer??r.pelanggan??'').trim();if(!name)return null;
   const amount=Math.abs(Number(r.amount??r.jumlah??r.nominal??r.nilai??r.total??0))||0;
   let date=String(r.date??r.tanggal??r.periode??r.tanggalMulai??r.mulai??'').slice(0,10);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(date))date='';
   const lunas=(r.status==='lunas'||r.status==='cash'||r.lunas===true||r.paid===true||!!r.paidAt||!!r.tanggalLunas);
   let paidAt=String(r.paidAt??r.tanggalLunas??r.paidDate??'').slice(0,10);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(paidAt))paidAt=lunas?(date||todayStr()):'';
-  return{
-    id:String(r.id??(Date.now()+''+Math.floor(Math.random()*999))),
-    name,amount,date,
+  return{id:String(r.id??(Date.now()+''+Math.floor(Math.random()*999))),name,amount,date,
     note:String(r.note??r.catatan??r.ket??r.keterangan??'').trim(),
-    mode:String(r.mode??(lunas?'cash':'utang')),
-    status:lunas?'lunas':'belum',
-    paidAt:paidAt||null
-  };
+    mode:String(r.mode??(lunas?'cash':'utang')),status:lunas?'lunas':'belum',paidAt:paidAt||null,createdAt:Number(r.createdAt)||0};
 }
 function fromCustomers(arr){
   const out=[];
   (Array.isArray(arr)?arr:[]).forEach(c=>{
     const name=String(c?.name??'').trim();if(!name)return;
     const bills=Array.isArray(c.bills)?c.bills:(Array.isArray(c.periode)?c.periode:[]);
-    bills.forEach(b=>{
-      const n=norm({
-        id:b?.id, name,
-        amount:b?.amount??b?.jumlah??b?.nominal,
-        date:b?.period??b?.date??b?.tanggal,
-        note:b?.note||c?.note,
-        status:(b?.status==='cash'||b?.status==='lunas'||b?.paid===true)?'lunas':'belum',
-        paidAt:(b?.status==='cash'||b?.status==='lunas')?(b?.period||b?.paidAt||null):null,
-        mode:(b?.status==='cash'||b?.status==='lunas')?'cash':'utang'
-      });
-      if(n)out.push(n);
-    });
-  });
-  return out;
+    const cCreatedAt=Number(c.createdAt)||0;
+    bills.forEach(b=>{const n=norm({id:b?.id,name,amount:b?.amount??b?.jumlah??b?.nominal,
+      date:b?.period??b?.date??b?.tanggal,note:b?.note||c?.note,
+      status:(b?.status==='cash'||b?.status==='lunas'||b?.paid===true)?'lunas':'belum',
+      paidAt:(b?.status==='cash'||b?.status==='lunas')?(b?.period||b?.paidAt||null):null,
+      mode:(b?.status==='cash'||b?.status==='lunas')?'cash':'utang',createdAt:cCreatedAt||Number(b?.createdAt)||0});
+      if(n)out.push(n);});
+  });return out;
 }
 let migrated=false;
 function loadLS(){
-  try{const v=JSON.parse(localStorage.getItem(LS_REC));
-    if(Array.isArray(v)&&v.length)return v.map(norm).filter(Boolean);}catch(e){}
-  try{const raw=localStorage.getItem(LS_OLD);
-    if(raw){const d=JSON.parse(raw);
-      const cust=Array.isArray(d)?d:(Array.isArray(d.customers)?d.customers:null);
-      if(cust){const mig=fromCustomers(cust);
-        if(mig.length){migrated=true;localStorage.setItem(LS_REC,JSON.stringify(mig));return mig;}
-      }}
-  }catch(e){}
+  try{const v=JSON.parse(localStorage.getItem(LS_REC));if(Array.isArray(v)&&v.length)return v.map(norm).filter(Boolean)}catch(e){}
+  try{const raw=localStorage.getItem(LS_OLD);if(raw){const d=JSON.parse(raw);const cust=Array.isArray(d)?d:(Array.isArray(d.customers)?d.customers:null);
+    if(cust){const mig=fromCustomers(cust);if(mig.length){migrated=true;localStorage.setItem(LS_REC,JSON.stringify(mig));return mig}}}}catch(e){}
   try{const v=JSON.parse(localStorage.getItem(LS_REC));return Array.isArray(v)?v.map(norm).filter(Boolean):[]}catch(e){return[]}
 }
 function save(){try{localStorage.setItem(LS_REC,JSON.stringify(records))}catch(e){toast('⚠ Penyimpanan penuh')}}
-function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3200)}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3000)}
 function tween(el,to,fmt){const from=parseFloat(el.dataset.v||0);el.dataset.v=to;const t0=performance.now(),D=650;
   (function s(t){const p=Math.min((t-t0)/D,1),e=1-Math.pow(1-p,3);el.textContent=fmt(from+(to-from)*e);if(p<1)requestAnimationFrame(s)})(t0)}
 
-let records=loadLS(), editingId=null, detailId=null, histKey=null, formMode='utang', filter='all', range=6;
-let calYM=ymNow(), selDate=null;
+let records=loadLS(), editingId=null, detailId=null, histKey=null, formMode='utang', filter='all', range=6, search='';
+let sortOrder='newest', calYM=ymNow(), selDate=null;
 
-/* ========== AKSI BARIS ========== */
-function markLunas(id){const r=records.find(x=>x.id===id);if(!r||isLunas(r))return false;
-  r.status='lunas';r.paidAt=todayStr();save();renderAll();refreshHist();toast('✓ '+r.name+' ditandai lunas');return true}
-function delRec(id){const r=records.find(x=>x.id===id);if(!r)return false;
-  if(!confirm('Hapus periode '+fmtDate(r.date)+' atas nama "'+r.name+'" ('+rp(r.amount)+')?'))return false;
-  records=records.filter(x=>x.id!==id);save();renderAll();refreshHist();toast('🗑 Periode dihapus');return true}
+function markLunas(id){const r=records.find(x=>x.id===id);if(!r||isLunas(r))return false;r.status='lunas';r.paidAt=todayStr();save();renderAll();refreshHist();toast('✓ '+r.name+' ditandai lunas');return true}
+function delRec(id){const r=records.find(x=>x.id===id);if(!r)return false;if(!confirm('Hapus periode '+fmtDate(r.date)+' atas nama "'+r.name+'" ('+rp(r.amount)+')?'))return false;records=records.filter(x=>x.id!==id);save();renderAll();refreshHist();toast('🗑 Periode dihapus');return true}
 function refreshHist(){if(histKey&&$('#ovHistory').classList.contains('show'))openHist(histKey)}
 
-/* ========== METRIK ========== */
 function metrics(){
   const names=new Set(records.map(r=>key(r.name)));
   const debt=records.filter(r=>!isLunas(r)).reduce((a,r)=>a+r.amount,0);
   const cash=records.filter(isLunas).reduce((a,r)=>a+r.amount,0);
   const remindRecs=records.filter(r=>!isLunas(r));
   const remindCust=new Set(remindRecs.map(r=>key(r.name))).size;
-  const ym=ymNow();
-  const inM=records.filter(r=>monthOf(r.date)===ym);
+  const ym=ymNow();const inM=records.filter(r=>monthOf(r.date)===ym);
   const ratio=inM.length?Math.round(inM.filter(isLunas).length/inM.length*100):0;
   return{cust:names.size,debt,cash,remindRecs:remindRecs.length,remindCust,lunas:records.filter(isLunas).length,ratio,total:records.length,inM};
 }
@@ -616,36 +635,42 @@ function monthSeries(n){
       belum:rs.filter(r=>!isLunas(r)).reduce((a,r)=>a+r.amount,0),
       lunas:rs.filter(isLunas).reduce((a,r)=>a+r.amount,0),
       cust:new Set(rs.map(r=>key(r.name))).size,
-      remind:rs.filter(r=>!isLunas(r)).length,
-      lunasN:rs.filter(isLunas).length});}
+      remind:rs.filter(r=>!isLunas(r)).length,lunasN:rs.filter(isLunas).length});}
   return out;
 }
-
-/* ========== GRAFIK ========== */
 function spark(el,arr){const max=Math.max(...arr,1),n=arr.length;
-  const pts=arr.map((v,i)=>[(i/Math.max(n-1,1))*96+2,24-(v/max)*20]).map(p=>p[0].toFixed(1)+','+p[1].toFixed(1));
-  el.innerHTML=`<polyline points="${pts.join(' ')}" fill="none" pathLength="1" class="draw" style="stroke:var(--acc1);stroke-width:1.6;stroke-linecap:round"/><circle cx="${pts[n-1].split(',')[0]}" cy="${pts[n-1].split(',')[1]}" r="2" style="fill:var(--acc1)"/>`}
-function svgStack(data){
-  const W=520,H=190,P=26,B=30,max=Math.max(...data.map(d=>d.belum+d.lunas),1),bw=(W-P*2)/data.length;
-  let out='';
-  data.forEach((d,i)=>{const x=P+i*bw+bw*0.22,w=bw*0.56;
-    const hb=(d.belum/max)*(H-B-18),hl=(d.lunas/max)*(H-B-18);
-    const yb=H-B-hb,yl=yb-hl;
-    out+=`<g><title>${fmtMonth(d.ym)}: menunggak ${rp(d.belum)} • lunas ${rp(d.lunas)}</title>
-      <rect class="grow" style="animation-delay:${i*45}ms" x="${x.toFixed(1)}" y="${yb.toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(hb,0).toFixed(1)}" rx="3" fill="var(--warn)" opacity=".85"/>
-      <rect class="grow" style="animation-delay:${i*45+60}ms" x="${x.toFixed(1)}" y="${yl.toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(hl,0).toFixed(1)}" rx="3" fill="var(--ok)"/>
-      <text x="${(x+w/2).toFixed(1)}" y="${H-10}" text-anchor="middle" class="cx">${d.label}</text></g>`;});
-  return `<svg viewBox="0 0 ${W} ${H}"><line x1="${P}" y1="${H-B}" x2="${W-P}" y2="${H-B}" style="stroke:var(--line)"/>${out}</svg>`;
-}
-function svgDonut(pct){const r=40,c=2*Math.PI*r;
-  return `<svg viewBox="0 0 100 100" class="donutsvg"><circle cx="50" cy="50" r="${r}" fill="none" style="stroke:var(--line)" stroke-width="10"/><circle class="danim" cx="50" cy="50" r="${r}" fill="none" style="stroke:var(--ok)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(c*pct/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 50 50)"/><text x="50" y="48" text-anchor="middle" class="dv">${pct}%</text><text x="50" y="61" text-anchor="middle" class="cx">lunas</text></svg>`}
+  const pts=arr.map((v,i)=>[(i/Math.max(n-1,1))*96+2,30-(v/max)*26]).map(p=>p[0].toFixed(1)+','+p[1].toFixed(1));
+  el.innerHTML=`<polyline points="${pts.join(' ')}" fill="none" pathLength="1" class="draw" style="stroke:var(--acc1);stroke-width:2;stroke-linecap:round"/><circle cx="${pts[n-1].split(',')[0]}" cy="${pts[n-1].split(',')[1]}" r="2.5" style="fill:var(--acc1)"/>`}
 
-/* ========== RENDER ========== */
+function svgLine(data){
+  const W=800,H=220,P=40,B=30,n=data.length;
+  const max=Math.max(...data.map(d=>d.v),1);
+  const step=(W-P*2)/Math.max(n-1,1);
+  const pts=data.map((d,i)=>[P+i*step,H-B-(d.v/max)*(H-B-20)]);
+  const line='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' L');
+  const area=line+` L${pts[n-1][0].toFixed(1)},${H-B} L${pts[0][0].toFixed(1)},${H-B} Z`;
+  const last=pts[n-1];
+  const labs=[0,Math.floor((n-1)/2),n-1].map(i=>`<text x="${pts[i][0].toFixed(1)}" y="${H-8}" text-anchor="middle" style="font:600 10px Inter;fill:var(--muted)">${data[i].l}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--acc1);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--acc1);stop-opacity:0"/></linearGradient></defs>
+    <line x1="${P}" y1="${H-B}" x2="${W-P}" y2="${H-B}" style="stroke:var(--line)"/>
+    <path d="${area}" fill="url(#gArea)"/>
+    <path d="${line}" pathLength="1" class="draw" fill="none" style="stroke:var(--acc1);stroke-width:2.5;stroke-linecap:round;filter:drop-shadow(0 0 6px var(--acc1))"/>
+    ${pts.map((p,i)=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" style="fill:var(--bg);stroke:var(--acc1);stroke-width:2"/>`).join('')}
+    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="6" style="fill:var(--acc1);filter:drop-shadow(0 0 8px var(--acc1))"/>
+    <rect x="${(last[0]-22).toFixed(1)}" y="${(last[1]-28).toFixed(1)}" width="44" height="22" rx="4" style="fill:var(--acc1)"/>
+    <text x="${last[0].toFixed(1)}" y="${(last[1]-13).toFixed(1)}" text-anchor="middle" style="font:700 11px JetBrains Mono;fill:var(--bg)">${Math.round(data[n-1].v)}</text>
+    ${labs}</svg>`;
+}
+function svgDonut(pct){const r=70,c=2*Math.PI*r;
+  return `<svg viewBox="0 0 180 180"><circle cx="90" cy="90" r="${r}" fill="none" style="stroke:var(--card2)" stroke-width="18"/><circle cx="90" cy="90" r="${r}" fill="none" style="stroke:var(--acc1)" stroke-width="18" stroke-linecap="round" stroke-dasharray="${(c*pct/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 90 90)" class="danim"/><circle cx="90" cy="90" r="${r-18}" fill="none" style="stroke:var(--warn);opacity:.3" stroke-width="18" stroke-dasharray="${(c*(100-pct)/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(${(-90+c*pct/100).toFixed(1)} 90 90)"/></svg>`}
+
 function renderHome(){
   const m=metrics();
-  $('#sysRemind').textContent=m.remindCust+' pelanggan';
-  $('#sysDebt').textContent=rp(m.debt);
-  $('#sysCash').textContent=rp(m.cash);
+  $('#mrrVal').textContent=rp(m.debt);
+  const prevDebt=monthSeries(2)[0]?.belum||0;
+  const delta=prevDebt?Math.round((m.debt-prevDebt)/prevDebt*100):0;
+  $('#mrrDelta').textContent=(delta>=0?'↑ ':'↓ ')+Math.abs(delta)+'% vs last month';
+  $('#mrrDelta').style.color=delta>=0?'var(--ok)':'var(--warn)';
   tween($('#kCust'),m.cust,v=>Math.round(v));
   tween($('#kDebt'),m.debt,rp);
   tween($('#kRemind'),m.remindRecs,v=>Math.round(v));
@@ -654,41 +679,47 @@ function renderHome(){
   spark($('#spCust'),s6.map(x=>x.cust));spark($('#spDebt'),s6.map(x=>x.belum));
   spark($('#spRemind'),s6.map(x=>x.remind));spark($('#spLunas'),s6.map(x=>x.lunasN));
   const sr=monthSeries(range);
-  $('#stackChart').innerHTML=records.length?svgStack(sr):'<div class="empty"><span class="big">📊</span>Grafik akan tampil setelah data tersedia.</div>';
-  const total=records.reduce((a,r)=>a+r.amount,0);
-  $('#anTotal').textContent=rp(total);
-  $('#anNunggak').textContent=m.remindCust+' orang';
+  const cum=[];let c=0;sr.forEach(x=>{c+=x.belum+x.lunas;cum.push({l:x.label,v:c})});
+  $('#lineChart').innerHTML=sr.length?svgLine(cum):'<div class="empty">Grafik akan tampil setelah data tersedia.</div>';
   const allRatio=records.length?Math.round(records.filter(isLunas).length/records.length*100):0;
-  $('#anRatio').textContent=allRatio+'%';
-  $('#donutChart').innerHTML=svgDonut(m.ratio);
-  $('#sumPeriod').textContent=m.inM.length;
-  $('#sumLunas').textContent=m.inM.filter(isLunas).length;
-  $('#sumDebt').textContent=rp(m.inM.filter(r=>!isLunas(r)).reduce((a,r)=>a+r.amount,0));
-  $('#sumCust').textContent=m.cust;
+  $('#donutChart').outerHTML=svgDonut(m.ratio);
+  $('#donutPct').innerHTML=m.ratio+'%<small>Retained</small>';
+  $('#donutRet').textContent=rp(m.inM.filter(isLunas).reduce((a,r)=>a+r.amount,0));
+  $('#donutChurn').textContent=rp(m.inM.filter(r=>!isLunas(r)).reduce((a,r)=>a+r.amount,0));
+  const gs=groups().slice(0,4);
+  const maxD=gs[0]?.debt||1;
+  $('#driversList').innerHTML=gs.length?gs.map((g,i)=>{
+    const icons=['💬','📈','📊','🤝'];
+    const pct=Math.round(g.debt/maxD*100);
+    return `<div class="driver"><div class="driver-ico"><span style="font-size:18px">${icons[i]||''}</span></div>
+      <div class="driver-info"><div class="n">${esc(g.name)}</div><div class="driver-bar"><i style="width:${pct}%"></i></div></div>
+      <div class="driver-val">${rp(g.debt)}</div></div>`;
+  }).join(''):'<div class="empty">Belum ada data.</div>';
+  $('#insightMsg').textContent=`Total pelanggan: ${m.cust} • Lunas: ${m.lunas} • Menunggak: ${m.remindRecs}`;
   $('#navCount').textContent=m.cust;
 }
 function groups(){
   const map=new Map();
-  records.forEach(r=>{const k=key(r.name);if(!map.has(k))map.set(k,{name:r.name,recs:[]});map.get(k).recs.push(r)});
-  return[...map.values()].map(g=>{g.recs.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  records.forEach(r=>{const k=key(r.name);if(!map.has(k))map.set(k,{name:r.name,recs:[],createdAt:0});map.get(k).recs.push(r)});
+  const arr=[...map.values()].map(g=>{g.recs.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
     g.debt=g.recs.filter(r=>!isLunas(r)).reduce((a,r)=>a+r.amount,0);
     g.belum=g.recs.filter(r=>!isLunas(r)).length;
     g.overdue=g.recs.filter(r=>!isLunas(r)&&monthOf(r.date)&&monthOf(r.date)<ymNow()).length;
-    return g}).sort((a,b)=>b.debt-a.debt||a.name.localeCompare(b.name));
+    g.createdAt=Math.max(...g.recs.map(r=>Number(r.createdAt)||0));return g});
+  arr.sort((a,b)=>{const ca=a.createdAt||0,cb=b.createdAt||0;if(ca!==cb)return sortOrder==='newest'?cb-ca:ca-cb;return a.name.localeCompare(b.name)});
+  return arr;
 }
 function rowHTML(r,boxed){
   const ri=reminderInfo(r);
-  return `<div class="prow" data-detail="${r.id}"${boxed?' style="border:var(--bw) solid var(--bcol);border-radius:12px;margin-bottom:4px;background:var(--card2)"':''}>
-    <span class="dt">${fmtDate(r.date)}</span>
-    <span class="nm">${esc(r.note||'Periode WiFi')}</span>
+  return `<div class="prow" data-detail="${r.id}"${boxed?' style="border:1px solid var(--line);border-radius:11px;margin-bottom:4px;background:var(--card2)"':''}>
+    <span class="dt">${fmtDate(r.date)}</span><span class="nm">${esc(r.note||'Periode WiFi')}</span>
     <span class="am">${rp(r.amount)}</span>
     <span class="pill ${isLunas(r)?'pill-lunas':'pill-belum'}">${isLunas(r)?'LUNAS':'BELUM'}</span>
     <span class="acts">
       ${isLunas(r)?'':`<button class="act ok" data-lunas="${r.id}" title="Tandai Lunas">✓</button>`}
-      <button class="act" data-edit="${r.id}" title="Edit Pelanggan">✎</button>
-      <button class="act del" data-del="${r.id}" title="Hapus Periode">🗑</button>
-    </span>
-  </div>
+      <button class="act" data-edit="${r.id}" title="Edit">✎</button>
+      <button class="act del" data-del="${r.id}" title="Hapus">🗑</button>
+    </span></div>
   ${ri?`<div class="remind${ri.arrived?' due':''}">${ri.txt}${ri.arrived?' — JADWAL BAYAR TIBA!':''}</div>`:''}`;
 }
 function renderCustomers(){
@@ -696,191 +727,115 @@ function renderCustomers(){
   if(filter==='belum')gs=gs.filter(g=>g.belum>0);
   if(filter==='lunas')gs=gs.filter(g=>g.belum===0);
   if(filter==='remind')gs=gs.filter(g=>g.overdue>0);
-  if(!gs.length){$('#custList').innerHTML='<div class="empty"><span class="big">📭</span>Belum ada pelanggan.<br>Tekan tombol "+ Tambah Pelanggan" untuk memulai.</div>';return}
-  $('#custList').innerHTML=gs.map(g=>`
-    <div class="cust">
-      <div class="cust-head" data-hist="${key(g.name)}" title="Klik untuk melihat riwayat lengkap">
-        <div class="cav">${esc(g.name.slice(0,2).toUpperCase())}</div>
-        <div><b>${esc(g.name)}</b><div class="sub">${g.recs.length} periode • ${g.belum} belum bayar${g.overdue?' • ⚠️ perlu pengingat':''} • ▤ riwayat</div></div>
-        <span class="amt ${g.debt?'':'zero'}">${rp(g.debt)}</span>
-      </div>
-      ${g.recs.map(r=>rowHTML(r,false)).join('')}
-    </div>`).join('');
+  const q=search.trim().toLowerCase();if(q)gs=gs.filter(g=>key(g.name).includes(q));
+  if(!gs.length){$('#custList').innerHTML=q?`<div class="empty">Tidak ditemukan "<b>${esc(search.trim())}</b>".</div>`:'<div class="empty">Belum ada pelanggan.</div>';return}
+  $('#custList').innerHTML=gs.map(g=>`<div class="cust">
+    <div class="cust-head" data-hist="${key(g.name)}">
+      <div class="cav">${esc(g.name.slice(0,2).toUpperCase())}</div>
+      <div style="flex:1;min-width:0"><b>${esc(g.name)}</b><div class="sub">${g.recs.length} periode • ${g.belum} belum bayar${g.overdue?' • ️ perlu pengingat':''}</div></div>
+      <span class="amt ${g.debt?'':'zero'}">${rp(g.debt)}</span>
+    </div>${g.recs.map(r=>rowHTML(r,false)).join('')}</div>`).join('');
 }
-/* ---- MODAL RIWAYAT PELANGGAN ---- */
 function openHist(k){
-  const g=groups().find(x=>key(x.name)===k);if(!g)return;
-  histKey=k;
-  $('#histHead').innerHTML=`<div class="cav">${esc(g.name.slice(0,2).toUpperCase())}</div>
-    <div><b>${esc(g.name)}</b><div class="sub">${g.recs.length} periode tercatat • klik baris untuk detail</div></div>`;
+  const g=groups().find(x=>key(x.name)===k);if(!g)return;histKey=k;
+  $('#histHead').innerHTML=`<div class="cav">${esc(g.name.slice(0,2).toUpperCase())}</div><div><b style="color:#fff">${esc(g.name)}</b><div class="sub">${g.recs.length} periode tercatat</div></div>`;
   const lunasAmt=g.recs.filter(isLunas).reduce((a,r)=>a+r.amount,0);
-  const totalAmt=g.recs.reduce((a,r)=>a+r.amount,0);
-  $('#histStats').innerHTML=`
-    <div class="sysitem"><div class="l">Total Periode</div><div class="v">${g.recs.length}</div></div>
-    <div class="sysitem"><div class="l">Total Tercatat</div><div class="v">${rp(totalAmt)}</div></div>
-    <div class="sysitem"><div class="l">Masih Utang</div><div class="v warn">${rp(g.debt)}</div></div>
-    <div class="sysitem"><div class="l">Sudah Lunas</div><div class="v ok">${rp(lunasAmt)}</div></div>`;
+  $('#histStats').innerHTML=`<div class="kpi"><div class="kpi-lbl">Total Periode</div><div class="kpi-val">${g.recs.length}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Masih Utang</div><div class="kpi-val" style="color:var(--warn)">${rp(g.debt)}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Sudah Lunas</div><div class="kpi-val" style="color:var(--ok)">${rp(lunasAmt)}</div></div>`;
   $('#histList').innerHTML=g.recs.map(r=>rowHTML(r,true)).join('')||'<div class="empty">Tidak ada periode.</div>';
-  $('#ovHistory').classList.add('show');
+  showOverlay($('#ovHistory'));
 }
-$('#btnHistClose').onclick=()=>{histKey=null;$('#ovHistory').classList.remove('show')};
+$('#btnHistClose').onclick=()=>{histKey=null;hideOverlay($('#ovHistory'))};
+$('#custSearch').addEventListener('input',e=>{search=e.target.value;renderCustomers()});
+$('#btnSearchClear').onclick=()=>{search='';$('#custSearch').value='';renderCustomers();$('#custSearch').focus()};
 function renderCalendar(){
-  const[y,m]=calYM.split('-').map(Number);
-  $('#calLabel').textContent=fmtMonth(calYM);
+  const[y,m]=calYM.split('-').map(Number);$('#calLabel').textContent=fmtMonth(calYM);
   const dim=new Date(y,m,0).getDate(),first=new Date(y,m-1,1).getDay(),lead=(first+6)%7;
-  const mark={};
-  records.forEach(r=>{if(monthOf(r.date)===calYM){mark[r.date]=mark[r.date]||{belum:false,lunas:false};
-    if(isLunas(r))mark[r.date].lunas=true;else mark[r.date].belum=true;}});
+  const mark={};records.forEach(r=>{if(monthOf(r.date)===calYM){mark[r.date]=mark[r.date]||{belum:false,lunas:false};
+    if(isLunas(r))mark[r.date].lunas=true;else mark[r.date].belum=true}});
   let html=['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(d=>`<div class="caldow">${d}</div>`).join('');
   for(let i=0;i<lead;i++)html+='<div class="calday blank"></div>';
   const t=todayStr();
   for(let d=1;d<=dim;d++){const ds=calYM+'-'+pad(d),mk=mark[ds];
-    html+=`<div class="calday${ds===t?' today':''}${ds===selDate?' sel':''}" data-day="${ds}">${d}${mk?`<span class="dot ${mk.belum?'dot-belum':'dot-lunas'}"></span>`:'<span class="dot" style="opacity:0"></span>'}</div>`;}
-  $('#calGrid').innerHTML=html;
-  renderDayList();
+    html+=`<div class="calday${ds===t?' today':''}${ds===selDate?' sel':''}" data-day="${ds}">${d}${mk?`<span class="dot ${mk.belum?'dot-belum':'dot-lunas'}"></span>`:''}</div>`;}
+  $('#calGrid').innerHTML=html;renderDayList();
 }
 function renderDayList(){
   $('#dayLabel').textContent=selDate?('— '+fmtDate(selDate)):'';
-  if(!selDate){$('#dayList').innerHTML='<div class="empty"><span class="big">▦</span>Belum ada tanggal dipilih.</div>';return}
+  if(!selDate){$('#dayList').innerHTML='<div class="empty">Belum ada tanggal dipilih.</div>';return}
   const rs=records.filter(r=>r.date===selDate).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
-  if(!rs.length){$('#dayList').innerHTML='<div class="empty"><span class="big">📭</span>Tidak ada tagihan pada tanggal ini.</div>';return}
+  if(!rs.length){$('#dayList').innerHTML='<div class="empty">Tidak ada tagihan pada tanggal ini.</div>';return}
   $('#dayList').innerHTML=rs.map(r=>rowHTML(r,true).replace('>'+fmtDate(r.date)+'</span>','>'+esc(r.name)+'</span>')).join('');
 }
 function renderAll(){renderHome();renderCustomers();renderCalendar()}
 
-/* ========== MODAL FORM ========== */
-function setMode(m){formMode=m;
-  $('#mUtang').className='modecard'+(m==='utang'?' active-m-utang':'');
-  $('#mCash').className='modecard'+(m==='cash'?' active-m-cash':'');}
+function setMode(m){formMode=m;$('#mUtang').className='modecard'+(m==='utang'?' active-m-utang':'');$('#mCash').className='modecard'+(m==='cash'?' active-m-cash':'')}
 function openForm(edit){
-  editingId=edit||null;
+  hideAllOverlays();editingId=edit||null;
   $('#formTitle').textContent=edit?'Edit Pelanggan':'Tambah Pelanggan';
-  $('#btnFormSave').textContent=edit?'💾 Simpan Perubahan':'＋ Simpan';
-  if(edit){const r=records.find(x=>x.id===edit);
-    $('#fName').value=r.name;$('#fAmount').value=r.amount;$('#fDate').value=r.date||todayStr();$('#fNote').value=r.note||'';
-    setMode(r.mode||(isLunas(r)?'cash':'utang'));}
+  $('#btnFormSave').textContent=edit?'💾 Simpan':'＋ Simpan';
+  if(edit){const r=records.find(x=>x.id===edit);$('#fName').value=r.name;$('#fAmount').value=r.amount;$('#fDate').value=r.date||todayStr();$('#fNote').value=r.note||'';setMode(r.mode||(isLunas(r)?'cash':'utang'))}
   else{$('#fName').value='';$('#fAmount').value='';$('#fDate').value=todayStr();$('#fNote').value='';setMode('utang')}
-  $$('.qchip').forEach(q=>q.classList.remove('active'));
-  $('#ovForm').classList.add('show');
+  $$('.qchip').forEach(q=>q.classList.remove('active'));showOverlay($('#ovForm'));
 }
-$('#mUtang').onclick=()=>setMode('utang');
-$('#mCash').onclick=()=>setMode('cash');
+$('#mUtang').onclick=()=>setMode('utang');$('#mCash').onclick=()=>setMode('cash');
 $$('.qchip').forEach(q=>q.onclick=()=>{$('#fAmount').value=q.dataset.amt;$$('.qchip').forEach(x=>x.classList.remove('active'));q.classList.add('active')});
-$('#btnAddSide').onclick=()=>openForm(null);
-$('#btnAddMob').onclick=()=>openForm(null);
-$('#btnFormCancel').onclick=()=>$('#ovForm').classList.remove('show');
+$('#btnAddSide').onclick=()=>openForm(null);$('#btnAddMob').onclick=()=>openForm(null);
+$('#btnFormCancel').onclick=()=>hideOverlay($('#ovForm'));
 $('#btnFormSave').onclick=()=>{
   const name=$('#fName').value.trim(),amount=Math.abs(parseFloat($('#fAmount').value)||0),date=$('#fDate').value;
-  if(!name){toast('⚠ Nama pelanggan wajib diisi');return}
-  if(!date){toast('⚠ Tanggal periode wajib diisi');return}
-  if(editingId){const r=records.find(x=>x.id===editingId);
-    r.name=name;r.amount=amount;r.date=date;r.note=$('#fNote').value.trim();r.mode=formMode;
-    if(formMode==='cash'&&r.status!=='lunas'){r.status='lunas';r.paidAt=r.paidAt||date}
-    toast('✔ Perubahan tersimpan');}
-  else{records.push({id:Date.now()+''+Math.floor(Math.random()*999),name,amount,date,
-    note:$('#fNote').value.trim(),mode:formMode,
-    status:formMode==='cash'?'lunas':'belum',paidAt:formMode==='cash'?date:null});
-    toast('✔ Periode tercatat');}
-  save();$('#ovForm').classList.remove('show');renderAll();refreshHist();
+  if(!name){toast('⚠ Nama wajib diisi');return}if(!date){toast('⚠ Tanggal wajib diisi');return}
+  if(editingId){const r=records.find(x=>x.id===editingId);const oldKey=key(r.name),newKey=key(name);
+    if(oldKey!==newKey){const oldName=r.name;records.forEach(x=>{if(key(x.name)===oldKey)x.name=name});toast('✔ "'+oldName+'" → "'+name+'"')}
+    r.amount=amount;r.date=date;r.note=$('#fNote').value.trim();r.mode=formMode;
+    if(formMode==='cash'&&r.status!=='lunas'){r.status='lunas';r.paidAt=r.paidAt||date}}
+  else{records.push({id:Date.now()+''+Math.floor(Math.random()*999),name,amount,date,note:$('#fNote').value.trim(),mode:formMode,status:formMode==='cash'?'lunas':'belum',paidAt:formMode==='cash'?date:null,createdAt:Date.now()});toast('✔ Periode tercatat')}
+  save();hideOverlay($('#ovForm'));renderAll();refreshHist();
 };
-
-/* ========== MODAL DETAIL ========== */
 function openDetail(id){
-  const r=records.find(x=>x.id===id);if(!r)return;
-  detailId=id;
-  const ri=reminderInfo(r);
-  $('#detailBody').innerHTML=`
-    <div class="drow"><span class="l">Nama</span><span class="v">${esc(r.name)}</span></div>
-    <div class="drow"><span class="l">Tanggal Periode</span><span class="v">${fmtDate(r.date)}</span></div>
+  const r=records.find(x=>x.id===id);if(!r)return;detailId=id;const ri=reminderInfo(r);
+  $('#detailBody').innerHTML=`<div class="drow"><span class="l">Nama</span><span class="v">${esc(r.name)}</span></div>
+    <div class="drow"><span class="l">Tanggal</span><span class="v">${fmtDate(r.date)}</span></div>
     <div class="drow"><span class="l">Jumlah</span><span class="v">${rp(r.amount)}</span></div>
-    <div class="drow"><span class="l">Status</span><span class="v" style="color:${isLunas(r)?'var(--ok)':'var(--warn)'}">${isLunas(r)?'LUNAS / CASH':'BELUM BAYAR'}</span></div>
-    ${r.paidAt?`<div class="drow"><span class="l">Tanggal Lunas</span><span class="v">${fmtDate(r.paidAt)}</span></div>`:''}
+    <div class="drow"><span class="l">Status</span><span class="v" style="color:${isLunas(r)?'var(--ok)':'var(--warn)'}">${isLunas(r)?'LUNAS':'BELUM'}</span></div>
+    ${r.paidAt?`<div class="drow"><span class="l">Tgl Lunas</span><span class="v">${fmtDate(r.paidAt)}</span></div>`:''}
     <div class="drow"><span class="l">Catatan</span><span class="v">${esc(r.note||'—')}</span></div>`;
-  $('#detailRemind').innerHTML=ri?`<div class="remind${ri.arrived?' due':''}" style="margin:12px 0 0">${ri.txt}${ri.arrived?' — JADWAL BAYAR TIBA!':''}</div>`:'';
-  $('#btnDetailLunas').style.display=isLunas(r)?'none':'';
-  $('#ovDetail').classList.add('show');
+  $('#detailRemind').innerHTML=ri?`<div class="remind${ri.arrived?' due':''}" style="margin:10px 0 0">${ri.txt}${ri.arrived?' — JADWAL BAYAR TIBA!':''}</div>`:'';
+  $('#btnDetailLunas').style.display=isLunas(r)?'none':'';showOverlay($('#ovDetail'));
 }
-$('#btnDetailClose').onclick=()=>$('#ovDetail').classList.remove('show');
-$('#btnDetailLunas').onclick=()=>{if(markLunas(detailId))$('#ovDetail').classList.remove('show')};
-$('#btnDetailEdit').onclick=()=>{$('#ovDetail').classList.remove('show');openForm(detailId)};
-$('#btnDetailDel').onclick=()=>{if(delRec(detailId))$('#ovDetail').classList.remove('show')};
-
-/* ========== DELEGASI KLIK ========== */
+$('#btnDetailClose').onclick=()=>hideOverlay($('#ovDetail'));
+$('#btnDetailLunas').onclick=()=>{if(markLunas(detailId))hideOverlay($('#ovDetail'))};
+$('#btnDetailEdit').onclick=()=>{const id=detailId;hideOverlay($('#ovDetail'));openForm(id)};
+$('#btnDetailDel').onclick=()=>{if(delRec(detailId))hideOverlay($('#ovDetail'))};
 document.addEventListener('click',e=>{
-  const lb=e.target.closest('[data-lunas]');
-  if(lb){markLunas(lb.getAttribute('data-lunas'));return}
-  const eb=e.target.closest('[data-edit]');
-  if(eb){openForm(eb.getAttribute('data-edit'));return}
-  const db=e.target.closest('[data-del]');
-  if(db){delRec(db.getAttribute('data-del'));return}
-  const hb=e.target.closest('[data-hist]');
-  if(hb){openHist(hb.getAttribute('data-hist'));return}
-  const d=e.target.closest('[data-detail]');
-  if(d){openDetail(d.getAttribute('data-detail'));return}
-  $$('.overlay').forEach(o=>{if(e.target===o)o.classList.remove('show')});
+  const lb=e.target.closest('[data-lunas]');if(lb){markLunas(lb.getAttribute('data-lunas'));return}
+  const eb=e.target.closest('[data-edit]');if(eb){openForm(eb.getAttribute('data-edit'));return}
+  const db=e.target.closest('[data-del]');if(db){delRec(db.getAttribute('data-del'));return}
+  const hb=e.target.closest('[data-hist]');if(hb){openHist(hb.getAttribute('data-hist'));return}
+  const d=e.target.closest('[data-detail]');if(d){openDetail(d.getAttribute('data-detail'));return}
+  if(e.target.classList.contains('overlay')){if(e.target.id==='ovForm')hideOverlay($('#ovForm'));else if(e.target.id==='ovDetail')hideOverlay($('#ovDetail'));else if(e.target.id==='ovHistory'){histKey=null;hideOverlay($('#ovHistory'))}}
 });
-
-/* ========== NAV / FILTER / RANGE / KALENDER ========== */
-$$('[data-tab]').forEach(b=>b.onclick=()=>{const t=b.getAttribute('data-tab');
-  $$('[data-tab]').forEach(x=>x.classList.toggle('active',x.getAttribute('data-tab')===t));
-  $$('.sec').forEach(x=>x.classList.remove('on'));$('#sec-'+t).classList.add('on');window.scrollTo({top:0,behavior:'smooth'})});
+$$('[data-tab]').forEach(b=>b.onclick=()=>{const t=b.getAttribute('data-tab');$$('[data-tab]').forEach(x=>x.classList.toggle('active',x.getAttribute('data-tab')===t));$$('.sec').forEach(x=>x.classList.remove('on'));$('#sec-'+t).classList.add('on');window.scrollTo({top:0,behavior:'smooth'})});
 $$('.chip').forEach(c=>c.onclick=()=>{filter=c.dataset.filter;$$('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');renderCustomers()});
+$$('.sbtn').forEach(b=>b.onclick=()=>{sortOrder=b.getAttribute('data-sort');$$('.sbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCustomers()});
 $$('.rbtn').forEach(b=>b.onclick=()=>{range=+b.dataset.range;$$('.rbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderHome()});
 $('#calPrev').onclick=()=>{const[y,m]=calYM.split('-').map(Number);const d=new Date(y,m-2,1);calYM=d.getFullYear()+'-'+pad(d.getMonth()+1);renderCalendar()};
 $('#calNext').onclick=()=>{const[y,m]=calYM.split('-').map(Number);const d=new Date(y,m,1);calYM=d.getFullYear()+'-'+pad(d.getMonth()+1);renderCalendar()};
 $('#calGrid').addEventListener('click',e=>{const c=e.target.closest('[data-day]');if(!c)return;selDate=c.dataset.day;renderCalendar()});
+$('#btnViewAction').onclick=()=>document.querySelector('[data-tab="customers"]').click();
 
-/* ========== BACKUP / RESTORE ========== */
 let lastBlobUrl=null;
-function makeBackup(){
-  const json=JSON.stringify({app:'utang-wifi-mikasa',format:'MikasaWirelessLedger',version:2,exportedAt:new Date().toISOString(),records},null,2);
-  if(lastBlobUrl)URL.revokeObjectURL(lastBlobUrl);
-  lastBlobUrl=URL.createObjectURL(new Blob([json],{type:'application/json'}));
-  return json;
-}
-$('#btnJson').onclick=()=>{makeBackup();const a=document.createElement('a');
-  a.href=lastBlobUrl;a.download='mikasa-backup-'+todayStr()+'.json';a.click();toast('💾 Backup JSON diunduh')};
-$('#dlFallback').onclick=e=>{e.preventDefault();makeBackup();$('#dlFallback').setAttribute('href',lastBlobUrl);
-  $('#dlFallback').setAttribute('download','mikasa-backup-'+todayStr()+'.json');toast('🔗 Tautan cadangan siap — ketuk lagi untuk unduh')};
-$('#btnCsv').onclick=()=>{
-  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
-  const lines=[['Nama','Status','Jumlah','Tanggal Periode','Tanggal Lunas','Catatan'].map(q).join(',')];
-  records.forEach(r=>lines.push([r.name,r.status,r.amount,r.date,r.paidAt||'',r.note||''].map(q).join(',')));
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv'}));
-  a.download='mikasa-utang-'+todayStr()+'.csv';a.click();URL.revokeObjectURL(a.href);toast('📊 Backup CSV diunduh');
-};
-$('#fileRestore').onchange=e=>{
-  const f=e.target.files[0];if(!f)return;
-  const rd=new FileReader();
-  rd.onload=()=>{try{
-    const d=JSON.parse(rd.result);
-    let arr=null;
-    if(Array.isArray(d))arr=d.map(norm);
-    else if(Array.isArray(d.records))arr=d.records.map(norm);
-    else if(Array.isArray(d.customers))arr=fromCustomers(d.customers);
-    if(!arr||!arr.length)throw 0;
-    arr=arr.filter(Boolean);
-    if(!confirm('Pulihkan '+arr.length+' catatan dari file cadangan?\nData saat ini ('+records.length+' catatan) akan ditimpa.'))return;
-    records=arr;save();renderAll();refreshHist();
-    toast('✔ Dipulihkan: '+arr.length+' catatan ('+f.name+')');
-  }catch(err){toast('⚠ File cadangan tidak valid')}};
-  rd.readAsText(f);e.target.value='';
-};
+function makeBackup(){const json=JSON.stringify({app:'utang-wifi-mikasa',format:'MikasaWirelessLedger',version:2,exportedAt:new Date().toISOString(),records},null,2);if(lastBlobUrl)URL.revokeObjectURL(lastBlobUrl);lastBlobUrl=URL.createObjectURL(new Blob([json],{type:'application/json'}));return json}
+$('#btnJson').onclick=()=>{makeBackup();const a=document.createElement('a');a.href=lastBlobUrl;a.download='mikasa-backup-'+todayStr()+'.json';a.click();toast('💾 Backup JSON diunduh')};
+$('#dlFallback').onclick=e=>{e.preventDefault();makeBackup();$('#dlFallback').setAttribute('href',lastBlobUrl);$('#dlFallback').setAttribute('download','mikasa-backup-'+todayStr()+'.json');toast('🔗 Tautan siap')};
+$('#btnCsv').onclick=()=>{const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const lines=[['Nama','Status','Jumlah','Tanggal','Tgl Lunas','Catatan'].map(q).join(',')];records.forEach(r=>lines.push([r.name,r.status,r.amount,r.date,r.paidAt||'',r.note||''].map(q).join(',')));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv'}));a.download='mikasa-utang-'+todayStr()+'.csv';a.click();URL.revokeObjectURL(a.href);toast('📊 CSV diunduh')};
+$('#fileRestore').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);let arr=null;if(Array.isArray(d))arr=d.map(norm);else if(Array.isArray(d.records))arr=d.records.map(norm);else if(Array.isArray(d.customers))arr=fromCustomers(d.customers);if(!arr||!arr.length)throw 0;arr=arr.filter(Boolean);if(!confirm('Pulihkan '+arr.length+' catatan? Data saat ini akan ditimpa.'))return;records=arr;save();renderAll();refreshHist();toast('✔ Dipulihkan: '+arr.length+' catatan')}catch(err){toast('⚠ File tidak valid')}};rd.readAsText(f);e.target.value=''};
 
-/* ========== TEMA ========== */
-function setTheme(n){document.documentElement.setAttribute('data-theme',n);
-  try{localStorage.setItem('mikasa.theme',n)}catch(e){}
-  $$('[data-theme-set]').forEach(b=>b.classList.toggle('active',b.getAttribute('data-theme-set')===n));}
-$$('[data-theme-set]').forEach(b=>b.onclick=()=>{setTheme(b.getAttribute('data-theme-set'));toast('🎨 Tema diterapkan')});
-
-/* ========== JAM & INIT ========== */
 setInterval(()=>{const d=new Date();$('#clock').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())},1000);
 $('#dateLong').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-setTheme(document.documentElement.getAttribute('data-theme')||'purple');
-save();
-renderAll();
-if(migrated)toast('✔ Data lama (wifiDebtCustomers_v4) otomatis dimigrasi: '+records.length+' catatan');
+save();renderAll();
+if(migrated)toast('✔ Data lama dimigrasi: '+records.length+' catatan');
 if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js');
 </script>
 </body>
