@@ -1344,15 +1344,34 @@ if ('serviceWorker' in navigator) addEventListener('load', () => navigator.servi
       if(toAdd.length){const z=await sb.from('mikasa_customers').insert(toAdd).select('id,name,deleted');if(z.error)throw z.error;(z.data||[]).forEach(c=>byName.set(norm(c.name),c));}
       const nameById=new Map([...byName.values()].map(c=>[c.id,c.name]));
       const remote=new Map((b.data||[]).map(x=>[norm(nameById.get(x.customer_id))+'|'+x.period,x]));
+      const remoteById=new Map((b.data||[]).map(x=>[x.id,x]));
       const additions=[],conflicts=[];
       for(const r of records){
         const name=String(r.name||'').trim(),period=String(r.period||'').trim(),amount=Number(r.amount);if(!name||!period||!Number.isSafeInteger(amount)||amount<=0)continue;
-        const key=norm(name)+'|'+period,old=remote.get(key);
-        if(old){if(Number(old.amount)!==amount||((old.status==='paid')!==(r.status==='cash'||r.status==='lunas')))conflicts.push(name+' '+period);continue;}
         const customer=byName.get(norm(name));if(!customer)throw new Error('Pelanggan tidak ditemukan: '+name);
-        additions.push({user_id:uid,customer_id:customer.id,period,amount,status:(r.status==='cash'||r.status==='lunas')?'paid':'unpaid',created_at:new Date(Number(r.createdAt)||Date.now()).toISOString()});
+        const desiredStatus=(r.status==='cash'||r.status==='lunas')?'paid':'unpaid';
+        const direct=remoteById.get(String(r.id));
+        if(direct){
+          const updates={customer_id:customer.id,period,amount,status:desiredStatus,updated_at:new Date().toISOString()};
+          const differs=direct.customer_id!==customer.id||direct.period!==period||Number(direct.amount)!==amount||direct.status!==desiredStatus;
+          if(differs){
+            const {error}=await sb.from('mikasa_bills').update(updates).eq('id',direct.id).eq('user_id',uid);
+            if(error)throw new Error('Gagal memperbarui tagihan '+name+' ('+period+'): '+error.message);
+          }
+          continue;
+        }
+        const key=norm(name)+'|'+period,old=remote.get(key);
+        if(old){
+          if(Number(old.amount)!==amount){conflicts.push(name+' '+period+' (nominal berbeda)');continue;}
+          if(desiredStatus==='paid'&&old.status!=='paid'){
+            const {error}=await sb.from('mikasa_bills').update({status:'paid',updated_at:new Date().toISOString()}).eq('id',old.id).eq('user_id',uid);
+            if(error)throw error;
+          }
+          continue;
+        }
+        additions.push({user_id:uid,customer_id:customer.id,period,amount,status:desiredStatus,created_at:new Date(Number(r.createdAt)||Date.now()).toISOString()});
       }
-      if(conflicts.length)throw new Error('Konflik lokal/cloud; tidak ada data yang ditimpa: '+conflicts.slice(0,4).join(', '));
+      if(conflicts.length)throw new Error('Nominal tagihan lokal berbeda dari cloud; tidak ada tagihan tersebut yang ditimpa: '+conflicts.slice(0,4).join(', '));
       if(additions.length){const z=await sb.from('mikasa_bills').insert(additions);if(z.error)throw z.error;}
       const [ca,ba]=await Promise.all([sb.from('mikasa_customers').select('id,name,deleted').eq('user_id',uid).eq('deleted',false),sb.from('mikasa_bills').select('id,customer_id,period,amount,status,created_at,updated_at,deleted').eq('user_id',uid).eq('deleted',false)]);
       if(ca.error)throw ca.error;if(ba.error)throw ba.error;
