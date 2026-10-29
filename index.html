@@ -705,6 +705,7 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     <!-- DATA -->
     <section class="view" id="v-data">
       <div class="tiles">
+        <button class="tile" id="mkCloudImport"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-db"/></svg></div><div><b>Salin Data ke Cloud</b><span class="s">Impor lokal dengan pemeriksaan duplikasi</span></div></button>
         <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button>
         <button class="tile" id="bCsv"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Buka di Excel / Google Sheets</span></div></button>
         <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor dari file backup .json</span></div><input type="file" id="restore" accept=".json,application/json" hidden></label>
@@ -1324,6 +1325,7 @@ if ('serviceWorker' in navigator) addEventListener('load', () => navigator.servi
 })();
 </script>
 <script src="./supabase-config.js"></script>
+<script src="./cloud-migration.js"></script>
 <script src="./auth-gate.js"></script>
 </body>
 </html>
