@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090c16"/><stop offset="1" stop-color="#111522"/></linearGradient><linearGradient id="pink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fb7185"/><stop offset=".52" stop-color="#f43f5e"/><stop offset="1" stop-color="#ff315c"/></linearGradient></defs>
+<rect width="512" height="512" rx="112" fill="url(#bg)"/>
+<g fill="none" stroke="url(#pink)" stroke-linecap="round" stroke-linejoin="round">
+<path stroke-width="26" d="M158 146a139 139 0 0 1 196 0"/>
+<path stroke-width="25" d="M192 184a91 91 0 0 1 128 0"/>
+<path stroke-width="23" d="M225 218a44 44 0 0 1 62 0"/>
+</g>
+<circle cx="256" cy="247" r="17" fill="url(#pink)"/>
+<path d="M109 144 256 297 403 144v199l-147 69-147-69z" fill="none" stroke="url(#pink)" stroke-width="39" stroke-linejoin="round"/>
+<path d="M130 352 256 410 382 352" fill="none" stroke="url(#pink)" stroke-width="27" stroke-linecap="round" stroke-linejoin="round"/>
+<g fill="url(#pink)"><circle cx="130" cy="352" r="28"/><circle cx="382" cy="352" r="28"/><circle cx="256" cy="410" r="29"/></g>
+</svg>
