@@ -22,7 +22,7 @@
     <form id="mkAuthForm"><label for="mkAuthEmail">Email</label><input id="mkAuthEmail" type="email" autocomplete="username" required>
     <label for="mkAuthPassword">Password</label><input id="mkAuthPassword" type="password" minlength="8" autocomplete="current-password" required>
     <button id="mkAuthSubmit" type="submit">Masuk</button></form>
-    <button class="auth-secondary" id="mkAuthMode" type="button">Buat akun Mikasa utama</button>
+    <button class="auth-secondary" id="mkAuthMode" type="button">Buat akun Mikasa</button>
     <p class="auth-message" id="mkAuthMessage" role="status"></p>
     <p style="margin:8px 0 0;font-size:11px">Akun ini terpisah dari login dashboard Supabase. Jangan gunakan password dashboard.</p>
     </div>`;
@@ -38,7 +38,7 @@
     if(window.supabase?.createClient)return Promise.resolve();
     return new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';sc.onload=resolve;sc.onerror=()=>reject(new Error('Library autentikasi tidak bisa dimuat. Periksa internet lalu muat ulang.'));document.head.append(sc);});
   }
-  mode.addEventListener('click',()=>{registering=!registering;submit.textContent=registering?'Daftar akun utama':'Masuk';mode.textContent=registering?'Kembali ke login':'Buat akun Mikasa utama';password.autocomplete=registering?'new-password':'current-password';intro.textContent=registering?'Buat satu akun utama. Setelah itu gunakan akun yang sama di perangkat istri.':'Masuk ke akun Mikasa Anda.';msg('');});
+  mode.addEventListener('click',()=>{registering=!registering;submit.textContent=registering?'Daftar akun utama':'Masuk';mode.textContent=registering?'Kembali ke login':'Buat akun Mikasa utama';password.autocomplete=registering?'new-password':'current-password';intro.textContent=registering?'Buat akun Mikasa untuk penggunaan pribadi. Simpan email dan password Anda dengan aman.':'Masuk ke akun Mikasa Anda.';msg('');});
   (async()=>{
     try{
       if(!cfg?.url||!cfg?.publishableKey)throw new Error('Konfigurasi Supabase belum tersedia.');
