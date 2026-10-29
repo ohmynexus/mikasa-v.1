@@ -1,0 +1,46 @@
+name: Build Mikasa Android APK
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'index.html'
+      - 'assets/**'
+      - 'android/**'
+      - '.github/workflows/android-apk.yml'
+permissions:
+  contents: read
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Prepare offline web app assets
+        run: |
+          mkdir -p android/app/src/main/assets
+          cp index.html android/app/src/main/assets/index.html
+          cp assets/customer-avatar.jpg android/app/src/main/assets/customer-avatar.jpg
+          cp assets/mikasa-bg.jpg android/app/src/main/assets/mikasa-bg.jpg
+          cp assets/icon-192.png android/app/src/main/assets/icon-192.png
+          cp assets/icon-512.png android/app/src/main/assets/icon-512.png
+          cp assets/mikasa-app.svg android/app/src/main/assets/mikasa-app.svg
+          # Provide compatibility aliases used by the web interface.
+          cp assets/icon-192.png android/app/src/main/assets/icon.png
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Build debug APK
+        working-directory: android
+        run: gradle assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mikasa-Android-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
