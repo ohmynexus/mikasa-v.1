@@ -40,13 +40,11 @@
       const raw = JSON.parse(localStorage.getItem(localKey) || '[]');
       const importedNames = JSON.parse(localStorage.getItem(custKey) || '[]');
       if (!Array.isArray(raw) || !Array.isArray(importedNames)) throw new Error('Format data lokal tidak valid.');
-      const bills = raw.map(r => ({
-        localId: String(r?.id || ''),
-        name: String(r?.name || r?.nama || '').trim(),
-        period: normPeriod(r?.period || r?.date),
-        amount: money(r?.amount ?? r?.jumlah),
-        status: r?.status === 'cash' || r?.status === 'lunas' ? 'paid' : 'unpaid'
-      })).filter(r => r.name && /^\d{4}-\d{2}-\d{2}$/.test(r.period) && r.amount);
+      const parsed = raw.map((r,index)=>({localId:String(r?.id||''),name:String(r?.name||r?.nama||'').trim(),period:normPeriod(r?.period||r?.date),amount:money(r?.amount??r?.jumlah),status:r?.status==='cash'||r?.status==='lunas'?'paid':'unpaid',index}));
+      const invalid = parsed.filter(r=>!r.name||!/^\d{4}-\d{2}-\d{2}$/.test(r.period)||!r.amount);
+      if(invalid.length) throw new Error('Preflight batal: '+invalid.length+' baris lokal tidak valid; tidak ada perubahan cloud.');
+      const bills=[]; const srcKeys=new Map();
+      for(const b of parsed){const k=normName(b.name)+'|'+b.period;const p=srcKeys.get(k);if(!p){srcKeys.set(k,b);bills.push(b);}else if(p.amount!==b.amount||p.status!==b.status)throw new Error('Preflight batal: konflik lokal '+b.name+' / '+b.period+'; tidak ada perubahan cloud.');}
       if (!bills.length && !importedNames.length) throw new Error('Tidak ada data lokal valid untuk migrasi.');
       const uniqueNames = [...new Set([
         ...importedNames.map(x => typeof x === 'string' ? x.trim() : ''),
@@ -68,6 +66,8 @@
         if (k && !customerByName.has(k)) customerByName.set(k, c.id);
       });
 
+      const nameCounts=new Map(); (cloudCustomers||[]).forEach(c=>{const k=normName(c.name);if(k)nameCounts.set(k,(nameCounts.get(k)||0)+1);});
+      if([...nameCounts.values()].some(n=>n>1)) throw new Error('Preflight batal: nama pelanggan cloud ambigu; tidak ada perubahan cloud.');
       let addedCustomers = 0, reusedCustomers = 0;
       for (const name of uniqueNames) {
         const k = normName(name);
@@ -92,10 +92,13 @@
 
       // Query all bills for the selected owner and skip matching active customer-period pairs.
       const { data: cloudBills, error: bErr } = await client.from('mikasa_bills')
-        .select('id,customer_id,period,status,deleted').eq('user_id', user.id).eq('deleted', false);
+        .select('id,customer_id,period,status,amount,deleted').eq('user_id', user.id).eq('deleted', false);
       if (bErr) throw bErr;
       const billKey = (customerId, period) => customerId + '|' + normPeriod(period);
-      const knownBills = new Set((cloudBills || []).map(b => billKey(b.customer_id, b.period)));
+      const existingByKey = new Map((cloudBills || []).map(b => [billKey(b.customer_id,b.period),b]));
+      const conflicts=bills.filter(b=>{const id=customerByName.get(normName(b.name));const old=existingByKey.get(billKey(id,b.period));return old&&(Number(old.amount)!==b.amount||old.status!==b.status);});
+      if(conflicts.length) throw new Error('Preflight batal: '+conflicts.length+' tagihan cloud berbeda nominal/status; perlu rekonsiliasi.');
+      const knownBills = new Set(existingByKey.keys());
       let addedBills = 0, skippedBills = 0, paymentsOmitted = 0;
       for (const b of bills) {
         const customerId = customerByName.get(normName(b.name));
