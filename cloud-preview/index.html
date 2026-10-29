@@ -279,4 +279,1245 @@ svg { display: block; }
 .search input { flex: 1; width: 100%; color: var(--text); }
 .select { height: 42px; padding: 0 12px; border-radius: var(--r-sm); background: var(--surface); border: 1px solid var(--line); font-size: 12.5px; font-weight: 600; color: var(--text-2); }
 .list { display: grid; gap: 10px; }
-.cust { ba
+.cust { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; transition: border-color .25s, box-shadow .3s var(--ease); animation: enter .45s var(--ease) both; }
+.cust:hover { border-color: var(--line-2); }
+.cust.open { border-color: color-mix(in srgb, var(--accent) 40%, transparent); box-shadow: var(--shadow); }
+.cust-head { display: flex; align-items: center; gap: 14px; padding: 14px 18px; cursor: pointer; user-select: none; }
+.cust-head:hover .av { transform: scale(1.06) rotate(-3deg); }
+.cust-info { flex: 1; min-width: 0; }
+.cust-name { font-weight: 700; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chips { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+.chip { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); color: var(--text-2); }
+.chip.bad { background: var(--bad-soft); color: var(--bad); }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.cust-bal { text-align: right; min-width: 108px; }
+.cust-bal b { font: 700 15px var(--mono); color: var(--bad); display: block; letter-spacing: -.02em; }
+.cust-bal b.settled { color: var(--ok); }
+.cust-bal span { font-size: 10.5px; color: var(--text-3); }
+.chev { transition: transform .35s var(--ease), color .2s; color: var(--text-3); }
+.cust.open .chev { transform: rotate(180deg); color: var(--accent-2); }
+.cust-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease); background: var(--bg-2); }
+.cust.open .cust-body { grid-template-rows: 1fr; border-top: 1px solid var(--line); }
+.cust-body > div { overflow: hidden; min-height: 0; }
+.prow { display: grid; grid-template-columns: 100px minmax(0, 1fr) 118px 86px auto; gap: 12px; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--line); font-size: 12.5px; }
+.prow:last-child { border-bottom: 0; }
+.prow.od { background: var(--bad-soft); box-shadow: inset 3px 0 0 var(--bad); }
+.prow .d { font: 500 11.5px var(--mono); color: var(--text-2); }
+.prow .n { color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prow .a { font: 700 12.5px var(--mono); text-align: right; }
+.pill { font: 700 10px var(--mono); padding: 4px 8px; border-radius: 6px; text-align: center; letter-spacing: .04em; }
+.pill.debt { background: var(--bad-soft); color: var(--bad); }
+.pill.cash { background: var(--ok-soft); color: var(--ok); }
+.acts { display: flex; gap: 6px; justify-content: flex-end; }
+.act { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line); color: var(--text-2); transition: all .18s; }
+.act .ico { width: 14px; height: 14px; }
+.act:hover { color: var(--text); background: var(--surface-3); }
+.act.pay { color: var(--ok); } .act.pay:hover { background: var(--ok-soft); }
+.act.wa { color: #25d366; } .act.wa:hover { background: rgba(37,211,102,.12); }
+.act.del { color: var(--bad); } .act.del:hover { background: var(--bad-soft); }
+.body-foot { padding: 10px 18px; display: flex; justify-content: flex-end; border-top: 1px solid var(--line); }
+
+/* ---------- calendar ---------- */
+.cal-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.cal-title { font-weight: 800; font-size: 16px; text-transform: capitalize; letter-spacing: -.02em; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.dow { text-align: center; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; color: var(--text-3); text-transform: uppercase; padding: 6px 0; }
+.day { aspect-ratio: 1.1; border-radius: var(--r-sm); background: var(--bg-2); border: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font: 600 13px var(--mono); color: var(--text-2); transition: all .2s var(--ease); }
+.day:hover:not(.void) { transform: translateY(-2px); border-color: var(--line-2); color: var(--text); }
+.day.void { background: transparent; border-color: transparent; }
+.day.today { border-color: var(--accent); color: var(--accent-2); }
+.day.sel { background: var(--accent-soft); border-color: var(--accent); color: var(--text); }
+.dots { display: flex; gap: 3px; min-height: 6px; }
+.dots i { width: 6px; height: 6px; border-radius: 50%; }
+.dots .d1 { background: var(--bad); } .dots .d2 { background: var(--ok); }
+.day-sum { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.day-sum .strip { flex: 1; min-width: 130px; }
+
+/* ---------- data ---------- */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 14px; }
+.tile { text-align: left; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); transition: all .3s var(--ease); cursor: pointer; }
+.tile:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow); }
+.tile .kpi-ico { width: 40px; height: 40px; border-radius: 12px; }
+.tile b { font-size: 14px; display: block; } .tile span.s { font-size: 12px; color: var(--text-3); }
+.diag { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+
+/* ---------- modal / toast ---------- */
+.overlay { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(4,6,12,.66); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.overlay.open { display: flex; animation: fade .25s ease both; }
+@keyframes fade { from { opacity: 0; } }
+.sheet { width: 100%; max-width: 520px; max-height: calc(100vh - 40px); overflow-y: auto; background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--r-lg); padding: 24px; box-shadow: var(--shadow-lg); animation: pop .4s var(--ease) both; }
+@keyframes pop { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+.sheet h3 { font-size: 17px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 4px; }
+.sheet .sub { color: var(--text-3); font-size: 12.5px; margin-bottom: 18px; }
+.form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form .full { grid-column: 1 / -1; }
+.field label { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); margin-bottom: 6px; }
+.input { width: 100%; height: 42px; padding: 0 12px; border-radius: var(--r-sm); background: var(--bg); border: 1px solid var(--line-2); font-size: 14px; transition: border-color .2s, box-shadow .2s; color-scheme: dark; }
+[data-theme="light"] .input { color-scheme: light; }
+.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.customer-picker { position: relative; }
+.customer-suggestions { position: absolute; z-index: 120; top: calc(100% + 7px); left: 0; right: 0; max-height: min(250px, 34vh); overflow-y: auto; padding: 5px; border: 1px solid var(--line-2); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow-lg); }
+.customer-suggestions[hidden] { display: none; }
+.customer-option { width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; border: 0; border-radius: 9px; padding: 11px 10px; background: transparent; color: var(--text); font: inherit; cursor: pointer; }
+.customer-option:hover, .customer-option:focus-visible { outline: none; background: var(--surface-2); }
+.customer-option .option-icon { width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 10px; background: var(--accent-soft); color: var(--accent-2); }
+.customer-option .option-meta { display: block; margin-top: 2px; color: var(--text-3); font-size: 11px; }
+.customer-option.create { color: var(--accent-2); border-top: 1px solid var(--line); margin-top: 4px; border-radius: 0 0 9px 9px; }
+.customer-empty { padding: 12px; color: var(--text-3); font-size: 12px; }
+.field-hint { margin-top: 6px; color: var(--text-3); font-size: 11px; }
+.amts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.amts button { padding: 4px 10px; border-radius: 8px; font: 600 11px var(--mono); background: var(--surface-2); border: 1px solid var(--line); color: var(--text-2); transition: all .18s; }
+.amts button:hover, .amts button.on { background: var(--accent-soft); color: var(--accent-2); border-color: var(--accent); }
+.status-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.status-pick button { padding: 11px; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--bg); font-weight: 700; font-size: 13px; color: var(--text-2); transition: all .2s var(--ease); }
+.status-pick button.on-debt { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.status-pick button.on-cash { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.sheet-foot { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+.confirm { max-width: 400px; }
+.confirm p { color: var(--text-2); font-size: 13.5px; margin: 6px 0 20px; }
+.toasts { position: fixed; z-index: 300; right: 24px; bottom: 24px; display: grid; gap: 8px; pointer-events: none; }
+.toast { padding: 12px 16px; border-radius: var(--r-sm); background: var(--surface-3); border: 1px solid var(--line-2); border-left: 3px solid var(--ok); font-weight: 600; font-size: 12.5px; box-shadow: var(--shadow-lg); animation: pop .35s var(--ease) both; }
+.toast.err { border-left-color: var(--bad); }
+
+/* ---------- mobile dock ---------- */
+.dock { display: none; position: fixed; z-index: 90; left: 12px; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom)); padding: 6px; border-radius: 22px; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line-2); box-shadow: var(--shadow-lg); }
+.dock-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; align-items: center; }
+.dock button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border-radius: 16px; font-size: 10px; font-weight: 700; color: var(--text-3); transition: all .2s var(--ease); }
+.dock button.active { color: var(--accent-2); background: var(--accent-soft); }
+.dock .fab { background: var(--accent); color: #fff; box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 40%, transparent); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1180px) {
+  .grid-kpi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-2, .grid-2b { grid-template-columns: 1fr; }
+  .calendar-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 1000px) {
+  .shell { grid-template-columns: 72px minmax(0, 1fr); }
+  .side { padding: 18px 10px; align-items: center; }
+  .brand { padding: 0 0 16px; } .brand > div:last-child, .nav-label, .nav-btn span, .nav-count, .side-card { display: none; }
+  .nav-btn { width: 48px; height: 48px; justify-content: center; padding: 0; }
+  .nav-btn.active::before { left: -10px; }
+  .main { padding: 24px 24px 60px; }
+}
+@media (max-width: 700px) {
+  .shell { display: block; }
+  .side { display: none; }
+  .dock { display: block; }
+  .main { padding: 18px 14px 120px; }
+  .top h1 { font-size: 22px; }
+  .clock { display: none; }
+  #topAdd { display: none; }
+  .grid-kpi { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpi { padding: 14px; } .kpi-val { font-size: 19px; } .spark { width: 56px; }
+  .card { padding: 16px; }
+  .chart { height: 230px; }
+  .prow { grid-template-columns: 78px minmax(0, 1fr) auto; row-gap: 8px; }
+  .prow .pill { display: none; }
+  .prow .acts { grid-column: 1 / -1; justify-content: flex-start; }
+  .cust-head { padding: 12px 14px; gap: 12px; } .cust-bal { min-width: 0; }
+  .qa { display: none; }
+  .overlay { align-items: flex-end; padding: 0; }
+  .sheet { max-width: none; border-radius: 22px 22px 0 0; max-height: 92vh; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+  .overlay .confirm { border-radius: 22px 22px 0 0; }
+  .form { grid-template-columns: 1fr; }
+  .toasts { left: 14px; right: 14px; bottom: calc(96px + env(safe-area-inset-bottom)); }
+  .day { aspect-ratio: 1; min-width: 0; padding: 2px 0; font-size: 12px; }
+  .calendar-layout { gap: 12px; }
+  .calendar-layout .card { padding: 14px; }
+  .calendar-layout .cal-grid { gap: 4px; }
+  .calendar-layout .cal-bar { gap: 6px; }
+  .calendar-layout .cal-title { font-size: 14px; }
+  .calendar-layout .cal-bar .icon-btn { flex: 0 0 36px; width: 36px; height: 36px; }
+  .calendar-layout .card-head { align-items: center; }
+  .calendar-layout .card-head .btn { flex-shrink: 0; }
+  .calendar-layout .day-sum { gap: 8px; }
+  .calendar-layout .day-sum .strip { flex-basis: 100%; }
+  .calendar-layout .legend { font-size: 11px; gap: 8px; }
+  #v-calendar .calendar-layout > .card:last-child { padding: 14px; }
+  #v-calendar .calendar-layout > .card:last-child .card-head { gap: 10px; }
+  #v-calendar .detail-heading .card-title { font-size: 16px; }
+  #v-calendar #calAdd { padding: 9px 11px !important; }
+  #dayList .detail-overview { padding: 14px; border-radius: 15px; }
+  #dayList .detail-metrics { gap: 8px; }
+  #dayList .detail-total { font-size: clamp(20px, 6vw, 26px); }
+  #dayList .detail-feed .feed-row { padding: 10px; gap: 8px; }
+  #dayList .detail-feed .feed-amt { font-size: 11px; }
+}
+@media (max-width: 380px) { .grid-kpi { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } .draw { stroke-dashoffset: 0; } }
+
+/* MIKASA visual refinement v2 */
+:root {
+  --tap-target: 44px;
+  --r-sm: 11px;
+  --r-md: 15px;
+  --r-lg: 18px;
+}
+body { font-size: 14px; line-height: 1.55; }
+button, input, select { accent-color: var(--accent); }
+button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+::placeholder { color: var(--text-3); opacity: .9; }
+.ico { width: 18px; height: 18px; }
+.side { border-right-color: var(--line-2); }
+.brand-logo { object-fit: cover; }
+.nav-btn { min-height: var(--tap-target); }
+.nav-btn.active { font-weight: 700; }
+.main { padding-top: clamp(20px, 2.8vw, 34px); }
+.top { align-items: center; margin-bottom: 26px; }
+.top h1 { font-size: clamp(22px, 2vw, 28px); line-height: 1.2; }
+.top p { max-width: 64ch; line-height: 1.55; }
+.top-actions { gap: 8px; }
+.icon-btn { width: var(--tap-target); height: var(--tap-target); border-radius: 12px; }
+.btn { min-height: var(--tap-target); }
+.card {
+  border-color: var(--line-2);
+  box-shadow: 0 3px 14px rgba(0,0,0,.035);
+}
+[data-theme="dark"] .card { box-shadow: 0 5px 20px rgba(0,0,0,.12); }
+.card-head { margin-bottom: 18px; }
+.card-title { font-size: 15px; line-height: 1.35; }
+.kpi { border-color: var(--line-2); }
+.kpi-label { letter-spacing: .065em; line-height: 1.4; }
+.kpi-val { font-size: clamp(19px, 1.8vw, 25px); overflow-wrap: anywhere; }
+.kpi-ico { width: 36px; height: 36px; border-radius: 11px; }
+.kpi-ico .ico { width: 18px; height: 18px; }
+.grid-kpi, .grid-2, .grid-2b, .calendar-layout { gap: 16px; }
+.search { min-height: var(--tap-target); }
+.search input { min-width: 0; font-size: 14px; }
+.input { height: 46px; border-radius: 11px; }
+.field label { font-size: 11px; letter-spacing: .055em; }
+.field-hint { line-height: 1.5; }
+.status-pick button { min-height: 46px; }
+.amts button { min-height: 34px; }
+.sheet { border-radius: 20px; }
+.sheet-foot .btn { min-width: 104px; }
+.tile { min-height: 148px; justify-content: flex-start; }
+.tile:focus-visible, .cust-head:focus-visible, .day:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pill { line-height: 1.35; }
+.dock { padding: 7px; }
+.dock button { min-height: var(--tap-target); }
+.dock button .ico { width: 20px; height: 20px; }
+.dock button.active { color: var(--accent-2); }
+.dock .fab { min-height: 48px; }
+.toast { line-height: 1.45; }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover { border-color: var(--line-2); }
+  .tile:hover { box-shadow: 0 12px 32px rgba(0,0,0,.1); }
+}
+@media (max-width: 1000px) {
+  .main { padding-left: 22px; padding-right: 22px; }
+  .grid-kpi, .grid-2, .grid-2b, .calendar-layout { gap: 12px; }
+}
+@media (max-width: 700px) {
+  .main { padding: 16px 12px calc(112px + env(safe-area-inset-bottom)); }
+  .top { gap: 12px; margin-bottom: 18px; align-items: center; }
+  .top h1 { font-size: 22px; letter-spacing: -.025em; }
+  .top p { font-size: 12px; max-width: 44ch; }
+  .top-actions { gap: 7px; }
+  .icon-btn { width: 44px; height: 44px; }
+  .grid-kpi { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .kpi { padding: 13px; border-radius: 15px; }
+  .kpi-top { gap: 8px; margin-bottom: 10px; }
+  .kpi-label { font-size: 10px; letter-spacing: .045em; }
+  .kpi-val { font-size: clamp(16px, 4.8vw, 21px); }
+  .card { padding: 15px; border-radius: 16px; }
+  .card-head { margin-bottom: 14px; }
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tile { min-width: 0; padding: 15px; min-height: 138px; }
+  .tile b { font-size: 13px; }
+  .tile span.s { font-size: 11px; line-height: 1.45; }
+  .search { min-width: 0; }
+  .form { gap: 12px; }
+  .sheet { border-radius: 20px 20px 0 0; padding: 22px 18px calc(20px + env(safe-area-inset-bottom)); max-height: 94dvh; }
+  .sheet-foot { position: sticky; bottom: calc(-20px - env(safe-area-inset-bottom)); background: var(--surface); padding: 12px 0 calc(6px + env(safe-area-inset-bottom)); }
+  .sheet-foot .btn { flex: 1; }
+  .day { min-height: 36px; }
+  .dock { left: 10px; right: 10px; bottom: calc(8px + env(safe-area-inset-bottom)); border-radius: 19px; }
+}
+@media (max-width: 340px) {
+  .grid-kpi, .tiles { grid-template-columns: minmax(0, 1fr); }
+  .kpi { padding: 15px; }
+  .top h1 { font-size: 20px; }
+  .calendar-layout .cal-grid { gap: 2px; }
+  .day { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within { scroll-behavior: auto; }
+}
+
+</style>
+
+<style>
+#cloudOpen{min-height:40px} #cloudOpen svg{width:16px;height:16px}
+#cloudDialog::backdrop{background:rgba(3,7,18,.68);backdrop-filter:blur(4px)}
+#cloudDialog .field-label{display:block;color:var(--text-2);font-size:12px;font-weight:700}
+@media(max-width:540px){#cloudOpen{padding:9px 10px}#cloudOpen span{font-size:12px}}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></symbol>
+    <symbol id="i-money" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-ul" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 1 1 21 11.5z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/></symbol>
+  </defs>
+</svg>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <img class="brand-logo" src="../assets/icon-192.png" alt="MIKASA" width="40" height="40">
+      <div>
+        <div class="brand-name">MIKASA <span class="tag">V0.1</span></div>
+        <div class="brand-sub">Wireless Billing Suite</div>
+      </div>
+    </div>
+    <div class="nav-label">Menu</div>
+    <button class="nav-btn active" data-nav="dashboard" title="Ringkasan"><svg class="ico"><use href="#i-grid"/></svg><span>Ringkasan</span></button>
+    <button class="nav-btn" data-nav="customers" title="Pelanggan"><svg class="ico"><use href="#i-users"/></svg><span>Pelanggan</span><span class="nav-count" id="navCount">0</span></button>
+    <button class="nav-btn" data-nav="calendar" title="Kalender"><svg class="ico"><use href="#i-cal"/></svg><span>Kalender</span></button>
+    <button class="nav-btn" data-nav="data" title="Data & Backup"><svg class="ico"><use href="#i-db"/></svg><span>Data & Backup</span></button>
+    <div class="side-foot">
+      <div class="side-card">
+        <div class="cap"><span>Ikon profil</span><span><span class="dot-live"></span></span></div>
+        <div class="seg" id="avSeg">
+          <button data-av="glyph" class="active">Glyph</button>
+          <button data-av="mono">Inisial</button>
+          <button data-av="3d">3D</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div>
+        <h1 id="hTitle">Ringkasan</h1>
+        <p id="hSub">Performa penagihan dan kesehatan arus kas pelanggan WiFi Anda</p>
+      </div>
+      <div class="top-actions">
+        <span class="clock"><span class="dot-live"></span><span id="clock">--:--:--</span></span>
+        <button class="btn btn-soft" id="cloudOpen" type="button" title="Sinkronisasi cloud"><svg class="ico"><use href="#i-cloud"/></svg><span id="cloudState">Cloud</span></button>
+        <button class="icon-btn" id="themeBtn" aria-label="Ganti tema"><svg class="ico" id="themeIco"><use href="#i-sun"/></svg></button>
+        <button class="btn btn-primary" id="topAdd"><svg class="ico"><use href="#i-plus"/></svg>Catat Tagihan</button>
+      </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="v-dashboard">
+      <div class="grid-kpi" id="kpis"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Tren Arus Kas</div>
+              <div class="card-sub">Tagihan lunas vs piutang per periode</div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+              <div class="legend"><span><i style="background:var(--ok)"></i>Lunas</span><span><i style="background:var(--accent)"></i>Piutang</span></div>
+              <div class="seg" id="rangeSeg"><button data-range="6" class="active">6 bln</button><button data-range="12">12 bln</button></div>
+            </div>
+          </div>
+          <div class="chart" id="trend"><div class="tip" id="tip"></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Komposisi Tagihan</div><div class="card-sub">Berdasarkan nilai rupiah</div></div></div>
+          <div class="donut-wrap">
+            <div class="donut"><svg viewBox="0 0 36 36" id="donut"></svg><div class="donut-center"><b id="dcVal">0%</b><span id="dcLab">Lunas</span></div></div>
+            <div class="strip-list" id="donutList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2b">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Prioritas Penagihan</div><div class="card-sub">Piutang aktif terbesar</div></div></div>
+          <div class="rank" id="rank"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Aktivitas Terbaru</div><div class="card-sub">Catatan yang baru dibuat atau dilunasi</div></div></div>
+          <div class="feed" id="feed"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMERS -->
+    <section class="view" id="v-customers">
+      <div class="toolbar">
+        <label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Cari nama pelanggan…" autocomplete="off"></label>
+        <div class="seg" id="filterSeg">
+          <button data-filter="all" class="active">Semua</button>
+          <button data-filter="debt">Belum bayar</button>
+          <button data-filter="overdue">⚠️ Overdue</button>
+          <button data-filter="paid">Lunas</button>
+        </div>
+        <select class="select" id="sort">
+          <option value="recent">Terbaru</option>
+          <option value="debt">Piutang tertinggi</option>
+          <option value="name">Nama A–Z</option>
+        </select>
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section class="view" id="v-calendar">
+      <div class="calendar-layout">
+        <div class="card">
+          <div class="cal-bar">
+            <button class="icon-btn" id="calPrev" aria-label="Bulan sebelumnya"><svg class="ico" style="transform:rotate(90deg)"><use href="#i-chev"/></svg></button>
+            <div class="cal-title" id="calTitle"></div>
+            <button class="icon-btn" id="calNext" aria-label="Bulan berikutnya"><svg class="ico" style="transform:rotate(-90deg)"><use href="#i-chev"/></svg></button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--text-3)">
+            <div class="legend"><span><i style="background:var(--bad);border-radius:50%"></i>Piutang</span><span><i style="background:var(--ok);border-radius:50%"></i>Lunas</span></div>
+            <button class="btn btn-ghost" id="calToday" style="font-size:12px">Hari ini</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div class="detail-heading"><div class="card-title">Rincian <span id="selLabel" style="color:var(--accent-2)"></span></div><div class="card-sub">Transaksi pada tanggal terpilih</div></div>
+            <button class="btn btn-soft" id="calAdd" style="padding:8px 12px"><svg class="ico"><use href="#i-plus"/></svg>Tambah</button>
+          </div>
+          <div id="dayList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA -->
+    <section class="view" id="v-data">
+      <div class="tiles">
+        <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button>
+        <button class="tile" id="bCsv"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Buka di Excel / Google Sheets</span></div></button>
+        <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor backup .json atau ekspor .csv</span></div><input type="file" id="restore" accept=".json,.csv,application/json,text/csv" hidden></label>
+        <label class="tile" for="customerImport"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Impor Excel / CSV</b><span class="s">Gabungkan daftar pelanggan tanpa membuat tagihan</span></div><input type="file" id="customerImport" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label>
+        <button class="tile" id="bSeed"><div class="kpi-ico" style="background:var(--warn-soft);color:var(--warn)"><svg class="ico"><use href="#i-spark"/></svg></div><div><b>Muat Data Contoh</b><span class="s">Isi simulasi untuk mencoba tampilan</span></div></button>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-head"><div><div class="card-title">Diagnostik Penyimpanan</div><div class="card-sub">Data tersimpan lokal di perangkat ini</div></div></div>
+        <div class="diag">
+          <div class="strip"><span class="strip-l">Total catatan</span><span class="strip-v" id="dCount">0</span></div>
+          <div class="strip"><span class="strip-l">Ukuran data</span><span class="strip-v" id="dSize">0 KB</span></div>
+          <div class="strip"><span class="strip-l">Backup terakhir</span><span class="strip-v" id="dBackup">Belum ada</span></div>
+          <div class="strip"><span class="strip-l">Versi</span><span class="strip-v">MIKASA V0.1</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><div class="card-title" style="color:var(--bad)">Zona Berbahaya</div><div class="card-sub">Tindakan ini tidak bisa dibatalkan. Lakukan backup lebih dulu.</div></div>
+          <button class="btn btn-danger" id="bWipe"><svg class="ico"><use href="#i-trash"/></svg>Hapus Semua Data</button></div>
+      </div>
+    </section>
+  </main>
+
+<dialog id="cloudDialog" style="width:min(560px,calc(100% - 28px));max-height:90vh;overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--line-2);border-radius:20px;padding:22px;box-shadow:var(--shadow-lg);margin:auto">
+  <form id="cloudForm">
+    <div class="card-head"><div><div class="card-title">Sinkronisasi Mikasa Cloud</div><div class="card-sub">Mode uji · satu pemilik, beberapa perangkat</div></div><button type="button" id="cloudClose" class="icon-btn" aria-label="Tutup">×</button></div>
+    <p class="card-sub" style="margin-bottom:14px">Hubungkan proyek Supabase Anda. Konfigurasi proyek dan publishable/anon key boleh tampil di frontend dengan RLS benar. Jangan masukkan service_role atau secret key.</p>
+    <label class="field-label" for="cloudUrl">Supabase Project URL</label><input id="cloudUrl" type="url" required placeholder="https://PROJECT.supabase.co" autocomplete="url" style="width:100%;padding:12px;border:1px solid var(--line-2);border-radius:10px;background:var(--bg-2);margin:6px 0 12px">
+    <label class="field-label" for="cloudKey">Publishable key / anon key</label><input id="cloudKey" required type="password" placeholder="sb_publishable_… atau anon key" autocomplete="off" style="width:100%;padding:12px;border:1px solid var(--line-2);border-radius:10px;background:var(--bg-2);margin:6px 0 12px">
+    <label class="field-label" for="cloudEmail">Email pemilik</label><input id="cloudEmail" required type="email" autocomplete="username" placeholder="email akun Supabase Auth" style="width:100%;padding:12px;border:1px solid var(--line-2);border-radius:10px;background:var(--bg-2);margin:6px 0 12px">
+    <label class="field-label" for="cloudPassword">Password akun</label><input id="cloudPassword" required type="password" autocomplete="current-password" style="width:100%;padding:12px;border:1px solid var(--line-2);border-radius:10px;background:var(--bg-2);margin:6px 0 14px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" type="submit" id="cloudLogin">Hubungkan & Login</button><button class="btn btn-soft" type="button" id="cloudRefresh">Muat data cloud</button><button class="btn btn-soft" type="button" id="cloudLogout">Logout</button></div>
+    <p id="cloudHelp" class="card-sub" role="status" aria-live="polite" style="margin-top:14px;white-space:pre-wrap">Status: belum terhubung.</p>
+    <p class="card-sub" style="margin-top:8px">Sesi tersimpan per perangkat oleh Supabase Auth. Gunakan akun pemilik yang sama di perangkat lain.</p>
+  </form>
+</dialog>
+
+</div>
+
+<nav class="dock"><div class="dock-grid">
+  <button data-nav="dashboard" class="active"><svg class="ico"><use href="#i-grid"/></svg>Ringkasan</button>
+  <button data-nav="customers"><svg class="ico"><use href="#i-users"/></svg>Pelanggan</button>
+  <button class="fab" id="dockAdd"><svg class="ico"><use href="#i-plus"/></svg>Catat</button>
+  <button data-nav="calendar"><svg class="ico"><use href="#i-cal"/></svg>Kalender</button>
+  <button data-nav="data"><svg class="ico"><use href="#i-db"/></svg>Data</button>
+</div></nav>
+
+<!-- FORM SHEET -->
+<div class="overlay" id="formOv">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fTitle">
+    <h3 id="fTitle">Catat Tagihan</h3>
+    <div class="sub" id="fSub">Tambahkan periode tagihan untuk pelanggan.</div>
+    <div class="form">
+      <div class="field full"><label for="fName">Nama pelanggan *</label><div class="customer-picker"><input class="input" id="fName" placeholder="Cari nama pelanggan…" autocomplete="off" aria-autocomplete="list" aria-controls="customerSuggestions" aria-expanded="false"><div class="customer-suggestions" id="customerSuggestions" role="listbox" hidden></div></div><div class="field-hint" id="customerHint">Ketik nama untuk mencari pelanggan terdaftar, atau masukkan nama baru.</div></div>
+      <div class="field"><label for="fAmt" id="lAmt">Nominal (Rp) *</label><input class="input" id="fAmt" type="number" inputmode="numeric" min="0" step="1000" placeholder="150000"></div>
+      <div class="field"><label for="fDate">Tanggal periode *</label><input class="input" id="fDate" type="date"></div>
+      <div class="field full"><div class="amts" id="amts" style="margin-top:0"><button type="button" data-amt="50000">50rb</button><button type="button" data-amt="100000">100rb</button><button type="button" data-amt="150000">150rb</button><button type="button" data-amt="200000">200rb</button><button type="button" data-amt="250000">250rb</button></div></div>
+      <div class="field full"><label>Status pembayaran</label>
+        <div class="status-pick"><button type="button" id="sDebt" class="on-debt">🔴 Utang</button><button type="button" id="sCash">🟢 Cash (lunas)</button></div></div>
+    </div>
+    <div class="sheet-foot"><button class="btn btn-soft" id="fCancel">Batal</button><button class="btn btn-primary" id="fSave"><svg class="ico"><use href="#i-check"/></svg><span id="fSaveTxt">Simpan</span></button></div>
+  </div>
+</div>
+
+<div class="overlay" id="confOv">
+  <div class="sheet confirm" role="alertdialog" aria-modal="true">
+    <h3 id="cTitle">Konfirmasi</h3><p id="cMsg"></p>
+    <div class="sheet-foot" style="margin-top:0"><button class="btn btn-soft" id="cNo">Batal</button><button class="btn btn-primary" id="cYes">Ya, lanjutkan</button></div>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const pad = n => String(n).padStart(2, '0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const today = () => iso(new Date());
+const ymOf = s => String(s || '').slice(0, 7);
+const curYM = () => today().slice(0, 7);
+const rp = n => 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
+const short = n => { const v = Math.abs(Number(n) || 0); return v >= 1e6 ? (v / 1e6).toFixed(1).replace('.0', '') + 'jt' : v >= 1e3 ? Math.round(v / 1e3) + 'rb' : String(Math.round(v)); };
+const fmtDate = d => { const t = new Date((d || '') + 'T00:00:00'); return isNaN(t) ? '—' : t.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }); };
+const fmtMonth = ym => { const [y, m] = ym.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }); };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const isPaid = b => b.status === 'cash';
+const isOver = b => !isPaid(b) && b.period && ymOf(b.period) < curYM();
+const ic = (id, cls = '') => `<svg class="ico ${cls}"><use href="#i-${id}"/></svg>`;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const KEY = 'mikasa.v01.records', CUSTOMER_KEY = 'mikasa.v01.customers', AVKEY = 'mikasa.v01.avatarMode', THEMEKEY = 'mikasa.v01.theme';
+let records = [];
+let importedCustomers = [];
+let avMode = 'glyph';
+try { avMode = localStorage.getItem(AVKEY) || 'glyph'; } catch (e) {}
+if (!['glyph', 'mono', '3d'].includes(avMode)) avMode = 'glyph';
+let range = 6, filter = 'all', sortBy = 'recent', query = '';
+let calYM = curYM(), selDate = today();
+let editId = null, editCust = null, formStatus = 'debt', confirmCb = null;
+const openSet = new Set();
+let currentView = 'dashboard';
+
+/* ---------- avatar system ---------- */
+const PAL = [
+  ['#e11d48', '#fb7185'], ['#7c3aed', '#c4b5fd'], ['#059669', '#6ee7b7'], ['#d97706', '#fcd34d'],
+  ['#2563eb', '#93c5fd'], ['#db2777', '#f9a8d4'], ['#0891b2', '#67e8f9'], ['#4f46e5', '#a5b4fc'],
+  ['#ea580c', '#fdba74'], ['#0d9488', '#5eead4'], ['#9333ea', '#d8b4fe'], ['#be123c', '#fda4af']
+];
+const hash = s => { let h = 2166136261; for (const ch of String(s || '').trim().toLowerCase()) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const initials = n => { const p = String(n || '').trim().split(/\s+/).filter(Boolean); return (p.length > 1 ? p[0][0] + p[1][0] : String(n || 'MK').slice(0, 2)).toUpperCase(); };
+const GLYPHS = [
+  `<circle cx="24" cy="24" r="19" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2"/><circle cx="24" cy="24" r="12" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2"/><circle cx="24" cy="24" r="5" fill="#fff" fill-opacity=".18"/>`,
+  `<rect x="9" y="9" width="30" height="30" rx="4" transform="rotate(45 24 24)" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2"/><rect x="16" y="16" width="16" height="16" rx="2" transform="rotate(45 24 24)" fill="#fff" fill-opacity=".14"/>`,
+  `<g stroke="#fff" stroke-opacity=".26" stroke-width="3" stroke-linecap="round"><path d="M-2 40 40 -2M6 52 52 6M-10 28 28 -10M18 56 56 18"/></g>`,
+  `<g fill="#fff" fill-opacity=".26"><circle cx="12" cy="12" r="3"/><circle cx="24" cy="12" r="3"/><circle cx="36" cy="12" r="3"/><circle cx="12" cy="24" r="3"/><circle cx="36" cy="24" r="3"/><circle cx="12" cy="36" r="3"/><circle cx="24" cy="36" r="3"/><circle cx="36" cy="36" r="3"/></g>`,
+  `<g fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2.4" stroke-linecap="round"><path d="M0 18a18 18 0 0 0 18-18"/><path d="M0 32a32 32 0 0 0 32-32"/><path d="M48 30a18 18 0 0 0-18 18"/><path d="M48 16a32 32 0 0 0-32 32"/></g>`,
+  `<path d="M24 5 44 40H4z" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2" stroke-linejoin="round"/><path d="M24 17 35 36H13z" fill="#fff" fill-opacity=".14"/>`,
+  `<path d="M24 4 41 14v20L24 44 7 34V14z" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2" stroke-linejoin="round"/><path d="M24 14 33 19v10l-9 5-9-5V19z" fill="#fff" fill-opacity=".14"/>`,
+  `<g fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="2.4" stroke-linecap="round"><path d="M0 14q6-8 12 0t12 0 12 0 12 0"/><path d="M0 26q6-8 12 0t12 0 12 0 12 0"/><path d="M0 38q6-8 12 0t12 0 12 0 12 0"/></g>`
+];
+const GLYPH_NAMES = ['Orbit', 'Prisma', 'Garis', 'Titik', 'Lengkung', 'Puncak', 'Heksa', 'Gelombang'];
+function avatar(name, o = {}) {
+  const h = hash(name), [c1, c2] = PAL[h % PAL.length], g = (h >>> 5) % GLYPHS.length;
+  const cls = 'av' + (o.size ? ' ' + o.size : '');
+  const badge = o.over > 0 ? `<span class="av-badge bad">${o.over}</span>` : o.clean ? `<span class="av-badge ok"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>` : '';
+  const bg = `background:linear-gradient(140deg,${c1},${c2})`;
+  if (avMode === '3d') {
+    const rot = (h % 360);
+    return `<div class="${cls}" style="${bg}"><img src="../assets/customer-avatar.jpg" alt="" loading="lazy" style="filter:hue-rotate(${rot}deg) saturate(1.1)" onerror="this.remove()"><span class="av-mono" style="position:absolute;bottom:-4px;left:-4px;font-size:9px;background:var(--bg);border:1px solid var(--line-2);padding:1px 4px;border-radius:5px;color:var(--text)">${esc(initials(name))}</span>${badge}</div>`;
+  }
+  if (avMode === 'mono') return `<div class="${cls}" style="${bg}"><span class="av-mono">${esc(initials(name))}</span>${badge}</div>`;
+  return `<div class="${cls}" style="${bg}"><svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><defs><clipPath id="c${h}"><rect width="48" height="48" rx="14"/></clipPath></defs><g clip-path="url(#c${h})">${GLYPHS[g]}</g></svg><span class="av-mono" style="position:relative">${esc(initials(name))}</span>${badge}</div>`;
+}
+const glyphName = n => GLYPH_NAMES[(hash(n) >>> 5) % GLYPH_NAMES.length];
+
+/* ---------- data ---------- */
+function load() {
+  try { importedCustomers = JSON.parse(localStorage.getItem(CUSTOMER_KEY) || '[]').filter(n => typeof n === 'string' && n.trim()); } catch (e) { importedCustomers = []; }
+  try {
+    const r = localStorage.getItem(KEY);
+    if (r) {
+      const parsed = JSON.parse(r);
+      if (!Array.isArray(parsed)) throw new Error('Format data lokal bukan array.');
+      records = parsed.map(normalize).filter(Boolean);
+      return;
+    }
+  } catch (e) { toast('Data lokal gagal dibaca. Periksa backup sebelum mengubah data.', 1); }
+  try {
+    const leg = localStorage.getItem('wifiDebtCustomers_v4');
+    if (leg) { const p = JSON.parse(leg); const arr = p.customers || p; if (Array.isArray(arr)) { records = migrate(arr); save(); return; } }
+  } catch (e) {}
+  records = [];
+}
+function normalize(r) {
+  const name = String(r.name || r.nama || '').trim(); if (!name) return null;
+  return { id: r.id || uid(), name, amount: Math.abs(Number(r.amount || r.jumlah || 0)), period: String(r.period || r.date || '').slice(0, 10),
+    status: (r.status === 'cash' || r.status === 'lunas') ? 'cash' : 'debt',
+    paidAt: r.paidAt || null, createdAt: Number(r.createdAt) || Date.now() };
+}
+function migrate(arr) { const out = []; arr.forEach(c => (c.bills || []).forEach(b => { const n = normalize({ ...b, name: c.name || c.nama }); if (n) out.push(n); })); return out; }
+
+// Cloud preview sync state. Existing local save remains immediate for resilience.
+let mikasaCloud = null, cloudRevision = 0, cloudEnabled = false, cloudConflict = false;
+let cloudQueue = Promise.resolve(), cloudUser = null;
+const cloudCfgKey = 'mikasa.v01.cloudConfig';
+const cloudSetStatus = (message, error = false) => {
+  const n = document.getElementById('cloudState'), h = document.getElementById('cloudHelp');
+  if (n) n.textContent = cloudConflict ? 'Konflik' : cloudEnabled ? 'Cloud aktif' : 'Cloud';
+  if (h) { h.textContent = message; h.style.color = error ? 'var(--bad)' : 'var(--text-2)'; }
+};
+function cloudPayload() {
+  return { records: records.map(r => ({...r})), customers: [...new Set(importedCustomers)] };
+}
+function queueCloudSnapshot() {
+  if (!cloudEnabled || !mikasaCloud || cloudConflict) return;
+  const snapshot = cloudPayload();
+  cloudQueue = cloudQueue.then(async () => {
+    if (!cloudEnabled || cloudConflict) return;
+    try {
+      const next = await mikasaCloud.saveWorkspace(snapshot, cloudRevision);
+      cloudRevision = next;
+      cloudSetStatus(`Tersinkron · revisi ${cloudRevision} · ${new Date().toLocaleTimeString('id-ID')}`);
+    } catch (err) {
+      if (err.code === 'SYNC_CONFLICT') {
+        cloudConflict = true; cloudEnabled = false;
+        cloudSetStatus('Ada perubahan dari perangkat lain. Penyimpanan cloud dihentikan agar data tidak tertimpa. Tekan “Muat data cloud” untuk melihat versi server.', true);
+      } else {
+        cloudSetStatus('Gagal sinkron. Perubahan tetap tersimpan lokal di perangkat ini; ekspor backup sebelum mencoba lagi. '+(err.message||''), true);
+      }
+    }
+  });
+}
+function save() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(records));
+    try { localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers)); } catch (_) {}
+    queueCloudSnapshot();
+    return true;
+  } catch (e) {
+    toast('Gagal menyimpan data. Ruang penyimpanan mungkin penuh atau diblokir.', 1);
+    return false;
+  }
+}
+
+function customers() {
+  const m = new Map();
+  importedCustomers.forEach(name => { const clean = String(name || '').trim(); const k = clean.toLocaleLowerCase('id'); if (k && !m.has(k)) m.set(k, { name: clean, bills: [] }); });
+  records.forEach(r => { const k = r.name.toLocaleLowerCase('id'); if (!m.has(k)) m.set(k, { name: r.name, bills: [] }); m.get(k).bills.push(r); });
+  return [...m.values()].map(c => {
+    c.bills.sort((a, b) => String(b.period).localeCompare(String(a.period)));
+    c.debt = c.bills.filter(b => !isPaid(b)).reduce((s, b) => s + b.amount, 0);
+    c.paid = c.bills.filter(isPaid).reduce((s, b) => s + b.amount, 0);
+    c.unpaid = c.bills.filter(b => !isPaid(b)).length;
+    c.over = c.bills.filter(isOver).length;
+    c.latest = c.bills.length ? Math.max(...c.bills.map(b => b.createdAt || 0)) : 0;
+    return c;
+  });
+}
+function series(n) {
+  const now = new Date(), out = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1), ym = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+    const b = records.filter(r => ymOf(r.period) === ym);
+    const debt = b.filter(r => !isPaid(r)).reduce((s, r) => s + r.amount, 0), paid = b.filter(isPaid).reduce((s, r) => s + r.amount, 0);
+    out.push({ ym, label: d.toLocaleDateString('id-ID', { month: 'short' }), full: fmtMonth(ym), debt, paid, count: b.length, paidN: b.filter(isPaid).length });
+  }
+  return out;
+}
+
+/* ---------- ui helpers ---------- */
+function toast(msg, err) { const e = document.createElement('div'); e.className = 'toast' + (err ? ' err' : ''); e.textContent = msg; $('#toasts').appendChild(e); setTimeout(() => e.remove(), 2800); }
+function ask(title, msg, cb, label = 'Ya, lanjutkan') { $('#cTitle').textContent = title; $('#cMsg').textContent = msg; $('#cYes').textContent = label; confirmCb = cb; $('#confOv').classList.add('open'); }
+function download(name, content, mime) { const u = URL.createObjectURL(new Blob([content], { type: mime })); const a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1500); }
+function countUp(el, to, fmt) {
+  const from = Number(el.dataset.v || 0); el.dataset.v = to;
+  if (reduced || from === to) { el.textContent = fmt(to); return; }
+  const t0 = performance.now(), dur = 800;
+  const step = t => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 4); el.textContent = fmt(from + (to - from) * e); if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(to); };
+  requestAnimationFrame(step);
+}
+function smooth(pts) {
+  if (!pts.length) return ''; if (pts.length === 1) return `M${pts[0].x},${pts[0].y}`;
+  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    d += ` C${(p1.x + (p2.x - p0.x) / 6).toFixed(1)},${(p1.y + (p2.y - p0.y) / 6).toFixed(1)} ${(p2.x - (p3.x - p1.x) / 6).toFixed(1)},${(p2.y - (p3.y - p1.y) / 6).toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+  }
+  return d;
+}
+function sparkline(vals, color) {
+  const W = 84, H = 30, max = Math.max(...vals, 1), min = Math.min(...vals, 0);
+  const pts = vals.map((v, i) => ({ x: 2 + i * ((W - 4) / Math.max(vals.length - 1, 1)), y: H - 3 - ((v - min) / ((max - min) || 1)) * (H - 8) }));
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${smooth(pts)}" pathLength="1" class="${reduced ? '' : 'draw'}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
+}
+const deltaTag = (cur, prev, goodUp) => {
+  if (!prev && !cur) return `<span class="delta flat">— 0%</span>`;
+  const pct = prev ? Math.round(((cur - prev) / prev) * 100) : 100;
+  if (pct === 0) return `<span class="delta flat">0%</span>`;
+  const good = goodUp ? pct > 0 : pct < 0;
+  return `<span class="delta ${good ? 'up' : 'down'}">${pct > 0 ? '↑' : '↓'} ${Math.abs(pct)}%</span>`;
+};
+
+/* ---------- dashboard ---------- */
+function renderKpis() {
+  const s = series(6), cur = s[5], prev = s[4];
+  const unpaid = records.filter(r => !isPaid(r)), overdue = records.filter(isOver);
+  const totalDebt = unpaid.reduce((a, r) => a + r.amount, 0), overAmt = overdue.reduce((a, r) => a + r.amount, 0);
+  const rateOf = x => x.count ? Math.round(x.paidN / x.count * 100) : 0;
+  const custs = customers();
+  const items = [
+    { k: 'debt', c: 'c-accent', icon: 'money', label: 'Total piutang', val: totalDebt, fmt: rp, delta: deltaTag(cur.debt, prev.debt, false), spark: s.map(x => x.debt), col: 'var(--accent)', go: 'debt' },
+    { k: 'cash', c: 'c-ok', icon: 'wallet', label: 'Terkumpul bulan ini', val: cur.paid, fmt: rp, delta: deltaTag(cur.paid, prev.paid, true), spark: s.map(x => x.paid), col: 'var(--ok)', go: 'paid' },
+    { k: 'over', c: 'c-warn', icon: 'alert', label: 'Jatuh tempo', val: overdue.length, fmt: v => Math.round(v) + ' tagihan', delta: `<span class="delta ${overdue.length ? 'down' : 'up'}">${rp(overAmt)}</span>`, spark: s.map((x, i) => records.filter(r => !isPaid(r) && ymOf(r.period) === x.ym).length), col: 'var(--warn)', go: 'overdue' },
+    { k: 'rate', c: 'c-info', icon: 'target', label: 'Kolektibilitas', val: rateOf({ count: records.length, paidN: records.filter(isPaid).length }), fmt: v => Math.round(v) + '%', delta: `<span class="delta flat">${custs.length} pelanggan</span>`, spark: s.map(rateOf), col: 'var(--info)', go: 'all' }
+  ];
+  const box = $('#kpis');
+  if (!box.children.length) {
+    box.innerHTML = items.map(it => `<div class="card kpi ${it.c}" data-go="${it.go}" id="kpi-${it.k}"><div class="kpi-top"><span class="kpi-label">${it.label}</span><span class="kpi-ico">${ic(it.icon)}</span></div><div class="kpi-val" data-v="0">0</div><div class="kpi-foot"><span class="d"></span><span class="sp"></span></div></div>`).join('');
+  }
+  items.forEach(it => {
+    const el = $('#kpi-' + it.k);
+    countUp($('.kpi-val', el), it.val, it.fmt);
+    $('.d', el).innerHTML = it.delta;
+    $('.sp', el).innerHTML = sparkline(it.spark, it.col);
+  });
+}
+
+function renderTrend() {
+  const data = series(range), stage = $('#trend'), W = Math.max(stage.clientWidth, 280), H = stage.clientHeight || 280;
+  const P = { t: 16, r: 16, b: 30, l: W < 480 ? 40 : 52 }, cw = W - P.l - P.r, ch = H - P.t - P.b;
+  const max = Math.max(...data.map(d => Math.max(d.debt, d.paid)), 100000) * 1.1;
+  const step = data.length > 1 ? cw / (data.length - 1) : 0;
+  const X = i => P.l + (data.length > 1 ? i * step : cw / 2), Y = v => P.t + ch - (v / max) * ch;
+  const dp = data.map((d, i) => ({ x: X(i), y: Y(d.debt) })), pp = data.map((d, i) => ({ x: X(i), y: Y(d.paid) }));
+  const base = P.t + ch, dc = smooth(dp), pc = smooth(pp);
+  const area = (c, p) => data.length > 1 ? `${c} L${p[p.length - 1].x.toFixed(1)},${base} L${p[0].x.toFixed(1)},${base} Z` : '';
+  let grid = '';
+  for (let i = 0; i <= 4; i++) { const y = P.t + (ch / 4) * i; grid += `<line x1="${P.l}" x2="${W - P.r}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-dasharray="3 5"/><text x="${P.l - 8}" y="${y + 4}" text-anchor="end" fill="var(--text-3)" font-size="10" font-family="JetBrains Mono, monospace">${short(max - (max / 4) * i)}</text>`; }
+  const every = data.length > 8 ? 2 : 1;
+  const xl = data.map((d, i) => i % every ? '' : `<text x="${X(i)}" y="${H - 8}" text-anchor="middle" fill="var(--text-2)" font-size="11" font-family="JetBrains Mono, monospace">${d.label}</text>`).join('');
+  stage.querySelector('svg')?.remove();
+  stage.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" id="trendSvg">
+    <defs><linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f43f5e" stop-opacity=".32"/><stop offset="1" stop-color="#f43f5e" stop-opacity="0"/></linearGradient>
+    <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34d399" stop-opacity=".26"/><stop offset="1" stop-color="#34d399" stop-opacity="0"/></linearGradient></defs>
+    ${grid}${xl}
+    <path class="fade-in" d="${area(pc, pp)}" fill="url(#gB)"/><path class="fade-in" d="${area(dc, dp)}" fill="url(#gA)"/>
+    <path class="${reduced ? '' : 'draw'}" pathLength="1" d="${pc}" fill="none" stroke="var(--ok)" stroke-width="2.4" stroke-linecap="round"/>
+    <path class="${reduced ? '' : 'draw'}" pathLength="1" d="${dc}" fill="none" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round"/>
+    <g id="hov" opacity="0"><line id="hl" y1="${P.t}" y2="${base}" stroke="var(--line-2)"/><circle id="hp" r="5" fill="var(--bg)" stroke="var(--ok)" stroke-width="2.5"/><circle id="hd" r="5" fill="var(--bg)" stroke="var(--accent)" stroke-width="2.5"/></g>
+    <rect x="${P.l}" y="${P.t}" width="${cw}" height="${ch}" fill="transparent" id="hit"/></svg>`);
+  const tip = $('#tip'), hov = $('#hov');
+  const move = ev => {
+    const r = $('#trendSvg').getBoundingClientRect(), px = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+    const i = data.length > 1 ? Math.max(0, Math.min(data.length - 1, Math.round((px - P.l) / step))) : 0, d = data[i];
+    hov.setAttribute('opacity', 1); $('#hl').setAttribute('x1', X(i)); $('#hl').setAttribute('x2', X(i));
+    $('#hp').setAttribute('cx', X(i)); $('#hp').setAttribute('cy', Y(d.paid)); $('#hd').setAttribute('cx', X(i)); $('#hd').setAttribute('cy', Y(d.debt));
+    tip.innerHTML = `<b>${d.full}</b><div class="row" style="color:var(--ok)"><span>Lunas</span><b class="mono">${rp(d.paid)}</b></div><div class="row" style="color:var(--accent-2)"><span>Piutang</span><b class="mono">${rp(d.debt)}</b></div><div class="row" style="color:var(--text-3);border-top:1px solid var(--line);margin-top:6px;padding-top:5px"><span>${d.count} periode</span></div>`;
+    tip.style.left = Math.min(Math.max(X(i), 95), W - 95) + 'px'; tip.style.top = Math.max(Math.min(Y(d.paid), Y(d.debt)), 90) + 'px'; tip.classList.add('show');
+  };
+  const leave = () => { hov.setAttribute('opacity', 0); tip.classList.remove('show'); };
+  const hit = $('#hit'); hit.addEventListener('pointermove', move); hit.addEventListener('pointerleave', leave); hit.addEventListener('touchmove', move, { passive: true }); hit.addEventListener('touchend', leave);
+}
+
+function renderDonut() {
+  const paid = records.filter(isPaid), over = records.filter(isOver), run = records.filter(r => !isPaid(r) && !isOver(r));
+  const sum = a => a.reduce((s, r) => s + r.amount, 0), tot = sum(records);
+  const parts = [{ n: 'Lunas', v: sum(paid), c: 'var(--ok)', cnt: paid.length }, { n: 'Berjalan', v: sum(run), c: 'var(--warn)', cnt: run.length }, { n: 'Overdue', v: sum(over), c: 'var(--bad)', cnt: over.length }];
+  let off = 0, arcs = `<circle cx="18" cy="18" r="15.9155" fill="none" stroke="var(--surface-3)" stroke-width="3.4"/>`;
+  parts.forEach((p, i) => { const pct = tot ? p.v / tot * 100 : 0; p.pct = pct; if (pct > 0) arcs += `<circle class="seg-arc" data-i="${i}" cx="18" cy="18" r="15.9155" fill="none" stroke="${p.c}" stroke-width="3.4" stroke-dasharray="${Math.max(pct - .8, .1)} ${100 - Math.max(pct - .8, .1)}" stroke-dashoffset="${-off}" stroke-linecap="round"/>`; off += pct; });
+  $('#donut').innerHTML = arcs;
+  const setC = i => { const p = parts[i]; $('#dcVal').textContent = Math.round(p.pct) + '%'; $('#dcLab').textContent = p.n; };
+  setC(0);
+  $$('.seg-arc', $('#donut')).forEach(a => { a.addEventListener('pointerenter', () => { setC(+a.dataset.i); a.setAttribute('stroke-width', 4.4); }); a.addEventListener('pointerleave', () => { setC(0); a.setAttribute('stroke-width', 3.4); }); });
+  $('#donutList').innerHTML = parts.map((p, i) => `<div class="strip" data-hi="${i}"><span class="strip-l"><i style="background:${p.c}"></i>${p.n}</span><span class="strip-v">${p.cnt} · ${short(p.v)}</span></div>`).join('');
+  $$('[data-hi]').forEach(s => s.addEventListener('pointerenter', () => setC(+s.dataset.hi)));
+}
+
+function renderRank() {
+  const top = customers().filter(c => c.debt > 0).sort((a, b) => b.debt - a.debt).slice(0, 5), mx = top[0]?.debt || 1;
+  $('#rank').innerHTML = top.length ? top.map(c => `<div class="rank-row" data-open="${esc(c.name)}">${avatar(c.name, { size: 'sm', over: c.over })}<div class="rank-main"><div class="rank-top"><span class="rank-name">${esc(c.name)}</span><span class="rank-amt">${rp(c.debt)}</span></div><div class="bar"><span style="width:${Math.round(c.debt / mx * 100)}%"></span></div></div></div>`).join('') : `<div class="empty"><b>Semua pelanggan lunas</b>Tidak ada piutang aktif saat ini.</div>`;
+}
+function renderFeed() {
+  const rec = [...records].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 6);
+  $('#feed').innerHTML = rec.length ? rec.map(r => `<div class="feed-row">${avatar(r.name, { size: 'sm', clean: isPaid(r) })}<div class="feed-main"><div class="feed-name">${esc(r.name)}</div><div class="feed-meta">${fmtDate(r.period)} · Tagihan WiFi${isOver(r) ? ' · <b style="color:var(--bad)">Jatuh Tempo</b>' : ''}</div></div><div><div class="feed-amt">${rp(r.amount)}</div><div style="text-align:right;margin-top:3px"><span class="pill ${isPaid(r) ? 'cash' : 'debt'}">${isPaid(r) ? 'LUNAS' : 'PIUTANG'}</span></div></div></div>`).join('') : `<div class="empty"><b>Belum ada data</b>Catat tagihan pertama atau muat data contoh di menu Data & Backup.</div>`;
+}
+
+/* ---------- customers ---------- */
+function renderList() {
+  let l = customers();
+  $('#navCount').textContent = l.length;
+  if (filter === 'debt') l = l.filter(c => c.unpaid > 0); else if (filter === 'overdue') l = l.filter(c => c.over > 0); else if (filter === 'paid') l = l.filter(c => c.unpaid === 0);
+  if (query) { const q = query.toLowerCase(); l = l.filter(c => c.name.toLowerCase().includes(q)); }
+  if (sortBy === 'debt') l.sort((a, b) => b.debt - a.debt); else if (sortBy === 'name') l.sort((a, b) => a.name.localeCompare(b.name, 'id')); else l.sort((a, b) => b.latest - a.latest);
+  if (!l.length) { $('#list').innerHTML = `<div class="card empty"><b>Tidak ada pelanggan ditemukan</b>${records.length ? 'Ubah filter atau kata kunci pencarian.' : 'Mulai dengan menekan Catat Tagihan.'}</div>`; return; }
+  $('#list').innerHTML = l.map((c, idx) => {
+    const key = c.name.toLowerCase();
+    const rows = c.bills.map(b => `<div class="prow${isOver(b) ? ' od' : ''}"><div class="d">${fmtDate(b.period)}</div><div class="n">Tagihan WiFi${isOver(b) ? ' <b style="color:var(--bad)">· Jatuh Tempo</b>' : ''}</div><div class="a">${rp(b.amount)}</div><span class="pill ${isPaid(b) ? 'cash' : 'debt'}">${isPaid(b) ? 'LUNAS' : 'PIUTANG'}</span>
+      <div class="acts">${!isPaid(b) ? `<button class="act pay" data-pay="${b.id}" title="Tandai lunas">${ic('check')}</button>` : ''}<button class="act" data-edit="${b.id}" title="Edit">${ic('edit')}</button><button class="act del" data-del="${b.id}" title="Hapus">${ic('trash')}</button></div></div>`).join('');
+    return `<div class="cust${openSet.has(key) ? ' open' : ''}" data-key="${esc(key)}" style="animation-delay:${Math.min(idx, 10) * 35}ms">
+      <div class="cust-head" data-toggle>${avatar(c.name, { over: c.over, clean: c.debt === 0 })}
+        <div class="cust-info"><div class="cust-name">${esc(c.name)}</div><div class="chips"><span class="chip">${glyphName(c.name)}</span><span class="chip">${c.bills.length} periode</span>${c.over ? `<span class="chip bad">⚠ ${c.over} overdue</span>` : ''}${c.debt === 0 ? '<span class="chip ok">Lunas semua</span>' : `<span class="chip">${c.unpaid} belum bayar</span>`}</div></div>
+        <button class="act" data-editcust="${esc(c.name)}" title="Edit nama / tambah utang atau cash" aria-label="Edit pelanggan">${ic('edit')}</button>
+        <div class="cust-bal"><b class="${c.debt === 0 ? 'settled' : ''}">${rp(c.debt)}</b><span>Lunas ${short(c.paid)}</span></div>
+        ${ic('chev', 'chev')}</div>
+      <div class="cust-body"><div>${rows}</div></div></div>`;
+  }).join('');
+}
+
+/* ---------- calendar ---------- */
+function renderCal() {
+  $('#calTitle').textContent = fmtMonth(calYM);
+  const [y, m] = calYM.split('-').map(Number), dim = new Date(y, m, 0).getDate(), off = (new Date(y, m - 1, 1).getDay() + 6) % 7;
+  const mk = {}; records.forEach(r => { if (ymOf(r.period) === calYM) { (mk[r.period] ||= { d: 0, c: 0 })[isPaid(r) ? 'c' : 'd']++; } });
+  let h = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map(d => `<div class="dow">${d}</div>`).join('') + '<div class="day void"></div>'.repeat(off);
+  for (let d = 1; d <= dim; d++) { const k = `${calYM}-${pad(d)}`, x = mk[k]; h += `<button class="day${k === today() ? ' today' : ''}${k === selDate ? ' sel' : ''}" data-date="${k}"><span>${d}</span><span class="dots">${x?.d ? '<i class="d1"></i>' : ''}${x?.c ? '<i class="d2"></i>' : ''}</span></button>`; }
+  $('#calGrid').innerHTML = h; renderDay();
+}
+function renderDay() {
+  $('#selLabel').textContent = '· ' + fmtDate(selDate);
+  const l = records.filter(r => r.period === selDate);
+  if (!l.length) { $('#dayList').innerHTML = `<div class="empty"><b>Tidak ada transaksi</b>Belum ada tagihan pada tanggal ini.</div>`; return; }
+  const d = l.filter(r => !isPaid(r)).reduce((s, r) => s + r.amount, 0), c = l.filter(isPaid).reduce((s, r) => s + r.amount, 0);
+  const settled = l.every(isPaid);
+  $('#dayList').innerHTML = `<div class="detail-overview">
+      <div class="detail-overview-top"><span class="detail-overview-label">Total piutang</span><span class="detail-state ${settled ? 'settled' : ''}">${settled ? '● Semua lunas' : '● Belum lunas'}</span></div>
+      <div class="detail-total">${rp(d)}</div>
+      <div class="detail-metrics">
+        <div><div class="detail-metric-label">Lunas</div><div class="detail-metric-value">${rp(c)}</div></div>
+        <div><div class="detail-metric-label">Transaksi</div><div class="detail-metric-value">${l.length} catatan</div></div>
+      </div>
+    </div>
+    <div class="detail-list-head"><div class="detail-list-title">Daftar transaksi</div><span class="detail-count">${l.length} transaksi</span></div>
+    <div class="feed detail-feed">` +
+    l.map(r => `<div class="feed-row">${avatar(r.name, { size: 'sm', clean: isPaid(r) })}<div class="feed-main"><div class="feed-name">${esc(r.name)}</div><div class="feed-meta">Tagihan WiFi${isOver(r) ? ' · <b style="color:var(--bad)">Jatuh Tempo</b>' : ''}</div></div><div><div class="feed-amt">${rp(r.amount)}</div><div style="text-align:right"><span class="pill ${isPaid(r) ? 'cash' : 'debt'}">${isPaid(r) ? 'LUNAS' : 'PIUTANG'}</span></div></div></div>`).join('') + '</div>';
+}
+
+/* ---------- data view ---------- */
+function renderDiag() {
+  $('#dCount').textContent = records.length + ' catatan';
+  const b = new Blob([JSON.stringify(records)]).size; $('#dSize').textContent = b < 1024 ? b + ' B' : (b / 1024).toFixed(1) + ' KB';
+  const lb = localStorage.getItem('mikasa.v01.lastBackup'); $('#dBackup').textContent = lb ? fmtDate(iso(new Date(Number(lb)))) : 'Belum ada';
+}
+function renderAll() { renderKpis(); renderTrend(); renderDonut(); renderRank(); renderFeed(); renderList(); renderCal(); renderDiag(); }
+
+/* ---------- navigation ---------- */
+const META = {
+  dashboard: ['Ringkasan', 'Performa penagihan dan kesehatan arus kas pelanggan WiFi Anda'],
+  customers: ['Pelanggan', 'Profil unik setiap pelanggan beserta riwayat periode tagihan'],
+  calendar: ['Kalender', 'Distribusi tagihan harian dan bulanan'],
+  data: ['Data & Backup', 'Ekspor, impor, dan kelola data lokal']
+};
+function go(v) {
+  currentView = v;
+  $$('.view').forEach(s => s.classList.toggle('active', s.id === 'v-' + v));
+  $$('[data-nav]').forEach(b => b.classList.toggle('active', b.dataset.nav === v));
+  $('#hTitle').textContent = META[v][0]; $('#hSub').textContent = META[v][1];
+  scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  if (v === 'dashboard') requestAnimationFrame(renderTrend);
+}
+
+/* ---------- form ---------- */
+function hideCustomerSuggestions() {
+  const box = $('#customerSuggestions');
+  if (!box) return;
+  box.hidden = true; box.innerHTML = '';
+  $('#fName')?.setAttribute('aria-expanded', 'false');
+}
+function updateCustomerSuggestions() {
+  const input = $('#fName'), box = $('#customerSuggestions');
+  if (!input || !box || !$('#formOv').classList.contains('open')) return;
+  const q = input.value.trim().toLocaleLowerCase('id');
+  if (!q) { hideCustomerSuggestions(); return; }
+  const matches = customers().filter(c => c.name.toLocaleLowerCase('id').includes(q))
+    .sort((a,b) => a.name.localeCompare(b.name, 'id')).slice(0, 6);
+  const exact = matches.some(c => c.name.toLocaleLowerCase('id') === q);
+  box.innerHTML = matches.map(c => `<button type="button" class="customer-option" role="option" data-pick-customer="${esc(c.name)}"><span class="option-icon">${ic('user-round')}</span><span><strong>${esc(c.name)}</strong><span class="option-meta">Pelanggan terdaftar</span></span></button>`).join('')
+    + (!exact ? `<button type="button" class="customer-option create" role="option" data-new-customer="1"><span class="option-icon">${ic('plus')}</span><span><strong>Gunakan nama “${esc(input.value.trim())}”</strong><span class="option-meta">Nama baru · lanjutkan pengisian transaksi</span></span></button>` : '')
+    + (!matches.length && exact ? '' : '');
+  if (!matches.length && exact === false) box.innerHTML = `<div class="customer-empty">Nama belum terdaftar.</div><button type="button" class="customer-option create" data-new-customer="1"><span class="option-icon">${ic('plus')}</span><span><strong>Gunakan nama “${esc(input.value.trim())}”</strong><span class="option-meta">Lanjutkan sebagai nama baru</span></span></button>`;
+  box.hidden = false; input.setAttribute('aria-expanded', 'true');
+}
+
+function openForm(rec, name = '', date = '', cust = false) {
+  editId = rec ? rec.id : null; editCust = cust ? name : null; formStatus = rec ? rec.status : 'debt';
+  $('#fTitle').textContent = cust ? 'Edit Pelanggan' : rec ? 'Edit Tagihan' : 'Catat Tagihan';
+  $('#fSub').textContent = cust ? 'Ubah nama pelanggan, atau tambah utang / cash baru (kosongkan nominal jika hanya ganti nama).' : rec ? `Perbarui catatan ${rec.name}.` : 'Tambahkan periode tagihan untuk pelanggan.';
+  $('#fSaveTxt').textContent = rec ? 'Simpan perubahan' : 'Simpan';
+  $('#lAmt').textContent = cust ? 'Nominal baru (Rp)' : 'Nominal (Rp) *';
+  $('#fName').value = rec ? rec.name : name; hideCustomerSuggestions(); $('#customerHint').textContent = 'Ketik nama untuk mencari pelanggan terdaftar, atau masukkan nama baru.'; $('#fAmt').value = rec ? rec.amount : '';
+  $('#fDate').value = rec ? rec.period : (date || today());
+  $$('#amts button').forEach(b => b.classList.remove('on')); syncStatus();
+  $('#formOv').classList.add('open');
+  setTimeout(() => (name ? $('#fAmt') : $('#fName')).focus(), 80);
+}
+const closeForm = () => { $('#formOv').classList.remove('open'); hideCustomerSuggestions(); editId = null; editCust = null; };
+function saveCust(name, amount, period) {
+  const old = editCust, msg = [];
+  if (!name) { toast('Nama pelanggan wajib diisi', 1); $('#fName').focus(); return; }
+  if (amount > 0 && !period) { toast('Tanggal periode wajib diisi', 1); $('#fDate').focus(); return; }
+  if (name !== old) {
+    records.forEach(x => { if (x.name.toLowerCase() === old.toLowerCase()) x.name = name; });
+    openSet.delete(old.toLowerCase()); msg.push('Nama diperbarui');
+  }
+  if (amount > 0) {
+    records.unshift({ id: uid(), name, amount, period, status: formStatus, paidAt: formStatus === 'cash' ? today() : null, createdAt: Date.now() });
+    msg.push(formStatus === 'cash' ? 'Cash ditambahkan' : 'Utang ditambahkan');
+  }
+  if (!msg.length) { toast('Tidak ada perubahan'); return; }
+  openSet.add(name.toLowerCase()); save(); closeForm(); renderAll(); toast(msg.join(' · '));
+}
+function syncStatus() { $('#sDebt').className = formStatus === 'debt' ? 'on-debt' : ''; $('#sCash').className = formStatus === 'cash' ? 'on-cash' : ''; }
+function saveForm() {
+  const name = $('#fName').value.trim(), amount = Math.abs(parseFloat($('#fAmt').value) || 0), period = $('#fDate').value;
+  if (editCust !== null) return saveCust(name, amount, period);
+  if (!name) { toast('Nama pelanggan wajib diisi', 1); $('#fName').focus(); return; }
+  if (amount <= 0) { toast('Nominal harus lebih dari Rp 0', 1); $('#fAmt').focus(); return; }
+  if (!period) { toast('Tanggal periode wajib diisi', 1); $('#fDate').focus(); return; }
+  if (editId) {
+    const r = records.find(x => x.id === editId);
+    if (r) {
+      const oldKey = r.name.toLowerCase();
+      Object.assign(r, { name, amount, period, status: formStatus });
+      if (formStatus === 'cash' && !r.paidAt) r.paidAt = today(); if (formStatus === 'debt') r.paidAt = null;
+      if (oldKey !== name.toLowerCase()) records.forEach(x => { if (x.name.toLowerCase() === oldKey) x.name = name; });
+      toast('Perubahan disimpan');
+    }
+  } else {
+    records.unshift({ id: uid(), name, amount, period, status: formStatus, paidAt: formStatus === 'cash' ? today() : null, createdAt: Date.now() });
+    openSet.add(name.toLowerCase()); toast(`Tagihan ${name} ditambahkan`);
+  }
+  save(); closeForm(); renderAll();
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  let el;
+  if ((el = t.closest('[data-nav]'))) return go(el.dataset.nav);
+  if ((el = t.closest('[data-go]'))) { filter = el.dataset.go; $$('#filterSeg button').forEach(b => b.classList.toggle('active', b.dataset.filter === filter)); go('customers'); return renderList(); }
+  if ((el = t.closest('[data-av]'))) { avMode = el.dataset.av; localStorage.setItem(AVKEY, avMode); $$('#avSeg button').forEach(b => b.classList.toggle('active', b === el)); renderAll(); return toast('Gaya ikon: ' + el.textContent); }
+  if ((el = t.closest('[data-range]'))) { range = +el.dataset.range; $$('#rangeSeg button').forEach(b => b.classList.toggle('active', b === el)); return renderTrend(); }
+  if ((el = t.closest('[data-filter]'))) { filter = el.dataset.filter; $$('#filterSeg button').forEach(b => b.classList.toggle('active', b === el)); return renderList(); }
+  if ((el = t.closest('[data-quick]'))) { e.stopPropagation(); return openForm(null, el.dataset.quick); }
+  if ((el = t.closest('[data-pay]'))) { const r = records.find(x => x.id === el.dataset.pay); if (r) { r.status = 'cash'; r.paidAt = today(); save(); renderAll(); toast(`${r.name} ditandai lunas`); } return; }
+  if ((el = t.closest('[data-editcust]'))) { e.stopPropagation(); return openForm(null, el.dataset.editcust, '', true); }
+  if ((el = t.closest('[data-edit]'))) { const r = records.find(x => x.id === el.dataset.edit); if (r) openForm(r); return; }
+  if ((el = t.closest('[data-del]'))) { const r = records.find(x => x.id === el.dataset.del); if (r) ask('Hapus catatan', `Hapus tagihan ${r.name} sebesar ${rp(r.amount)}?`, () => { records = records.filter(x => x.id !== r.id); save(); renderAll(); toast('Catatan dihapus'); }, 'Hapus'); return; }
+  if ((el = t.closest('[data-toggle]'))) { const card = el.parentElement, k = card.dataset.key; card.classList.toggle('open'); card.classList.contains('open') ? openSet.add(k) : openSet.delete(k); return; }
+  if ((el = t.closest('[data-open]'))) { openSet.add(el.dataset.open.toLowerCase()); query = ''; $('#q').value = ''; filter = 'all'; $$('#filterSeg button').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all')); go('customers'); renderList(); const c = $(`.cust[data-key="${CSS.escape(el.dataset.open.toLowerCase())}"]`); if (c) setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120); return; }
+  if ((el = t.closest('[data-date]'))) { selDate = el.dataset.date; return renderCal(); }
+  if ((el = t.closest('[data-amt]'))) { $('#fAmt').value = el.dataset.amt; $$('#amts button').forEach(b => b.classList.toggle('on', b === el)); return; }
+  if (t.classList.contains('overlay')) { if (t.id === 'formOv') closeForm(); else { t.classList.remove('open'); confirmCb = null; } }
+});
+$('#topAdd').onclick = () => openForm(); $('#dockAdd').onclick = () => openForm();
+$('#calAdd').onclick = () => openForm(null, '', selDate);
+$('#fCancel').onclick = closeForm; $('#fSave').onclick = saveForm;
+$('#fName').addEventListener('input', updateCustomerSuggestions);
+$('#fName').addEventListener('focus', () => { if ($('#fName').value.trim()) updateCustomerSuggestions(); });
+$('#customerSuggestions').addEventListener('pointerdown', e => {
+  const pick = e.target.closest('[data-pick-customer]');
+  const newName = e.target.closest('[data-new-customer]');
+  if (pick) {
+    e.preventDefault(); $('#fName').value = pick.dataset.pickCustomer;
+    $('#customerHint').textContent = 'Pelanggan terdaftar dipilih.';
+    hideCustomerSuggestions(); $('#fAmt').focus();
+  } else if (newName) {
+    e.preventDefault(); $('#customerHint').textContent = 'Nama baru. Pastikan ejaan sudah benar sebelum menyimpan.';
+    hideCustomerSuggestions(); $('#fAmt').focus();
+  }
+});
+document.addEventListener('pointerdown', e => {
+  if (!e.target.closest('.customer-picker')) hideCustomerSuggestions();
+});
+$('#sDebt').onclick = () => { formStatus = 'debt'; syncStatus(); }; $('#sCash').onclick = () => { formStatus = 'cash'; syncStatus(); };
+$('#formOv').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.tagName === 'INPUT') saveForm(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeForm(); $('#confOv').classList.remove('open'); } });
+$('#cNo').onclick = () => { $('#confOv').classList.remove('open'); confirmCb = null; };
+$('#cYes').onclick = () => { $('#confOv').classList.remove('open'); const f = confirmCb; confirmCb = null; if (f) f(); };
+$('#q').addEventListener('input', e => { query = e.target.value; renderList(); });
+$('#sort').addEventListener('change', e => { sortBy = e.target.value; renderList(); });
+$('#calPrev').onclick = () => { const [y, m] = calYM.split('-').map(Number), d = new Date(y, m - 2, 1); calYM = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; renderCal(); };
+$('#calNext').onclick = () => { const [y, m] = calYM.split('-').map(Number), d = new Date(y, m, 1); calYM = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; renderCal(); };
+$('#calToday').onclick = () => { calYM = curYM(); selDate = today(); renderCal(); };
+
+function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); $('#themeIco').innerHTML = `<use href="#i-${t === 'dark' ? 'sun' : 'moon'}"/>`; document.querySelector('meta[name=theme-color]').content = t === 'dark' ? '#0a0c12' : '#f5f6fa'; }
+$('#themeBtn').onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem(THEMEKEY, t); applyTheme(t); };
+
+$('#bJson').onclick = () => { download(`mikasa-backup-${today()}.json`, JSON.stringify({ app: 'mikasa-wireless', format: 'MikasaWirelessLedger', version: 2, exportedAt: new Date().toISOString(), count: records.length, records, customers: [...new Set([...importedCustomers, ...customers().map(c => c.name)])] }, null, 2), 'application/json'); localStorage.setItem('mikasa.v01.lastBackup', String(Date.now())); renderDiag(); toast('Backup JSON diunduh'); };
+$('#bCsv').onclick = () => { const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"'; const rows = [['Nama', 'Status', 'Jumlah', 'Periode', 'Tanggal Lunas'].map(q).join(',')]; records.forEach(r => rows.push([r.name, isPaid(r) ? 'LUNAS' : 'PIUTANG', r.amount, r.period, r.paidAt || ''].map(q).join(','))); download(`mikasa-export-${today()}.csv`, '\ufeff' + rows.join('\n'), 'text/csv;charset=utf-8'); toast('CSV diunduh'); };
+$('#restore').addEventListener('change', e => {
+  const f = e.target.files?.[0]; if (!f) return;
+  const rd = new FileReader();
+  rd.onload = ev => {
+    try {
+      const isCsv = /\.csv$/i.test(f.name) || /text\/csv/i.test(f.type);
+      let arr, restoredNames = [];
+      if (isCsv) {
+        const rows = parseCSVText(String(ev.target.result || ''))
+          .filter(r => Array.isArray(r) && r.some(v => String(v ?? '').trim()));
+        if (rows.length < 2) throw new Error('CSV kosong atau tidak memiliki baris transaksi.');
+        const headers = rows[0].map(v => cleanHeader(v));
+        const ixName = colIndex(headers, ['nama']);
+        const ixStatus = colIndex(headers, ['status']);
+        const ixAmount = colIndex(headers, ['jumlah']);
+        const ixPeriod = colIndex(headers, ['periode']);
+        const ixPaid = colIndex(headers, ['tanggallunas']);
+        if ([ixName, ixStatus, ixAmount, ixPeriod].some(ix => ix < 0))
+          throw new Error('Header CSV tidak sesuai. Gunakan file Ekspor CSV Mikasa (Nama, Status, Jumlah, Periode, Tanggal Lunas).');
+        const invalid = [];
+        arr = [];
+        rows.slice(1).forEach((row, i) => {
+          const name = String(row[ixName] ?? '').trim();
+          const statusText = String(row[ixStatus] ?? '').trim().toLocaleLowerCase('id');
+          const rawAmount = String(row[ixAmount] ?? '').trim().replace(/[^\d,.-]/g, '');
+          const amount = Number(rawAmount.replace(/\./g, '').replace(',', '.'));
+          const period = String(row[ixPeriod] ?? '').trim();
+          const paidAt = ixPaid >= 0 ? String(row[ixPaid] ?? '').trim() : '';
+          if (!name || !['lunas', 'piutang'].includes(statusText) || !Number.isFinite(amount) || amount < 0 || !period) {
+            invalid.push(i + 2); return;
+          }
+          arr.push({ name, amount, period, status: statusText === 'lunas' ? 'cash' : 'debt',
+            paidAt: statusText === 'lunas' && paidAt ? paidAt : null });
+        });
+        if (invalid.length) throw new Error(`CSV memiliki ${invalid.length} baris tidak valid (baris: ${invalid.slice(0, 8).join(', ')}${invalid.length > 8 ? ', …' : ''}). Data tidak diubah.`);
+        restoredNames = [...new Set(arr.map(r => r.name))];
+      } else {
+        const d = JSON.parse(ev.target.result);
+        arr = Array.isArray(d.records) ? d.records : Array.isArray(d) ? d : Array.isArray(d.customers) ? migrate(d.customers) : null;
+        if (!arr) throw new Error('Struktur backup JSON tidak dikenali.');
+        restoredNames = Array.isArray(d.customers) ? d.customers.map(x => typeof x === 'string' ? x.trim() : String(x.name || x.nama || '').trim()).filter(Boolean) : [];
+      }
+      const clean = arr.map(normalize).filter(r => r && r.period);
+      if (!clean.length && !restoredNames.length) throw new Error('Tidak ada data valid untuk dipulihkan.');
+      const sourceLabel = isCsv ? 'CSV' : 'backup';
+      ask('Pulihkan data', `Ganti data saat ini dengan ${clean.length} catatan dan ${restoredNames.length} nama pelanggan dari ${sourceLabel}? Data lokal saat ini akan diganti.`, () => {
+        const previousRecords = records, previousCustomers = importedCustomers;
+        records = clean; importedCustomers = [...new Set(restoredNames)];
+        try {
+          localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers));
+          if (!save()) throw new Error('Penyimpanan transaksi gagal.');
+        } catch(err) {
+          records = previousRecords; importedCustomers = previousCustomers;
+          try { localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers)); } catch (_) {}
+          try { localStorage.setItem(KEY, JSON.stringify(previousRecords)); } catch (_) {}
+          toast('Pemulihan gagal disimpan. Data sesi dikembalikan.', 1); return;
+        }
+        renderAll();
+        toast(`Pemulihan selesai: ${clean.length} catatan, ${importedCustomers.length} pelanggan`);
+      });
+    } catch (err) {
+      toast(err.message || 'File tidak dapat dibaca atau formatnya tidak sesuai.', 1);
+    } finally { e.target.value = ''; }
+  };
+  rd.onerror = () => { toast('File gagal dibaca. Coba pilih file dari penyimpanan perangkat.', 1); e.target.value = ''; };
+  rd.readAsText(f, 'UTF-8');
+});
+/* ---------- import customers + opening receivable from XLSX / CSV ---------- */
+const importInput = $('#customerImport');
+const cleanHeader = v => String(v || '').trim().toLocaleLowerCase('id').replace(/[\s_\-().]/g, '');
+function parseCSVText(text) {
+  const rows=[]; let row=[], cell='', quoted=false;
+  text=text.replace(/^\uFEFF/,'');
+  for(let i=0;i<text.length;i++){const ch=text[i], nx=text[i+1];
+    if(ch==='"' && quoted && nx==='"'){cell+='"';i++;}
+    else if(ch==='"'){quoted=!quoted;}
+    else if(ch===',' && !quoted){row.push(cell);cell='';}
+    else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&nx==='\n')i++;row.push(cell);if(row.some(v=>String(v).trim()))rows.push(row);row=[];cell='';}
+    else cell+=ch;
+  }
+  row.push(cell); if(row.some(v=>String(v).trim()))rows.push(row); return rows;
+}
+function parseImportDate(v) {
+  const s=String(v??'').trim(); if(!s || s==='-') return '';
+  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m){const d=new Date(+m[3],+m[2]-1,+m[1]);return d.getFullYear()===+m[3]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[1]?`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`:'';}
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})/); if(m){const d=new Date(+m[1],+m[2]-1,+m[3]);return d.getFullYear()===+m[1]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[3]?m[0].slice(0,10):'';}
+  return '';
+}
+function colIndex(headers, names){return headers.findIndex(h=>names.includes(cleanHeader(h)));}
+importInput.addEventListener('change', async e => {
+  const file=e.target.files?.[0]; if(!file)return;
+  try {
+    let rows;
+    if(/\.csv$/i.test(file.name)) rows=parseCSVText(await file.text());
+    else {
+      if(!window.XLSX) throw new Error('Pembaca XLSX belum tersedia. Periksa koneksi atau gunakan CSV.');
+      const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});
+      rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:false,defval:''});
+    }
+    rows=rows.filter(r=>Array.isArray(r)&&r.some(v=>String(v??'').trim()));
+    if(!rows.length) throw new Error('File kosong.');
+    const headers=rows[0].map(v=>String(v??'').trim());
+    const ix=colIndex(headers,['nama','namapelanggan','customer','customername','pelanggan','name','akun','account','username']);
+    if(ix<0) throw new Error('Kolom nama tidak ditemukan. Gunakan header Nama atau Account.');
+    const dateIx=colIndex(headers,['tanggalmulaiutang','activatedat','tanggalaktivasi','tanggalmulai']);
+    const amountIx=colIndex(headers,['nominalrp','nominal','amount','utang','tagihan']);
+    const deviceIx=colIndex(headers,['jumlahdevice','device','devices']);
+    const seen=new Map(), duplicates=[], invalid=[];
+    rows.slice(1).forEach((r,i)=>{
+      const name=String(r[ix]??'').trim(); if(!name){invalid.push(i+2);return;}
+      const k=name.toLocaleLowerCase('id'); if(seen.has(k)){duplicates.push(name);return;}
+      const date=dateIx>=0?parseImportDate(r[dateIx]):'';
+      let amount=amountIx>=0?Number(String(r[amountIx]??'').replace(/[^\d,.-]/g,'').replace(/\./g,'').replace(',','.')):0;
+      if(!(amount>0) && deviceIx>=0){const dev=Number(String(r[deviceIx]??'').trim()); if(dev>0) amount=dev*100000;}
+      seen.set(k,{name,date,amount:Number.isFinite(amount)?Math.round(amount):0});
+    });
+    const entries=[...seen.values()];
+    const existingCustomers=new Map(customers().map(c=>[c.name.toLocaleLowerCase('id'),c]));
+    const noHistory=entries.filter(x=>!(existingCustomers.get(x.name.toLocaleLowerCase('id'))?.bills.length));
+    const historySkip=entries.filter(x=>(existingCustomers.get(x.name.toLocaleLowerCase('id'))?.bills.length||0)>0);
+    const toBill=noHistory.filter(x=>x.amount>0&&x.date);
+    const missingDate=noHistory.filter(x=>x.amount>0&&!x.date);
+    const noAmount=noHistory.filter(x=>!(x.amount>0));
+    const newNames=entries.filter(x=>!existingCustomers.has(x.name.toLocaleLowerCase('id'))).map(x=>x.name);
+    const preview=toBill.slice(0,7).map(x=>`• ${x.name} — ${x.date.split('-').reverse().join('/')} — ${rp(x.amount)}`).join('\n')||'Tidak ada tagihan awal valid.';
+    const msg=`File: ${file.name}\nNama unik: ${entries.length}\nProfil pelanggan baru: ${newNames.length}\nTagihan awal yang akan dibuat: ${toBill.length}\nPelanggan dengan riwayat transaksi (dilewati): ${historySkip.length}\nNominal ada, tanggal kosong/tidak valid: ${missingDate.length}\nNominal tidak tersedia: ${noAmount.length}\nDuplikat di file (dilewati): ${duplicates.length}\nBaris tanpa nama: ${invalid.length}\n\nPreview tagihan awal:\n${preview}${toBill.length>7?`\n…dan ${toBill.length-7} lainnya`:''}\n\nSetiap tagihan awal memakai status PIUTANG dan tanggal dari file. Tidak dibuat tagihan berulang. Pelanggan dengan riwayat transaksi dilewati agar tidak tertagih ganda. Lanjutkan?`;
+    if(!entries.length){toast('Tidak ada nama pelanggan valid.',1);return;}
+    if(!confirm(msg)) return;
+    const known=new Set(importedCustomers.map(n=>n.toLocaleLowerCase('id')));
+    newNames.forEach(n=>{if(!known.has(n.toLocaleLowerCase('id'))){importedCustomers.push(n);known.add(n.toLocaleLowerCase('id'));}});
+    const newBills=toBill.map(x=>({id:uid(),name:x.name,amount:x.amount,period:x.date,status:'debt',paidAt:null,createdAt:Date.now(),source:'account-import-opening'}));
+    records.push(...newBills);
+    try { localStorage.setItem(CUSTOMER_KEY,JSON.stringify(importedCustomers)); save(); }
+    catch(err){ records.splice(Math.max(0,records.length-newBills.length),newBills.length); throw new Error('Penyimpanan lokal gagal. Perubahan transaksi dibatalkan.');}
+    renderAll();
+    toast(`Impor selesai: ${newNames.length} pelanggan baru · ${newBills.length} tagihan awal dibuat`);
+  } catch(err){ toast(err.message || 'File tidak dapat dibaca.',1); }
+  finally { importInput.value=''; }
+});
+
+$('#bSeed').onclick = () => ask('Muat data contoh', 'Tambahkan data simulasi untuk mencoba grafik dan ikon profil?', () => {
+  const now = new Date(), D = (mo, day = 10) => { const d = new Date(now.getFullYear(), now.getMonth() - mo, day); return iso(d); };
+  const people = [['Andi Wijaya', 150000, 'Gamer 50 Mbps'], ['Budi Santoso', 200000, 'Bisnis Dedicated'], ['Citra Lestari', 100000, 'Home 20 Mbps'], ['Dimas Pratama', 150000, 'Streaming 30 Mbps'], ['Eka Putri', 250000, 'Pro Fiber 100 Mbps'], ['Fajar Nugroho', 120000, 'Keluarga 25 Mbps'], ['Gita Maharani', 175000, 'Home 40 Mbps'], ['Hendra Kusuma', 100000, 'Home 20 Mbps']];
+  const out = []; let s = 7;
+  const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  people.forEach(([name, amt], pi) => { for (let mo = 7; mo >= 0; mo--) { const lateBias = pi === 3 || pi === 5 ? .55 : .15, debt = mo === 0 ? rnd() < .5 : rnd() < lateBias * (mo < 3 ? 1.4 : .5); out.push({ id: uid(), name, amount: amt, period: D(mo, 5 + pi), status: debt ? 'debt' : 'cash', paidAt: debt ? null : D(mo, 7 + pi), createdAt: Date.now() - mo * 86400000 * 5 - pi * 1000 }); } });
+  records.push(...out); save(); renderAll(); toast('Data contoh ditambahkan');
+});
+$('#bWipe').onclick = () => ask('Hapus semua data', 'Seluruh catatan akan dihapus permanen dari perangkat ini. Lanjutkan?', () => { records = []; importedCustomers = []; localStorage.removeItem(CUSTOMER_KEY); openSet.clear(); save(); renderAll(); toast('Semua data dihapus'); }, 'Hapus semua');
+
+/* ---------- init ---------- */
+const tick = () => { const d = new Date(); $('#clock').textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`; };
+setInterval(tick, 1000); tick();
+$$('#avSeg button').forEach(b => b.classList.toggle('active', b.dataset.av === avMode));
+applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+
+// ---------- Cloud beta controls ----------
+(() => {
+  const dlg = document.getElementById('cloudDialog');
+  const open = document.getElementById('cloudOpen');
+  const cfgInputs = { url: document.getElementById('cloudUrl'), key: document.getElementById('cloudKey') };
+  let cloudUnsub = null;
+  const readCfg = () => { try { return JSON.parse(localStorage.getItem(cloudCfgKey) || '{}'); } catch (_) { return {}; } };
+  const setCfgInputs = () => { const c=readCfg(); cfgInputs.url.value=c.url||''; cfgInputs.key.value=c.key||''; };
+  async function connect() {
+    const cfg = { url: cfgInputs.url.value.trim().replace(/\/+$/,''), key: cfgInputs.key.value.trim() };
+    if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(cfg.url) || !cfg.key) throw new Error('Project URL atau public key belum benar.');
+    localStorage.setItem(cloudCfgKey, JSON.stringify(cfg));
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+    mikasaCloud = createClient(cfg.url, cfg.key, { auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } });
+    return mikasaCloud;
+  }
+  async function refreshCloud(adopt=true) {
+    if (!mikasaCloud) await connect();
+    const { data: auth, error: authErr } = await mikasaCloud.auth.getUser();
+    if (authErr) throw authErr;
+    cloudUser = auth.user;
+    if (!cloudUser) throw new Error('Belum login. Isi email dan password lalu pilih Hubungkan & Login.');
+    const { data, error } = await mikasaCloud.from('mikasa_workspaces').select('payload,revision,updated_at').eq('owner_id',cloudUser.id).maybeSingle();
+    if (error) throw error;
+    if (!data) {
+      const localCount=records.length, localCust=importedCustomers.length;
+      if (!confirm(`Workspace cloud masih kosong.\n\nMigrasikan data PERANGKAT INI ke cloud?\n${localCount} transaksi · ${localCust} pelanggan eksplisit\n\nPastikan perangkat ini adalah sumber data utama dan backup JSON sudah diunduh.`)) {
+        cloudSetStatus('Login aktif, cloud kosong. Migrasi ditunda. Jangan lakukan perubahan yang dianggap sinkron.',true); return;
+      }
+      try {
+        const result=await mikasaCloud.rpc('mikasa_save_workspace',{p_payload:cloudPayload(),p_expected_revision:0});
+        if(result.error) throw result.error;
+        const row=Array.isArray(result.data)?result.data[0]:result.data;
+        if(!row?.ok) throw new Error('Migrasi bertabrakan dengan perubahan lain. Muat ulang workspace.');
+        cloudRevision=Number(row.new_revision); cloudConflict=false; cloudEnabled=true;
+        cloudSetStatus(`Migrasi perangkat selesai · ${localCount} transaksi · revisi ${cloudRevision}`);
+      } catch(e) { cloudEnabled=false; throw e; }
+    } else if (adopt) {
+      const same = Number(data.revision)===cloudRevision && cloudEnabled;
+      if (!same && !confirm(`Workspace cloud ditemukan (revisi ${data.revision}).\n${(data.payload.records||[]).length} transaksi.\n\nGanti tampilan perangkat ini dengan data cloud? Data lokal yang berbeda tidak akan diunggah.`)) {
+        cloudEnabled=false; cloudSetStatus('Cloud login aktif, tetapi data lokal belum diselaraskan. Muat cloud saat siap.',true); return;
+      }
+      records=(data.payload.records||[]).map(normalize).filter(Boolean);
+      importedCustomers=[...new Set((data.payload.customers||[]).map(n=>String(n||'').trim()).filter(Boolean))];
+      localStorage.setItem(KEY,JSON.stringify(records)); localStorage.setItem(CUSTOMER_KEY,JSON.stringify(importedCustomers));
+      cloudRevision=Number(data.revision)||0; cloudConflict=false; cloudEnabled=true;
+      renderAll(); cloudSetStatus(`Data cloud dimuat · ${records.length} transaksi · revisi ${cloudRevision}`);
+    }
+    if (cloudUnsub) cloudUnsub();
+    const channel=mikasaCloud.channel('mikasa-workspace-change')
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'mikasa_workspaces',filter:`owner_id=eq.${cloudUser.id}`},payload=>{
+        const remote=Number(payload.new?.revision||0);
+        if (remote>cloudRevision) {
+          cloudConflict=true; cloudEnabled=false;
+          cloudSetStatus('Perangkat lain memperbarui data. Penyimpanan dihentikan sementara. Pilih “Muat data cloud” setelah memastikan perubahan lokal aman.',true);
+        }
+      }).subscribe();
+    cloudUnsub=()=>mikasaCloud.removeChannel(channel);
+  }
+  open?.addEventListener('click',()=>{setCfgInputs();dlg.showModal();});
+  document.getElementById('cloudClose').addEventListener('click',()=>dlg.close());
+  document.getElementById('cloudForm').addEventListener('submit',async e=>{
+    e.preventDefault(); const b=document.getElementById('cloudLogin'); b.disabled=true;
+    try {
+      await connect();
+      const {error}=await mikasaCloud.auth.signInWithPassword({email:document.getElementById('cloudEmail').value.trim(),password:document.getElementById('cloudPassword').value});
+      if(error) throw error;
+      await refreshCloud(true);
+      document.getElementById('cloudPassword').value='';
+    } catch(err) { cloudSetStatus('Koneksi/login gagal: '+(err.message||String(err)),true); }
+    finally { b.disabled=false; }
+  });
+  document.getElementById('cloudRefresh').addEventListener('click',async()=>{
+    try { await refreshCloud(true); } catch(err) { cloudSetStatus('Gagal memuat cloud: '+(err.message||String(err)),true); }
+  });
+  document.getElementById('cloudLogout').addEventListener('click',async()=>{
+    try {
+      if (!mikasaCloud) await connect();
+      const {error}=await mikasaCloud.auth.signOut(); if(error) throw error;
+      if(cloudUnsub) cloudUnsub(); cloudUnsub=null;
+      cloudEnabled=false; cloudConflict=false; cloudUser=null; cloudRevision=0;
+      cloudSetStatus('Logout. Data yang terlihat tetap tersimpan sebagai salinan lokal.');
+    } catch(err) { cloudSetStatus('Logout gagal: '+err.message,true); }
+  });
+  try {
+    const cfg=readCfg();
+    if(cfg.url && cfg.key) {
+      connect().then(async()=>{
+        const {data:{session}}=await mikasaCloud.auth.getSession();
+        if(session?.user) { cloudUser=session.user; cloudSetStatus('Sesi pemilik terdeteksi. Tekan Cloud lalu “Muat data cloud” untuk menyelaraskan.'); }
+      }).catch(()=>{});
+    }
+  } catch (_) {}
+})();
+
+load(); renderAll();
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (currentView === 'dashboard') renderTrend(); }, 120); });
+if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+})();
+</script>
+</body>
+</html>
