@@ -546,6 +546,49 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
   html:focus-within { scroll-behavior: auto; }
 }
 
+
+/* Customer search layout fix: prevent the search field from collapsing beside filters */
+@media (max-width: 700px) {
+  #v-customers .toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    align-items: stretch;
+  }
+  #v-customers .search {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0 14px;
+    gap: 10px;
+  }
+  #v-customers .search input {
+    display: block;
+    flex: 1 1 auto;
+    width: 0;
+    min-width: 0;
+    font-size: 14px;
+  }
+  #v-customers #filterSeg {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  #v-customers #filterSeg button {
+    min-width: 0;
+    padding: 8px 3px;
+    white-space: normal;
+    line-height: 1.2;
+    font-size: 11px;
+  }
+  #v-customers #sort {
+    width: 100%;
+    min-height: 46px;
+  }
+}
+
 </style>
 </head>
 <body>
