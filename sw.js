@@ -1,6 +1,6 @@
 'use strict';
-const CACHE = 'mikasa-v01-release-3';
-const CORE = ['./', './index.html', './manifest.json'];
+const CACHE = 'mikasa-v01-pwa-4';
+const CORE = ['./', './index.html', './manifest.json', './assets/icon-192.png', './assets/icon-512.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
