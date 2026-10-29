@@ -1,15 +1,53 @@
-const CACHE = 'mikasa-v01-premium-cache-v3';
-const CORE = ['./', './index.html', './manifest.json', './customer-avatar.jpg', './icon-192.png', './icon-512.png', './mikasa-bg.png'];
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())));
-self.addEventListener('activate', e => e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
-self.addEventListener('fetch', e => {
-  const req = e.request;
-  if (req.method !== 'GET') return;
-  e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(res => {
-    if (res.ok && new URL(req.url).origin === location.origin) {
-      const cp = res.clone();
-      caches.open(CACHE).then(c => c.put(req, cp));
+'use strict';
+const CACHE = 'mikasa-v01-release-2';
+const CORE = ['./', './index.html', './manifest.json'];
+
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await Promise.all(CORE.map(async path => {
+      try { await cache.add(path); } catch (_) { /* Optional during offline install. */ }
+    }));
+    await self.skipWaiting();
+  })());
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(key => key.startsWith('mikasa-v01-') && key !== CACHE)
+      .map(key => caches.delete(key)));
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  // Do not cache range requests or opaque cross-origin assets.
+  if (request.headers.has('range')) return;
+
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    const cached = await cache.match(request);
+    const isNavigation = request.mode === 'navigate';
+    const refresh = fetch(request).then(async response => {
+      if (response.ok && response.type === 'basic') {
+        await cache.put(request, response.clone());
+      }
+      return response;
+    });
+    if (cached) {
+      event.waitUntil(refresh.catch(() => {}));
+      return cached;
     }
-    return res;
-  }).catch(() => caches.match('./index.html'))));
+    try { return await refresh; }
+    catch (_) {
+      if (isNavigation) return (await cache.match('./index.html')) || Response.error();
+      return Response.error();
+    }
+  })());
 });
