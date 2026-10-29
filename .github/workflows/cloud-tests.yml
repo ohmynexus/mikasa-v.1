@@ -1,0 +1,36 @@
+name: Cloud workflow verification
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, "feat/mikasa-personal-cloud"]
+
+permissions:
+  contents: read
+
+jobs:
+  static-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run cloud contract tests
+        run: node --test tests/personal-cloud.test.mjs
+      - name: Check cloud module syntax
+        run: node --check cloud-sync.js
+      - name: Check Supabase configuration syntax
+        run: node --check supabase-config.js
+      - name: Extract and check app inline script syntax
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const html = fs.readFileSync('index.html', 'utf8');
+          const matches = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)];
+          const inline = matches.map(m => m[1]).find(s => s.length > 10000);
+          if (!inline) throw new Error('Main inline application script not found');
+          fs.writeFileSync('/tmp/mikasa-inline.js', inline);
+          NODE
+          node --check /tmp/mikasa-inline.js
