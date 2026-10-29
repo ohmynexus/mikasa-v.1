@@ -46,7 +46,7 @@
         period: normPeriod(r?.period || r?.date),
         amount: money(r?.amount ?? r?.jumlah),
         status: r?.status === 'cash' || r?.status === 'lunas' ? 'paid' : 'unpaid'
-      })).filter(r => r.name && /^\\d{4}-\\d{2}-\\d{2}$/.test(r.period) && r.amount);
+      })).filter(r => r.name && /^\d{4}-\d{2}-\d{2}$/.test(r.period) && r.amount);
       if (!bills.length && !importedNames.length) throw new Error('Tidak ada data lokal valid untuk migrasi.');
       const uniqueNames = [...new Set([
         ...importedNames.map(x => typeof x === 'string' ? x.trim() : ''),
