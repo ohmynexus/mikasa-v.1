@@ -60,7 +60,9 @@ begin
     v_name := btrim(coalesce(v_c#>>'{}',''));
     if v_name = '' then continue; end if;
     v_norm := lower(normalize(v_name, NFKC));
-    select count(*), min(id::text)::uuid into v_customer_count, v_customer_id
+    -- Deduplicate normalized customer names within the incoming payload.
+    if v_map ? v_norm then continue; end if;
+    select count(*), min(id::text)::uuid into v_customer_count
     from public.mikasa_customers
     where user_id=v_uid and deleted=false and lower(normalize(btrim(name), NFKC))=v_norm;
     if v_customer_count > 1 then raise exception 'Ambiguous existing customer name: %', v_name; end if;
