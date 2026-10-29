@@ -547,6 +547,21 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 }
 
 
+
+/* Customer count card icon */
+.customer-total-main { display:flex;align-items:center;gap:13px;min-width:0; }
+.customer-total-icon { width:52px;height:52px;flex:0 0 52px;display:grid;place-items:center;border-radius:15px;color:var(--accent-2);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 28%,transparent); }
+.customer-total-icon svg { width:27px;height:27px; }
+.customer-total-copy { min-width:0; }
+.customer-total-note { color:var(--text-3);font-size:13px;text-align:right; }
+@media (max-width:700px) {
+  #v-customers .customer-total-card { padding:15px 14px !important;gap:8px !important; }
+  #v-customers .customer-total-main { gap:11px; }
+  #v-customers .customer-total-icon { width:46px;height:46px;flex-basis:46px;border-radius:13px; }
+  #v-customers .customer-total-icon svg { width:24px;height:24px; }
+  #v-customers .customer-total-note { font-size:11px; }
+}
+
 /* Customer search toolbar — polished compact mobile layout */
 @media (max-width: 700px) {
   #v-customers .toolbar {
@@ -737,9 +752,14 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
     <!-- CUSTOMERS -->
     <section class="view" id="v-customers">
-      <div class="card" style="margin-bottom:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-        <div><div class="card-sub">TOTAL PELANGGAN TERDAFTAR</div><div id="customerTotal" style="font-size:clamp(24px,5vw,32px);font-weight:800;line-height:1.25;font-variant-numeric:tabular-nums">0</div></div>
-        <div style="color:var(--text-3);font-size:13px;text-align:right">Pelanggan unik<br>di daftar</div>
+      <div class="card customer-total-card" style="margin-bottom:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div class="customer-total-main">
+          <div class="customer-total-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="customer-total-copy"><div class="card-sub">TOTAL PELANGGAN TERDAFTAR</div><div id="customerTotal" style="font-size:clamp(24px,5vw,32px);font-weight:800;line-height:1.25;font-variant-numeric:tabular-nums">0</div></div>
+        </div>
+        <div class="customer-total-note">Pelanggan unik<br>di daftar</div>
       </div>
       <div class="toolbar">
         <label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Cari nama pelanggan…" autocomplete="off"></label>
