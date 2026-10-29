@@ -56,67 +56,24 @@
         '\nCatatan tagihan lokal valid: ' + total +
         '\n\nProses ini menambahkan data yang belum ada. Data cloud yang ada tidak ditimpa. Tagihan dicocokkan berdasarkan pelanggan + periode. Status lunas hanya dipindahkan sebagai status; riwayat pembayaran tidak dibuat karena tidak tersedia di data lokal.\n\nLanjutkan?')) return;
 
-      statusLine('Memeriksa data cloud…');
-      const { data: cloudCustomers, error: cErr } = await client.from('mikasa_customers')
-        .select('id,name,deleted').eq('user_id', user.id).eq('deleted', false);
-      if (cErr) throw cErr;
-      const customerByName = new Map();
-      (cloudCustomers || []).forEach(c => {
-        const k = normName(c.name);
-        if (k && !customerByName.has(k)) customerByName.set(k, c.id);
+      statusLine('Memvalidasi dan mengirim migrasi atomik…');
+      const payloadCustomers = uniqueNames;
+      const payloadBills = bills.map(b => ({
+        name: b.name, period: b.period, amount: b.amount, status: b.status
+      }));
+      // Server function owns the transaction and performs conflict checks. Never fall back to client inserts.
+      const { data: result, error: migrationError } = await client.rpc('mikasa_import_ledger', {
+        p_customers: payloadCustomers,
+        p_bills: payloadBills
       });
-
-      const nameCounts=new Map(); (cloudCustomers||[]).forEach(c=>{const k=normName(c.name);if(k)nameCounts.set(k,(nameCounts.get(k)||0)+1);});
-      if([...nameCounts.values()].some(n=>n>1)) throw new Error('Preflight batal: nama pelanggan cloud ambigu; tidak ada perubahan cloud.');
-      let addedCustomers = 0, reusedCustomers = 0;
-      for (const name of uniqueNames) {
-        const k = normName(name);
-        if (customerByName.has(k)) { reusedCustomers++; continue; }
-        const { data, error } = await client.from('mikasa_customers')
-          .insert({ user_id: user.id, name, phone: null, notes: null })
-          .select('id').single();
-        if (error) {
-          // A same-name profile may have appeared from another device during this run.
-          if (error.code === '23505') {
-            const retry = await client.from('mikasa_customers').select('id,name,deleted')
-              .eq('user_id', user.id).eq('deleted', false);
-            if (retry.error) throw retry.error;
-            const found = (retry.data || []).find(c => normName(c.name) === k);
-            if (found) { customerByName.set(k, found.id); reusedCustomers++; continue; }
-          }
-          throw error;
-        }
-        customerByName.set(k, data.id);
-        addedCustomers++;
-      }
-
-      // Query all bills for the selected owner and skip matching active customer-period pairs.
-      const { data: cloudBills, error: bErr } = await client.from('mikasa_bills')
-        .select('id,customer_id,period,status,amount,deleted').eq('user_id', user.id).eq('deleted', false);
-      if (bErr) throw bErr;
-      const billKey = (customerId, period) => customerId + '|' + normPeriod(period);
-      const existingByKey = new Map((cloudBills || []).map(b => [billKey(b.customer_id,b.period),b]));
-      const conflicts=bills.filter(b=>{const id=customerByName.get(normName(b.name));const old=existingByKey.get(billKey(id,b.period));return old&&(Number(old.amount)!==b.amount||old.status!==b.status);});
-      if(conflicts.length) throw new Error('Preflight batal: '+conflicts.length+' tagihan cloud berbeda nominal/status; perlu rekonsiliasi.');
-      const knownBills = new Set(existingByKey.keys());
-      let addedBills = 0, skippedBills = 0, paymentsOmitted = 0;
-      for (const b of bills) {
-        const customerId = customerByName.get(normName(b.name));
-        if (!customerId) throw new Error('Pemetaan pelanggan gagal: ' + b.name);
-        const key = billKey(customerId, b.period);
-        if (knownBills.has(key)) { skippedBills++; continue; }
-        const { error } = await client.from('mikasa_bills').insert({
-          user_id: user.id, customer_id: customerId, period: b.period,
-          amount: b.amount, status: b.status
-        });
-        if (error) {
-          if (error.code === '23505') { skippedBills++; knownBills.add(key); continue; }
-          throw error;
-        }
-        knownBills.add(key);
-        addedBills++;
-        if (b.status === 'paid') paymentsOmitted++;
-      }
+      if (migrationError) throw migrationError;
+      const outcome = Array.isArray(result) ? result[0] : result;
+      if (!outcome || typeof outcome !== 'object') throw new Error('Respons migrasi tidak dikenali.');
+      const addedBills = Number(outcome.bills_added || 0);
+      const skippedBills = Number(outcome.bills_skipped || 0);
+      const addedCustomers = Number(outcome.customers_added || 0);
+      const reusedCustomers = Number(outcome.customers_reused || 0);
+      const paymentsOmitted = bills.filter(b => b.status === 'paid').length;
       statusLine('Migrasi selesai.\nPelanggan baru: ' + addedCustomers +
         '\nPelanggan yang dipakai ulang: ' + reusedCustomers +
         '\nTagihan ditambahkan: ' + addedBills +
