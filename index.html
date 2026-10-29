@@ -703,7 +703,7 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
       <div class="tiles">
         <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button>
         <button class="tile" id="bCsv"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Buka di Excel / Google Sheets</span></div></button>
-        <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor backup .json atau ekspor .csv</span></div><input type="file" id="restore" accept=".json,.csv,application/json,text/csv" hidden></label>
+        <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor dari file backup .json</span></div><input type="file" id="restore" accept=".json,application/json" hidden></label>
         <label class="tile" for="customerImport"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Impor Excel / CSV</b><span class="s">Gabungkan daftar pelanggan tanpa membuat tagihan</span></div><input type="file" id="customerImport" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label>
         <button class="tile" id="bSeed"><div class="kpi-ico" style="background:var(--warn-soft);color:var(--warn)"><svg class="ico"><use href="#i-spark"/></svg></div><div><b>Muat Data Contoh</b><span class="s">Isi simulasi untuk mencoba tampilan</span></div></button>
       </div>
@@ -1205,71 +1205,23 @@ $('#themeBtn').onclick = () => { const t = document.documentElement.getAttribute
 $('#bJson').onclick = () => { download(`mikasa-backup-${today()}.json`, JSON.stringify({ app: 'mikasa-wireless', format: 'MikasaWirelessLedger', version: 2, exportedAt: new Date().toISOString(), count: records.length, records, customers: [...new Set([...importedCustomers, ...customers().map(c => c.name)])] }, null, 2), 'application/json'); localStorage.setItem('mikasa.v01.lastBackup', String(Date.now())); renderDiag(); toast('Backup JSON diunduh'); };
 $('#bCsv').onclick = () => { const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"'; const rows = [['Nama', 'Status', 'Jumlah', 'Periode', 'Tanggal Lunas'].map(q).join(',')]; records.forEach(r => rows.push([r.name, isPaid(r) ? 'LUNAS' : 'PIUTANG', r.amount, r.period, r.paidAt || ''].map(q).join(','))); download(`mikasa-export-${today()}.csv`, '\ufeff' + rows.join('\n'), 'text/csv;charset=utf-8'); toast('CSV diunduh'); };
 $('#restore').addEventListener('change', e => {
-  const f = e.target.files?.[0]; if (!f) return;
-  const rd = new FileReader();
-  rd.onload = ev => {
-    try {
-      const isCsv = /\.csv$/i.test(f.name) || /text\/csv/i.test(f.type);
-      let arr, restoredNames = [];
-      if (isCsv) {
-        const rows = parseCSVText(String(ev.target.result || ''))
-          .filter(r => Array.isArray(r) && r.some(v => String(v ?? '').trim()));
-        if (rows.length < 2) throw new Error('CSV kosong atau tidak memiliki baris transaksi.');
-        const headers = rows[0].map(v => cleanHeader(v));
-        const ixName = colIndex(headers, ['nama']);
-        const ixStatus = colIndex(headers, ['status']);
-        const ixAmount = colIndex(headers, ['jumlah']);
-        const ixPeriod = colIndex(headers, ['periode']);
-        const ixPaid = colIndex(headers, ['tanggallunas']);
-        if ([ixName, ixStatus, ixAmount, ixPeriod].some(ix => ix < 0))
-          throw new Error('Header CSV tidak sesuai. Gunakan file Ekspor CSV Mikasa (Nama, Status, Jumlah, Periode, Tanggal Lunas).');
-        const invalid = [];
-        arr = [];
-        rows.slice(1).forEach((row, i) => {
-          const name = String(row[ixName] ?? '').trim();
-          const statusText = String(row[ixStatus] ?? '').trim().toLocaleLowerCase('id');
-          const rawAmount = String(row[ixAmount] ?? '').trim().replace(/[^\d,.-]/g, '');
-          const amount = Number(rawAmount.replace(/\./g, '').replace(',', '.'));
-          const period = String(row[ixPeriod] ?? '').trim();
-          const paidAt = ixPaid >= 0 ? String(row[ixPaid] ?? '').trim() : '';
-          if (!name || !['lunas', 'piutang'].includes(statusText) || !Number.isFinite(amount) || amount < 0 || !period) {
-            invalid.push(i + 2); return;
-          }
-          arr.push({ name, amount, period, status: statusText === 'lunas' ? 'cash' : 'debt',
-            paidAt: statusText === 'lunas' && paidAt ? paidAt : null });
-        });
-        if (invalid.length) throw new Error(`CSV memiliki ${invalid.length} baris tidak valid (baris: ${invalid.slice(0, 8).join(', ')}${invalid.length > 8 ? ', …' : ''}). Data tidak diubah.`);
-        restoredNames = [...new Set(arr.map(r => r.name))];
-      } else {
-        const d = JSON.parse(ev.target.result);
-        arr = Array.isArray(d.records) ? d.records : Array.isArray(d) ? d : Array.isArray(d.customers) ? migrate(d.customers) : null;
-        if (!arr) throw new Error('Struktur backup JSON tidak dikenali.');
-        restoredNames = Array.isArray(d.customers) ? d.customers.map(x => typeof x === 'string' ? x.trim() : String(x.name || x.nama || '').trim()).filter(Boolean) : [];
+  const f = e.target.files[0]; if (!f) return; const rd = new FileReader();
+  rd.onload = ev => { try { const d = JSON.parse(ev.target.result); const arr = Array.isArray(d.records) ? d.records : Array.isArray(d) ? d : Array.isArray(d.customers) ? migrate(d.customers) : null; if (!arr) throw 0;
+    const clean = arr.map(normalize).filter(r => r && r.period);
+    const restoredNames = Array.isArray(d.customers) ? d.customers.map(x => typeof x === 'string' ? x.trim() : String(x.name || x.nama || '').trim()).filter(Boolean) : [];
+    if (!clean.length && !restoredNames.length) throw 0;
+    ask('Pulihkan data', `Ganti data saat ini dengan ${clean.length} catatan dan ${restoredNames.length} nama pelanggan dari backup?`, () => { const previousRecords = records, previousCustomers = importedCustomers;
+      records = clean; importedCustomers = [...new Set(restoredNames)];
+      try {
+        localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers));
+        if (!save()) throw new Error('Penyimpanan transaksi gagal.');
+      } catch(e) {
+        records = previousRecords; importedCustomers = previousCustomers;
+        try { localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers)); } catch (_) {}
+        toast('Pemulihan gagal disimpan. Data sesi dikembalikan.', 1); return;
       }
-      const clean = arr.map(normalize).filter(r => r && r.period);
-      if (!clean.length && !restoredNames.length) throw new Error('Tidak ada data valid untuk dipulihkan.');
-      const sourceLabel = isCsv ? 'CSV' : 'backup';
-      ask('Pulihkan data', `Ganti data saat ini dengan ${clean.length} catatan dan ${restoredNames.length} nama pelanggan dari ${sourceLabel}? Data lokal saat ini akan diganti.`, () => {
-        const previousRecords = records, previousCustomers = importedCustomers;
-        records = clean; importedCustomers = [...new Set(restoredNames)];
-        try {
-          localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers));
-          if (!save()) throw new Error('Penyimpanan transaksi gagal.');
-        } catch(err) {
-          records = previousRecords; importedCustomers = previousCustomers;
-          try { localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers)); } catch (_) {}
-          try { localStorage.setItem(KEY, JSON.stringify(previousRecords)); } catch (_) {}
-          toast('Pemulihan gagal disimpan. Data sesi dikembalikan.', 1); return;
-        }
-        renderAll();
-        toast(`Pemulihan selesai: ${clean.length} catatan, ${importedCustomers.length} pelanggan`);
-      });
-    } catch (err) {
-      toast(err.message || 'File tidak dapat dibaca atau formatnya tidak sesuai.', 1);
-    } finally { e.target.value = ''; }
-  };
-  rd.onerror = () => { toast('File gagal dibaca. Coba pilih file dari penyimpanan perangkat.', 1); e.target.value = ''; };
-  rd.readAsText(f, 'UTF-8');
+      renderAll(); toast(`Pemulihan selesai: ${clean.length} catatan, ${importedCustomers.length} pelanggan`); }); } catch (x) { toast('File JSON tidak valid', 1); } e.target.value = ''; };
+  rd.readAsText(f);
 });
 /* ---------- import customers + opening receivable from XLSX / CSV ---------- */
 const importInput = $('#customerImport');
