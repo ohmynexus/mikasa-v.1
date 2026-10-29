@@ -709,6 +709,7 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
         <button class="tile" id="bCloudSync"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-db"/></svg></div><div><b>Sinkronkan Cloud</b><span class="s">Simpan dan muat data akun cloud</span></div></button>
         <button class="tile" id="bCsv"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Buka di Excel / Google Sheets</span></div></button>
         <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor dari file backup .json</span></div><input type="file" id="restore" accept=".json,application/json" hidden></label>
+        <button class="tile" id="bSignOut"><div class="kpi-ico" style="background:var(--surface-3);color:var(--text-2)"><svg class="ico"><use href="#i-moon"/></svg></div><div><b>Keluar Akun</b><span class="s">Akhiri sesi login pada perangkat ini</span></div></button>
         <label class="tile" for="customerImport"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Impor Excel / CSV</b><span class="s">Gabungkan daftar pelanggan tanpa membuat tagihan</span></div><input type="file" id="customerImport" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label>
         <button class="tile" id="bSeed"><div class="kpi-ico" style="background:var(--warn-soft);color:var(--warn)"><svg class="ico"><use href="#i-spark"/></svg></div><div><b>Muat Data Contoh</b><span class="s">Isi simulasi untuk mencoba tampilan</span></div></button>
       </div>
@@ -1390,7 +1391,11 @@ if ('serviceWorker' in navigator) addEventListener('load', () => navigator.servi
     }catch(e){status('Gagal: '+(e.message||'kesalahan'),true);toast('Sinkronisasi gagal: '+(e.message||'kesalahan'),1);}
     finally{busy=false;if(btn)btn.disabled=false;}
   }
-  document.addEventListener('click',e=>{if(e.target.closest('#bCloudSync'))sync();});
+  document.addEventListener('click',e=>{if(e.target.closest('#bCloudSync'))sync();if(e.target.closest('#bSignOut')){if(typeof window.MIKASA_SIGN_OUT==='function')window.MIKASA_SIGN_OUT();else toast('Fungsi keluar akun belum siap.',1);}});
+  // Keep the fresh-start version focused on entry, cloud sync and local backup/restore.
+  ['bCsv','bSeed'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  ['customerImport'].forEach(id=>{const el=document.getElementById(id);if(el){const label=el.closest('label');if(label)label.hidden=true;}});
+  const wipeBtn=document.getElementById('bWipe');if(wipeBtn&&wipeBtn.closest('.card'))wipeBtn.closest('.card').hidden=true;
   const orig=renderAll;renderAll=function(){orig();const n=document.getElementById('dCloudStatus');if(n&&localStorage.getItem('mikasa.v02.cloudSyncState'))n.textContent='Pernah sinkron · tekan tombol untuk memperbarui';};
   setTimeout(()=>status('Belum disinkronkan'),0);
 })();
