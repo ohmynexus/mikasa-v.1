@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'mikasa-v01-cloud-local-backup-1';
+const CACHE = 'mikasa-personal-cloud-backup-2';
 const CORE = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', event => {
