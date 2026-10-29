@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a0c12">
-<title>MIKASA V0.1 — Wireless Billing & Analytics</title>
+<title>MIKASA — Tagihan Pribadi & Cloud Backup</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -580,7 +580,7 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     <div class="brand">
       <img class="brand-logo" src="./icon-192.png" alt="MIKASA" width="40" height="40">
       <div>
-        <div class="brand-name">MIKASA <span class="tag">V0.1</span></div>
+        <div class="brand-name">MIKASA <span class="tag">PERSONAL</span></div>
         <div class="brand-sub">Wireless Billing Suite</div>
       </div>
     </div>
@@ -705,10 +705,10 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     <!-- DATA -->
     <section class="view" id="v-data">
       <div class="tiles">
-        <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button>
-        <button class="tile" id="bCloudSync"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-db"/></svg></div><div><b>Sinkronkan Cloud</b><span class="s">Simpan dan muat data akun cloud</span></div></button>
+        <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Unduh cadangan lokal dalam file JSON</span></div></button>
+        <button class="tile" id="bCloudSync"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-db"/></svg></div><div><b>Sinkronkan Cloud</b><span class="s">Kirim perubahan dan muat data akun cloud</span></div></button>
         <button class="tile" id="bCsv"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Buka di Excel / Google Sheets</span></div></button>
-        <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor dari file backup .json</span></div><input type="file" id="restore" accept=".json,application/json" hidden></label>
+        <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Pulihkan file backup lokal; tidak mengubah cloud</span></div><input type="file" id="restore" accept=".json,application/json" hidden></label>
         <button class="tile" id="bSignOut"><div class="kpi-ico" style="background:var(--surface-3);color:var(--text-2)"><svg class="ico"><use href="#i-moon"/></svg></div><div><b>Keluar Akun</b><span class="s">Akhiri sesi login pada perangkat ini</span></div></button>
         <label class="tile" for="customerImport"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Impor Excel / CSV</b><span class="s">Gabungkan daftar pelanggan tanpa membuat tagihan</span></div><input type="file" id="customerImport" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label>
         <button class="tile" id="bSeed"><div class="kpi-ico" style="background:var(--warn-soft);color:var(--warn)"><svg class="ico"><use href="#i-spark"/></svg></div><div><b>Muat Data Contoh</b><span class="s">Isi simulasi untuk mencoba tampilan</span></div></button>
@@ -719,7 +719,7 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
           <div class="strip"><span class="strip-l">Total catatan</span><span class="strip-v" id="dCount">0</span></div>
           <div class="strip"><span class="strip-l">Ukuran data</span><span class="strip-v" id="dSize">0 KB</span></div>
           <div class="strip"><span class="strip-l">Backup terakhir</span><span class="strip-v" id="dBackup">Belum ada</span></div>
-          <div class="strip"><span class="strip-l">Versi</span><span class="strip-v">MIKASA V0.1</span></div>
+          <div class="strip"><span class="strip-l">Versi</span><span class="strip-v">MIKASA PERSONAL</span></div>
         </div>
       </div>
       <div class="card">
