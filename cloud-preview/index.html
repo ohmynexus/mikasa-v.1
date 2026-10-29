@@ -892,8 +892,11 @@ function queueCloudSnapshot() {
   cloudQueue = cloudQueue.then(async () => {
     if (!cloudEnabled || cloudConflict) return;
     try {
-      const next = await mikasaCloud.saveWorkspace(snapshot, cloudRevision);
-      cloudRevision = next;
+      const result = await mikasaCloud.rpc('mikasa_save_workspace', { p_payload: snapshot, p_expected_revision: cloudRevision });
+      if (result.error) throw result.error;
+      const row = Array.isArray(result.data) ? result.data[0] : result.data;
+      if (!row?.ok) { const err = new Error('Penyimpanan cloud ditolak. Muat ulang workspace sebelum mencoba lagi.'); err.code = row?.code || 'SYNC_CONFLICT'; throw err; }
+      cloudRevision = Number(row.new_revision);
       cloudSetStatus(`Tersinkron · revisi ${cloudRevision} · ${new Date().toLocaleTimeString('id-ID')}`);
     } catch (err) {
       if (err.code === 'SYNC_CONFLICT') {
