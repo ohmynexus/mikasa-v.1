@@ -1462,7 +1462,26 @@ applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
     } else if (adopt) {
       const same = Number(data.revision)===cloudRevision && cloudEnabled;
       if (!same && !confirm(`Workspace cloud ditemukan (revisi ${data.revision}).\n${(data.payload.records||[]).length} transaksi.\n\nGanti tampilan perangkat ini dengan data cloud? Data lokal yang berbeda tidak akan diunggah.`)) {
-        cloudEnabled=false; cloudSetStatus('Cloud login aktif, tetapi data lokal belum diselaraskan. Muat cloud saat siap.',true); return;
+        const localCount=records.length, localCust=importedCustomers.length;
+        if (!confirm(`DATA LOKAL TIDAK AKAN HILANG DARI PERANGKAT INI, tetapi belum ada di cloud.\n\nUnggah data perangkat ini ke cloud dan GANTI isi workspace cloud revisi ${data.revision}?\n\nData lokal: ${localCount} transaksi · ${localCust} pelanggan eksplisit.\n\nLANJUTKAN HANYA jika backup JSON sudah diunduh dan perangkat ini adalah sumber data yang benar. Data cloud yang berbeda akan tertimpa.`)) {
+          cloudEnabled=false; cloudSetStatus('Login aktif; belum sinkron. Data lokal tetap dipertahankan. Backup sebelum mencoba lagi.',true); return;
+        }
+        try {
+          const result=await mikasaCloud.rpc('mikasa_save_workspace',{p_payload:cloudPayload(),p_expected_revision:Number(data.revision)});
+          if(result.error) throw result.error;
+          const row=Array.isArray(result.data)?result.data[0]:result.data;
+          if(!row?.ok) { const err=new Error('Cloud berubah sejak pemeriksaan. Data lokal aman; muat cloud dan tinjau ulang.'); err.code='SYNC_CONFLICT'; throw err; }
+          cloudRevision=Number(row.new_revision); cloudConflict=false; cloudEnabled=true;
+          cloudSetStatus(`Data perangkat diunggah · ${localCount} transaksi · revisi ${cloudRevision}`);
+        } catch(e) { cloudEnabled=false; throw e; }
+        if (cloudUnsub) cloudUnsub();
+        const channel=mikasaCloud.channel('mikasa-workspace-change')
+          .on('postgres_changes',{event:'UPDATE',schema:'public',table:'mikasa_workspaces',filter:`owner_id=eq.${cloudUser.id}`},payload=>{
+            const remote=Number(payload.new?.revision||0);
+            if(remote>cloudRevision){cloudConflict=true;cloudEnabled=false;cloudSetStatus('Ada perubahan dari perangkat lain. Penyimpanan cloud dihentikan. Muat data cloud untuk meninjau.',true);}
+          }).subscribe();
+        cloudUnsub=()=>mikasaCloud.removeChannel(channel);
+        return;
       }
       records=(data.payload.records||[]).map(normalize).filter(Boolean);
       importedCustomers=[...new Set((data.payload.customers||[]).map(n=>String(n||'').trim()).filter(Boolean))];
