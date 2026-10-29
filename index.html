@@ -656,6 +656,10 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
     <!-- CUSTOMERS -->
     <section class="view" id="v-customers">
+      <div class="card" style="margin-bottom:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div><div class="card-sub">TOTAL PELANGGAN TERDAFTAR</div><div id="customerTotal" style="font-size:clamp(24px,5vw,32px);font-weight:800;line-height:1.25;font-variant-numeric:tabular-nums">0</div></div>
+        <div style="color:var(--text-3);font-size:13px;text-align:right">Pelanggan unik<br>di daftar</div>
+      </div>
       <div class="toolbar">
         <label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Cari nama pelanggan…" autocomplete="off"></label>
         <div class="seg" id="filterSeg">
@@ -1004,7 +1008,9 @@ function renderFeed() {
 /* ---------- customers ---------- */
 function renderList() {
   let l = customers();
-  $('#navCount').textContent = l.length;
+  const totalCustomers = l.length;
+  $('#navCount').textContent = totalCustomers;
+  $('#customerTotal').textContent = totalCustomers.toLocaleString('id-ID');
   if (filter === 'debt') l = l.filter(c => c.unpaid > 0); else if (filter === 'overdue') l = l.filter(c => c.over > 0); else if (filter === 'paid') l = l.filter(c => c.unpaid === 0);
   if (query) { const q = query.toLowerCase(); l = l.filter(c => c.name.toLowerCase().includes(q)); }
   if (sortBy === 'debt') l.sort((a, b) => b.debt - a.debt); else if (sortBy === 'name') l.sort((a, b) => a.name.localeCompare(b.name, 'id')); else l.sort((a, b) => b.latest - a.latest);
