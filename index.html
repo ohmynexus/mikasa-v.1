@@ -706,6 +706,7 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     <section class="view" id="v-data">
       <div class="tiles">
         <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button>
+        <button class="tile" id="bCloudSync"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-db"/></svg></div><div><b>Sinkronkan Cloud</b><span class="s">Simpan dan muat data akun cloud</span></div></button>
         <button class="tile" id="bCsv"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Buka di Excel / Google Sheets</span></div></button>
         <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor dari file backup .json</span></div><input type="file" id="restore" accept=".json,application/json" hidden></label>
         <label class="tile" for="customerImport"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Impor Excel / CSV</b><span class="s">Gabungkan daftar pelanggan tanpa membuat tagihan</span></div><input type="file" id="customerImport" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label>
@@ -1208,7 +1209,7 @@ $('#calToday').onclick = () => { calYM = curYM(); selDate = today(); renderCal()
 function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); $('#themeIco').innerHTML = `<use href="#i-${t === 'dark' ? 'sun' : 'moon'}"/>`; document.querySelector('meta[name=theme-color]').content = t === 'dark' ? '#0a0c12' : '#f5f6fa'; }
 $('#themeBtn').onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem(THEMEKEY, t); applyTheme(t); };
 
-$('#bJson').onclick = () => { download(`mikasa-backup-${today()}.json`, JSON.stringify({ app: 'mikasa-wireless', format: 'MikasaWirelessLedger', version: 2, exportedAt: new Date().toISOString(), count: records.length, records, customers: [...new Set([...importedCustomers, ...customers().map(c => c.name)])] }, null, 2), 'application/json'); localStorage.setItem('mikasa.v01.lastBackup', String(Date.now())); renderDiag(); toast('Backup JSON diunduh'); };
+$('#bJson').onclick = () => { download(`mikasa-backup-lokal-${today()}.json`, JSON.stringify({ app: 'mikasa-wireless', format: 'MikasaWirelessLedger', version: 2, exportedAt: new Date().toISOString(), count: records.length, records, customers: [...new Set([...importedCustomers, ...customers().map(c => c.name)])] }, null, 2), 'application/json'); localStorage.setItem('mikasa.v01.lastBackup', String(Date.now())); renderDiag(); toast('Backup lokal berhasil diunduh'); };
 $('#bCsv').onclick = () => { const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"'; const rows = [['Nama', 'Status', 'Jumlah', 'Periode', 'Tanggal Lunas'].map(q).join(',')]; records.forEach(r => rows.push([r.name, isPaid(r) ? 'LUNAS' : 'PIUTANG', r.amount, r.period, r.paidAt || ''].map(q).join(','))); download(`mikasa-export-${today()}.csv`, '\ufeff' + rows.join('\n'), 'text/csv;charset=utf-8'); toast('CSV diunduh'); };
 $('#restore').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return; const rd = new FileReader();
@@ -1324,6 +1325,53 @@ if ('serviceWorker' in navigator) addEventListener('load', () => navigator.servi
 })();
 </script>
 <script src="./supabase-config.js"></script>
+<script>
+(() => {
+  let busy=false;
+  const status=(msg,bad=false)=>{let n=document.getElementById('dCloudStatus');if(!n){const d=document.querySelector('#v-data .diag');if(d){const r=document.createElement('div');r.className='strip';r.innerHTML='<span class="strip-l">Status cloud</span><span class="strip-v" id="dCloudStatus"></span>';d.append(r);n=r.querySelector('#dCloudStatus');}}if(n){n.textContent=msg;n.style.color=bad?'var(--bad)':'var(--ok)';}};
+  async function sync(){
+    if(busy)return;const sb=window.MIKASA_AUTH_CLIENT;if(!sb){toast('Login cloud belum siap. Muat ulang.',1);return;}
+    busy=true;const btn=document.getElementById('bCloudSync');if(btn)btn.disabled=true;status('Menyinkronkan…');
+    try{
+      const {data:u,error:ue}=await sb.auth.getUser();if(ue)throw ue;if(!u.user)throw new Error('Sesi berakhir; login kembali.');
+      const uid=u.user.id;
+      const [a,b]=await Promise.all([sb.from('mikasa_customers').select('id,name,deleted').eq('user_id',uid).eq('deleted',false),sb.from('mikasa_bills').select('id,customer_id,period,amount,status,created_at,updated_at,deleted').eq('user_id',uid).eq('deleted',false)]);
+      if(a.error)throw a.error;if(b.error)throw b.error;
+      const norm=x=>String(x||'').trim().toLocaleLowerCase('id');
+      const byName=new Map((a.data||[]).map(c=>[norm(c.name),c]));
+      const names=[...new Set([...(importedCustomers||[]),...records.map(r=>r.name)].map(x=>String(x||'').trim()).filter(Boolean))];
+      const toAdd=names.filter(n=>!byName.has(norm(n))).map(name=>({user_id:uid,name}));
+      if(toAdd.length){const z=await sb.from('mikasa_customers').insert(toAdd).select('id,name,deleted');if(z.error)throw z.error;(z.data||[]).forEach(c=>byName.set(norm(c.name),c));}
+      const nameById=new Map([...byName.values()].map(c=>[c.id,c.name]));
+      const remote=new Map((b.data||[]).map(x=>[norm(nameById.get(x.customer_id))+'|'+x.period,x]));
+      const additions=[],conflicts=[];
+      for(const r of records){
+        const name=String(r.name||'').trim(),period=String(r.period||'').trim(),amount=Number(r.amount);if(!name||!period||!Number.isSafeInteger(amount)||amount<=0)continue;
+        const key=norm(name)+'|'+period,old=remote.get(key);
+        if(old){if(Number(old.amount)!==amount||((old.status==='paid')!==(r.status==='cash'||r.status==='lunas')))conflicts.push(name+' '+period);continue;}
+        const customer=byName.get(norm(name));if(!customer)throw new Error('Pelanggan tidak ditemukan: '+name);
+        additions.push({user_id:uid,customer_id:customer.id,period,amount,status:(r.status==='cash'||r.status==='lunas')?'paid':'unpaid',created_at:new Date(Number(r.createdAt)||Date.now()).toISOString()});
+      }
+      if(conflicts.length)throw new Error('Konflik lokal/cloud; tidak ada data yang ditimpa: '+conflicts.slice(0,4).join(', '));
+      if(additions.length){const z=await sb.from('mikasa_bills').insert(additions);if(z.error)throw z.error;}
+      const [ca,ba]=await Promise.all([sb.from('mikasa_customers').select('id,name,deleted').eq('user_id',uid).eq('deleted',false),sb.from('mikasa_bills').select('id,customer_id,period,amount,status,created_at,updated_at,deleted').eq('user_id',uid).eq('deleted',false)]);
+      if(ca.error)throw ca.error;if(ba.error)throw ba.error;
+      const lookup=new Map((ca.data||[]).map(c=>[c.id,c.name]));
+      const next=(ba.data||[]).map(x=>({id:x.id,name:lookup.get(x.customer_id),amount:Number(x.amount),period:x.period,status:x.status==='paid'?'cash':'debt',paidAt:x.status==='paid'?(x.updated_at||x.created_at):null,createdAt:new Date(x.created_at).getTime()})).filter(x=>x.name);
+      const nextNames=[...new Set((ca.data||[]).map(x=>String(x.name).trim()).filter(Boolean))];
+      records=next.map(normalize).filter(Boolean);importedCustomers=nextNames;
+      if(!save())throw new Error('Gagal menyimpan salinan lokal.');
+      localStorage.setItem(CUSTOMER_KEY,JSON.stringify(importedCustomers));localStorage.setItem('mikasa.v01.cloudSyncState',new Date().toISOString());
+      renderAll();status('Sukses · '+nextNames.length+' pelanggan · '+next.length+' tagihan');toast('Sinkronisasi cloud berhasil');
+    }catch(e){status('Gagal: '+(e.message||'kesalahan'),true);toast('Sinkronisasi gagal: '+(e.message||'kesalahan'),1);}
+    finally{busy=false;if(btn)btn.disabled=false;}
+  }
+  document.addEventListener('click',e=>{if(e.target.closest('#bCloudSync'))sync();});
+  const orig=renderAll;renderAll=function(){orig();const n=document.getElementById('dCloudStatus');if(n&&localStorage.getItem('mikasa.v01.cloudSyncState'))n.textContent='Pernah sinkron · tekan tombol untuk memperbarui';};
+  setTimeout(()=>status('Belum disinkronkan'),0);
+})();
+</script>
+
 <script src="./auth-gate.js"></script>
 </body>
 </html>
