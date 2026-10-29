@@ -79,12 +79,12 @@
         '\nTagihan ditambahkan: ' + addedBills +
         '\nTagihan dilewati (sudah ada): ' + skippedBills +
         (paymentsOmitted ? '\nCatatan: ' + paymentsOmitted + ' tagihan berstatus lunas dipindahkan tanpa event pembayaran.' : '') +
-        '\nPerangkat lokal tidak dihapus.');
+        '\nPerangkat lokal tidak dihapus. Jalankan ulang aman untuk memeriksa data yang sama.');
       alert('Migrasi selesai. Tagihan baru: ' + addedBills + '. Dilewati: ' + skippedBills + '.');
     } catch (err) {
       console.error('[Mikasa cloud migration]', err);
       statusLine('Migrasi berhenti: ' + (err?.message || 'Kesalahan tidak diketahui') +
-        '\nData lokal tetap dipertahankan. Periksa koneksi/izin lalu jalankan lagi; proses dirancang melewati data yang sudah ada.', true);
+        '\nData lokal tetap dipertahankan. Periksa koneksi/izin. Jika transaksi ditolak, cek konflik terlebih dahulu; server membatalkan seluruh transaksi.', true);
       alert('Migrasi belum tuntas: ' + (err?.message || 'Kesalahan tidak diketahui'));
     } finally {
       busy = false;
