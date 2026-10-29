@@ -19,6 +19,7 @@ declare
   v_customer_count integer;
   v_existing_amount bigint;
   v_existing_status text;
+  v_existing_deleted boolean;
   v_added_customers integer := 0;
   v_reused_customers integer := 0;
   v_added_bills integer := 0;
@@ -81,11 +82,14 @@ begin
     v_customer_id := (v_map->>v_norm)::uuid;
     if v_customer_id is null then raise exception 'Customer mapping missing'; end if;
     v_period := v_b->>'period'; v_amount := (v_b->>'amount')::bigint; v_status := v_b->>'status';
-    select amount,status into v_existing_amount,v_existing_status
+    select amount,status,deleted into v_existing_amount,v_existing_status,v_existing_deleted
     from public.mikasa_bills
-    where user_id=v_uid and customer_id=v_customer_id and period=v_period and deleted=false
+    where user_id=v_uid and customer_id=v_customer_id and period=v_period
     for update;
     if found then
+      if v_existing_deleted then
+        raise exception 'Deleted cloud bill occupies customer/period; manual review required';
+      end if;
       if v_existing_amount<>v_amount or v_existing_status<>v_status then
         raise exception 'Cloud bill conflict for customer/period';
       end if;
