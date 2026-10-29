@@ -704,6 +704,11 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
     <!-- DATA -->
     <section class="view" id="v-data">
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-head"><div><div class="card-title">Sinkronisasi Cloud</div><div class="card-sub">Akun pribadi ini menyimpan salinan data pada Supabase.</div></div><button class="btn btn-primary" id="bCloudSync" type="button">Sinkronkan sekarang</button></div>
+        <div id="cloudSyncStatus" role="status" aria-live="polite" class="card-sub">Belum disinkronkan pada sesi ini.</div>
+        <div class="card-sub" style="margin-top:8px">Sinkronisasi tidak akan mengunggah atau menggabungkan data lokal secara otomatis. Gunakan backup lokal untuk menyimpan salinan file.</div>
+      </div>
       <div class="tiles">
         <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button>
         <button class="tile" id="bCsv"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Buka di Excel / Google Sheets</span></div></button>
