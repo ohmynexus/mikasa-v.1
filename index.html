@@ -547,46 +547,84 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 }
 
 
-/* Customer search layout fix: prevent the search field from collapsing beside filters */
+/* Customer search toolbar — polished compact mobile layout */
 @media (max-width: 700px) {
   #v-customers .toolbar {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
+    gap: 12px;
     align-items: stretch;
+    margin-bottom: 18px;
   }
   #v-customers .search {
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
-    min-height: 48px;
-    padding: 0 14px;
-    gap: 10px;
+    height: 54px;
+    padding: 0 16px;
+    gap: 12px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--surface) 78%, var(--accent) 5%));
+    border-color: var(--line-2);
   }
+  #v-customers .search:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  #v-customers .search .ico { width: 20px; height: 20px; flex: 0 0 auto; }
   #v-customers .search input {
     display: block;
     flex: 1 1 auto;
     width: 0;
     min-width: 0;
-    font-size: 14px;
+    height: 100%;
+    font-size: 15px;
   }
   #v-customers #filterSeg {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
     width: 100%;
     min-width: 0;
-    box-sizing: border-box;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
   }
   #v-customers #filterSeg button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-width: 0;
-    padding: 8px 3px;
+    min-height: 44px;
+    padding: 9px 8px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text-2);
     white-space: normal;
-    line-height: 1.2;
-    font-size: 11px;
+    line-height: 1.25;
+    font-size: 12px;
+    font-weight: 650;
+  }
+  #v-customers #filterSeg button.active {
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 78%, #a20e3d));
+    border-color: transparent;
+    box-shadow: 0 5px 16px var(--accent-soft);
   }
   #v-customers #sort {
-    width: 100%;
+    width: auto;
+    min-width: 142px;
     min-height: 46px;
+    justify-self: start;
+    padding: 0 14px;
+    border-radius: 13px;
+    font-size: 13px;
   }
+}
+@media (min-width: 701px) {
+  #v-customers .search { min-width: 240px; }
 }
 
 </style>
