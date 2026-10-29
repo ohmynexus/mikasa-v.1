@@ -1,5 +1,5 @@
 {
-  "name": "MIKASA V0.1 — Wireless Billing & Analytics",
+  "name": "MIKASA — Tagihan Pribadi & Cloud Backup",
   "short_name": "MIKASA",
   "id": "./index.html",
   "start_url": "./index.html",
@@ -8,7 +8,7 @@
   "orientation": "any",
   "background_color": "#0a0c12",
   "theme_color": "#0a0c12",
-  "description": "Aplikasi tagihan dan analitik pelanggan WiFi yang modern, minimalis, dan responsif.",
+  "description": "Aplikasi pencatatan tagihan WiFi pribadi dengan sinkronisasi cloud serta backup dan restore lokal.",
   "categories": [
     "finance",
     "business",
