@@ -784,7 +784,7 @@ const isOver = b => !isPaid(b) && b.period && ymOf(b.period) < curYM();
 const ic = (id, cls = '') => `<svg class="ico ${cls}"><use href="#i-${id}"/></svg>`;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const KEY = 'mikasa.v01.records', CUSTOMER_KEY = 'mikasa.v01.customers', AVKEY = 'mikasa.v01.avatarMode', THEMEKEY = 'mikasa.v01.theme';
+const KEY = 'mikasa.v02.records', CUSTOMER_KEY = 'mikasa.v02.customers', AVKEY = 'mikasa.v01.avatarMode', THEMEKEY = 'mikasa.v01.theme';
 let records = [];
 let importedCustomers = [];
 let avMode = 'glyph';
@@ -831,6 +831,8 @@ const glyphName = n => GLYPH_NAMES[(hash(n) >>> 5) % GLYPH_NAMES.length];
 
 /* ---------- data ---------- */
 function load() {
+  // New data namespace: do not auto-import any previous app or legacy local data.
+  // Old browser data remains untouched under its old key until the user explicitly restores a backup.
   try { importedCustomers = JSON.parse(localStorage.getItem(CUSTOMER_KEY) || '[]').filter(n => typeof n === 'string' && n.trim()); } catch (e) { importedCustomers = []; }
   try {
     const r = localStorage.getItem(KEY);
@@ -840,11 +842,7 @@ function load() {
       records = parsed.map(normalize).filter(Boolean);
       return;
     }
-  } catch (e) { toast('Data lokal gagal dibaca. Periksa backup sebelum mengubah data.', 1); }
-  try {
-    const leg = localStorage.getItem('wifiDebtCustomers_v4');
-    if (leg) { const p = JSON.parse(leg); const arr = p.customers || p; if (Array.isArray(arr)) { records = migrate(arr); save(); return; } }
-  } catch (e) {}
+  } catch (e) { toast('Data lokal baru gagal dibaca. Periksa backup lokal sebelum mengubah data.', 1); }
   records = [];
 }
 function normalize(r) {
@@ -1062,7 +1060,7 @@ function renderDay() {
 function renderDiag() {
   $('#dCount').textContent = records.length + ' catatan';
   const b = new Blob([JSON.stringify(records)]).size; $('#dSize').textContent = b < 1024 ? b + ' B' : (b / 1024).toFixed(1) + ' KB';
-  const lb = localStorage.getItem('mikasa.v01.lastBackup'); $('#dBackup').textContent = lb ? fmtDate(iso(new Date(Number(lb)))) : 'Belum ada';
+  const lb = localStorage.getItem('mikasa.v02.lastBackup'); $('#dBackup').textContent = lb ? fmtDate(iso(new Date(Number(lb)))) : 'Belum ada';
 }
 function renderAll() { renderKpis(); renderTrend(); renderDonut(); renderRank(); renderFeed(); renderList(); renderCal(); renderDiag(); }
 
@@ -1168,7 +1166,7 @@ document.addEventListener('click', e => {
   if ((el = t.closest('[data-pay]'))) { const r = records.find(x => x.id === el.dataset.pay); if (r) { r.status = 'cash'; r.paidAt = today(); save(); renderAll(); toast(`${r.name} ditandai lunas`); } return; }
   if ((el = t.closest('[data-editcust]'))) { e.stopPropagation(); return openForm(null, el.dataset.editcust, '', true); }
   if ((el = t.closest('[data-edit]'))) { const r = records.find(x => x.id === el.dataset.edit); if (r) openForm(r); return; }
-  if ((el = t.closest('[data-del]'))) { const r = records.find(x => x.id === el.dataset.del); if (r) ask('Hapus catatan', `Hapus tagihan ${r.name} sebesar ${rp(r.amount)}?`, () => { records = records.filter(x => x.id !== r.id); const stored = save(); if (stored) { try { const k='mikasa.v01.cloudDeleteQueue', q=JSON.parse(localStorage.getItem(k)||'[]'); if(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(r.id))&&!q.includes(String(r.id))) q.push(String(r.id)); localStorage.setItem(k,JSON.stringify(q)); } catch (_) {} } renderAll(); toast('Catatan dihapus'); }, 'Hapus'); return; }
+  if ((el = t.closest('[data-del]'))) { const r = records.find(x => x.id === el.dataset.del); if (r) ask('Hapus catatan', `Hapus tagihan ${r.name} sebesar ${rp(r.amount)}?`, () => { records = records.filter(x => x.id !== r.id); const stored = save(); if (stored) { try { const k='mikasa.v02.cloudDeleteQueue', q=JSON.parse(localStorage.getItem(k)||'[]'); if(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(r.id))&&!q.includes(String(r.id))) q.push(String(r.id)); localStorage.setItem(k,JSON.stringify(q)); } catch (_) {} } renderAll(); toast('Catatan dihapus'); }, 'Hapus'); return; }
   if ((el = t.closest('[data-toggle]'))) { const card = el.parentElement, k = card.dataset.key; card.classList.toggle('open'); card.classList.contains('open') ? openSet.add(k) : openSet.delete(k); return; }
   if ((el = t.closest('[data-open]'))) { openSet.add(el.dataset.open.toLowerCase()); query = ''; $('#q').value = ''; filter = 'all'; $$('#filterSeg button').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all')); go('customers'); renderList(); const c = $(`.cust[data-key="${CSS.escape(el.dataset.open.toLowerCase())}"]`); if (c) setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120); return; }
   if ((el = t.closest('[data-date]'))) { selDate = el.dataset.date; return renderCal(); }
@@ -1209,7 +1207,7 @@ $('#calToday').onclick = () => { calYM = curYM(); selDate = today(); renderCal()
 function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); $('#themeIco').innerHTML = `<use href="#i-${t === 'dark' ? 'sun' : 'moon'}"/>`; document.querySelector('meta[name=theme-color]').content = t === 'dark' ? '#0a0c12' : '#f5f6fa'; }
 $('#themeBtn').onclick = () => { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem(THEMEKEY, t); applyTheme(t); };
 
-$('#bJson').onclick = () => { download(`mikasa-backup-lokal-${today()}.json`, JSON.stringify({ app: 'mikasa-wireless', format: 'MikasaWirelessLedger', version: 2, exportedAt: new Date().toISOString(), count: records.length, records, customers: [...new Set([...importedCustomers, ...customers().map(c => c.name)])] }, null, 2), 'application/json'); localStorage.setItem('mikasa.v01.lastBackup', String(Date.now())); renderDiag(); toast('Backup lokal berhasil diunduh'); };
+$('#bJson').onclick = () => { download(`mikasa-backup-lokal-${today()}.json`, JSON.stringify({ app: 'mikasa-wireless', format: 'MikasaWirelessLedger', version: 2, exportedAt: new Date().toISOString(), count: records.length, records, customers: [...new Set([...importedCustomers, ...customers().map(c => c.name)])] }, null, 2), 'application/json'); localStorage.setItem('mikasa.v02.lastBackup', String(Date.now())); renderDiag(); toast('Backup lokal berhasil diunduh'); };
 $('#bCsv').onclick = () => { const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"'; const rows = [['Nama', 'Status', 'Jumlah', 'Periode', 'Tanggal Lunas'].map(q).join(',')]; records.forEach(r => rows.push([r.name, isPaid(r) ? 'LUNAS' : 'PIUTANG', r.amount, r.period, r.paidAt || ''].map(q).join(','))); download(`mikasa-export-${today()}.csv`, '\ufeff' + rows.join('\n'), 'text/csv;charset=utf-8'); toast('CSV diunduh'); };
 $('#restore').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return; const rd = new FileReader();
@@ -1222,7 +1220,7 @@ $('#restore').addEventListener('change', e => {
       try {
         localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers));
         if (!save()) throw new Error('Penyimpanan transaksi gagal.');
-        try { const k='mikasa.v01.cloudDeleteQueue', q=JSON.parse(localStorage.getItem(k)||'[]'); localStorage.setItem(k,JSON.stringify(q.filter(id=>!clean.some(r=>String(r.id)===String(id))))); } catch (_) {}
+        try { const k='mikasa.v02.cloudDeleteQueue', q=JSON.parse(localStorage.getItem(k)||'[]'); localStorage.setItem(k,JSON.stringify(q.filter(id=>!clean.some(r=>String(r.id)===String(id))))); } catch (_) {}
       } catch(e) {
         records = previousRecords; importedCustomers = previousCustomers;
         try { localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers)); } catch (_) {}
@@ -1336,7 +1334,7 @@ if ('serviceWorker' in navigator) addEventListener('load', () => navigator.servi
     try{
       const {data:u,error:ue}=await sb.auth.getUser();if(ue)throw ue;if(!u.user)throw new Error('Sesi berakhir; login kembali.');
       const uid=u.user.id;
-      const deleteKey='mikasa.v01.cloudDeleteQueue';
+      const deleteKey='mikasa.v02.cloudDeleteQueue';
       let deleteQueue=[];try{deleteQueue=JSON.parse(localStorage.getItem(deleteKey)||'[]').filter(x=>typeof x==='string');}catch(_){deleteQueue=[];}
       const currentlyPresent=new Set(records.map(x=>String(x.id)));
       const stillPending=deleteQueue.filter(id=>/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)&&!currentlyPresent.has(id));
@@ -1387,13 +1385,13 @@ if ('serviceWorker' in navigator) addEventListener('load', () => navigator.servi
       const nextNames=[...new Set((ca.data||[]).map(x=>String(x.name).trim()).filter(Boolean))];
       records=next.map(normalize).filter(Boolean);importedCustomers=nextNames;
       if(!save())throw new Error('Gagal menyimpan salinan lokal.');
-      localStorage.setItem(CUSTOMER_KEY,JSON.stringify(importedCustomers));localStorage.setItem('mikasa.v01.cloudSyncState',new Date().toISOString());
+      localStorage.setItem(CUSTOMER_KEY,JSON.stringify(importedCustomers));localStorage.setItem('mikasa.v02.cloudSyncState',new Date().toISOString());
       renderAll();status('Sukses · '+nextNames.length+' pelanggan · '+next.length+' tagihan');toast('Sinkronisasi cloud berhasil');
     }catch(e){status('Gagal: '+(e.message||'kesalahan'),true);toast('Sinkronisasi gagal: '+(e.message||'kesalahan'),1);}
     finally{busy=false;if(btn)btn.disabled=false;}
   }
   document.addEventListener('click',e=>{if(e.target.closest('#bCloudSync'))sync();});
-  const orig=renderAll;renderAll=function(){orig();const n=document.getElementById('dCloudStatus');if(n&&localStorage.getItem('mikasa.v01.cloudSyncState'))n.textContent='Pernah sinkron · tekan tombol untuk memperbarui';};
+  const orig=renderAll;renderAll=function(){orig();const n=document.getElementById('dCloudStatus');if(n&&localStorage.getItem('mikasa.v02.cloudSyncState'))n.textContent='Pernah sinkron · tekan tombol untuk memperbarui';};
   setTimeout(()=>status('Belum disinkronkan'),0);
 })();
 </script>
