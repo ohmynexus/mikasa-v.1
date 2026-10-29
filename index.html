@@ -706,8 +706,8 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     <section class="view" id="v-data">
       <div class="card" style="margin-bottom:14px">
         <div class="card-head"><div><div class="card-title">Sinkronisasi Cloud</div><div class="card-sub">Akun pribadi ini menyimpan salinan data pada Supabase.</div></div><button class="btn btn-primary" id="bCloudSync" type="button">Sinkronkan sekarang</button></div>
-        <div id="cloudSyncStatus" role="status" aria-live="polite" class="card-sub">Belum disinkronkan pada sesi ini.</div>
-        <div class="card-sub" style="margin-top:8px">Sinkronisasi tidak akan mengunggah atau menggabungkan data lokal secara otomatis. Gunakan backup lokal untuk menyimpan salinan file.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-soft" id="bCloudPull" type="button">Pulihkan dari cloud</button><button class="btn btn-soft" id="bCloudPush" type="button">Simpan ke cloud</button></div>
+        <div class="card-sub" style="margin-top:8px">Pemulihan cloud hanya tersedia bila lokal kosong. Simpan ke cloud meminta konfirmasi dan memakai pemeriksaan revisi untuk mencegah penimpaan bersamaan. Backup lokal tetap melalui file JSON.</div>
       </div>
       <div class="tiles">
         <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button>
@@ -1324,6 +1324,27 @@ setInterval(tick, 1000); tick();
 $$('#avSeg button').forEach(b => b.classList.toggle('active', b.dataset.av === avMode));
 applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
 load(); renderAll();
+window.MIKASA_LOCAL_LEDGER = Object.freeze({
+  snapshot: () => ({ records: JSON.parse(JSON.stringify(records)), customers: [...importedCustomers] }),
+  isEmpty: () => records.length === 0 && importedCustomers.length === 0,
+  replace: payload => {
+    if (!payload || !Array.isArray(payload.records) || !Array.isArray(payload.customers)) throw new Error('Format data cloud tidak valid.');
+    const safeRecords = payload.records.map(normalize).filter(r => r && r.period);
+    const safeNames = payload.customers.map(n => String(n || '').trim()).filter(Boolean);
+    if (safeRecords.length !== payload.records.length) throw new Error('Ada catatan cloud tidak valid; restore dibatalkan.');
+    const prevRecords = records, prevCustomers = importedCustomers;
+    records = safeRecords; importedCustomers = [...new Set(safeNames)];
+    try {
+      localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers));
+      if (!save()) throw new Error('Data lokal gagal disimpan.');
+    } catch (e) {
+      records = prevRecords; importedCustomers = prevCustomers;
+      try { localStorage.setItem(CUSTOMER_KEY, JSON.stringify(importedCustomers)); } catch (_) {}
+      throw e;
+    }
+    renderAll();
+  }
+});
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (currentView === 'dashboard') renderTrend(); }, 120); });
 if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 })();
