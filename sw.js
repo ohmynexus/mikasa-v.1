@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'mikasa-v01-pwa-4';
+const CACHE = 'mikasa-v01-clone-pwa-1';
 const CORE = ['./', './index.html', './manifest.json', './assets/icon-192.png', './assets/icon-512.png'];
 
 self.addEventListener('install', event => {
