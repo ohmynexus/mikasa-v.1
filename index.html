@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html lang="id" data-theme="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0a0c12">
-<title>MIKASA V0.1 — Wireless Billing & Analytics</title>
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-<link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>
-try { var t = localStorage.getItem('mikasa.v01.theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
-</script>
-<style>
+<!DOCTYPE html><html lang="id" data-theme="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f1f6fc"><title>MIKASA V0.1 — Billing Dashboard</title><link rel="manifest" href="./manifest.json"><link rel="icon" href="./assets/icon-192.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"><script>try{const t=localStorage.getItem('mikasa.v01.theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script><style>
 :root, [data-theme="dark"] {
   --bg: #0a0c12;
   --bg-2: #0e1119;
@@ -642,10 +626,22 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
   #v-customers .search { min-width: 240px; }
 }
 
-</style>
-</head>
-<body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+
+/* Finora-inspired clone visual system */
+:root{--bg:#f1f6fc;--bg-2:#eaf1fa;--surface:#fff;--surface-2:#f8fbff;--surface-3:#eef4fb;--line:rgba(24,52,94,.08);--line-2:rgba(24,52,94,.14);--text:#172b52;--text-2:#71819c;--text-3:#95a2b7;--accent:#3b82e9;--accent-2:#60a5fa;--accent-soft:rgba(59,130,233,.12);--ok:#27b98a;--ok-soft:rgba(39,185,138,.12);--warn:#eab447;--warn-soft:rgba(234,180,71,.14);--bad:#e7687b;--bad-soft:rgba(231,104,123,.12);--info:#7f82e9;--shadow:0 12px 36px rgba(50,89,140,.08)}
+[data-theme=dark]{--bg:#101827;--bg-2:#142238;--surface:#19263a;--surface-2:#1e2e45;--surface-3:#263952;--line:rgba(255,255,255,.07);--line-2:rgba(255,255,255,.13);--text:#eff5ff;--text-2:#a9b8cf;--text-3:#778aa6;--accent:#62a5ff;--accent-2:#86b8ff;--accent-soft:rgba(98,165,255,.13);--ok:#4bd1a4;--ok-soft:rgba(75,209,164,.13);--warn:#e9bf62;--warn-soft:rgba(233,191,98,.13);--bad:#f0879a;--bad-soft:rgba(240,135,154,.13);--info:#a0a3ff;--shadow:0 12px 36px rgba(0,0,0,.18)}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif}
+.shell{width:100%;max-width:none;margin:0;min-height:100vh;padding:16px;display:grid;grid-template-columns:216px minmax(0,1fr);gap:18px}
+.side{position:sticky;top:16px;height:calc(100vh - 32px);border:1px solid var(--line);border-radius:22px;background:var(--surface);box-shadow:var(--shadow);padding:20px 14px}
+.brand{margin-bottom:30px}.brand-logo{border-radius:14px}.brand-name{color:var(--text);font-size:20px}.brand-sub{color:var(--text-2)}.nav-label{color:var(--text-3);letter-spacing:.12em}.nav-btn{border-radius:12px;color:var(--text-2);margin:4px 0;padding:12px}.nav-btn.active{background:#e6f1ff;color:#2375d6;font-weight:800}[data-theme=dark] .nav-btn.active{background:#203b5c;color:#95c4ff}
+.side-card{background:var(--surface-2);border:1px solid var(--line);border-radius:16px}.main{min-width:0;padding:4px 2px 30px}.top{border:0;padding:8px 4px 18px}.top h1{color:var(--text);font-size:24px}.top p{color:var(--text-2)}.clock{background:var(--surface);border:1px solid var(--line);border-radius:99px}
+.card,.kpi{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.card{padding:20px}.card-head{margin-bottom:16px}.card-title{color:var(--text);font-size:16px}.card-sub{color:var(--text-2)}
+.grid-kpi{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:16px}.kpi{padding:18px}.kpi-label{color:var(--text-2)}.kpi-val{color:var(--text);font-size:clamp(22px,2.2vw,30px)}.grid-2,.grid-2b{gap:14px;margin-bottom:14px}.grid-2{grid-template-columns:minmax(0,1.65fr) minmax(280px,1fr)}.grid-2b{grid-template-columns:1fr 1fr}.chart{min-height:285px}
+.toolbar,.search,.select{background:var(--surface);border-color:var(--line);border-radius:12px}.btn-primary{background:#3d8ff0;border-radius:12px;box-shadow:0 8px 18px rgba(59,130,233,.18)}.btn-soft,.btn-ghost,.icon-btn{background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:12px}.view{display:none}.view.active{display:block}.customer-total-card{background:var(--surface)!important}.tile{background:var(--surface);border:1px solid var(--line);border-radius:16px;color:var(--text)}.sheet{background:var(--surface);border-color:var(--line);border-radius:24px}
+@media(max-width:1100px){.shell{grid-template-columns:190px minmax(0,1fr);gap:12px;padding:12px}.grid-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-2{grid-template-columns:minmax(0,1.4fr) minmax(250px,1fr)}}
+@media(max-width:760px){.shell{display:block;padding:0 14px 92px}.side{display:none}.main{padding:0}.top{padding:17px 2px 15px;align-items:flex-start}.top h1{font-size:21px}.top p{font-size:12px;max-width:260px}.top-actions .clock,.top-actions #themeBtn{display:none}.top-actions .btn{font-size:12px;padding:10px 12px}.grid-kpi{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.kpi{padding:14px;border-radius:17px}.kpi-val{font-size:21px}.kpi-label{font-size:11px}.grid-2,.grid-2b{grid-template-columns:1fr;gap:10px;margin-bottom:10px}.card{padding:15px;border-radius:18px}.card-title{font-size:14px}.chart{min-height:240px}.donut-wrap{flex-direction:column}.donut{margin:auto}.toolbar{display:grid;grid-template-columns:1fr;gap:9px}.toolbar .seg{overflow:auto;max-width:100%}.toolbar .select{width:100%}.calendar-layout{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr;gap:9px}.diag{grid-template-columns:1fr 1fr}.dock{display:block;position:fixed;z-index:1000;bottom:0;left:0;right:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(20px);border-top:1px solid var(--line)}[data-theme=dark] .dock{background:rgba(25,38,58,.95)}.dock-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}.dock button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:none;border:0;color:var(--text-2);font-size:10px;padding:4px 1px;min-height:46px}.dock button.active{color:var(--accent);font-weight:800}.dock .ico{width:19px;height:19px}.dock .fab{background:#3d8ff0;color:#fff;border-radius:15px;margin-top:-18px;box-shadow:0 6px 16px rgba(59,130,233,.28);min-height:54px}.dock .fab .ico{width:22px;height:22px}.sheet{width:min(100% - 18px,560px);max-height:90dvh;overflow:auto}.cal-grid{gap:4px}}
+@media(max-width:390px){.shell{padding-left:10px;padding-right:10px}.kpi{padding:12px}.kpi-val{font-size:18px}.tiles{grid-template-columns:1fr}.top h1{font-size:19px}}
+</style></head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></symbol>
     <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
@@ -666,178 +662,19 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></symbol>
     <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
     <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
-    <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 1 1 21 11.5z"/></symbol>
+    
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/></symbol>
   </defs>
-</svg>
-
-<div class="shell">
-  <aside class="side">
-    <div class="brand">
-      <img class="brand-logo" src="./icon-192.png" alt="MIKASA" width="40" height="40">
-      <div>
-        <div class="brand-name">MIKASA <span class="tag">V0.1</span></div>
-        <div class="brand-sub">Wireless Billing Suite</div>
-      </div>
-    </div>
-    <div class="nav-label">Menu</div>
-    <button class="nav-btn active" data-nav="dashboard" title="Ringkasan"><svg class="ico"><use href="#i-grid"/></svg><span>Ringkasan</span></button>
-    <button class="nav-btn" data-nav="customers" title="Pelanggan"><svg class="ico"><use href="#i-users"/></svg><span>Pelanggan</span><span class="nav-count" id="navCount">0</span></button>
-    <button class="nav-btn" data-nav="calendar" title="Kalender"><svg class="ico"><use href="#i-cal"/></svg><span>Kalender</span></button>
-    <button class="nav-btn" data-nav="data" title="Data & Backup"><svg class="ico"><use href="#i-db"/></svg><span>Data & Backup</span></button>
-    <div class="side-foot">
-      <div class="side-card">
-        <div class="cap"><span>Ikon profil</span><span><span class="dot-live"></span></span></div>
-        <div class="seg" id="avSeg">
-          <button data-av="glyph" class="active">Glyph</button>
-          <button data-av="mono">Inisial</button>
-          <button data-av="3d">3D</button>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <main class="main">
-    <header class="top">
-      <div>
-        <h1 id="hTitle">Ringkasan</h1>
-        <p id="hSub">Performa penagihan dan kesehatan arus kas pelanggan WiFi Anda</p>
-      </div>
-      <div class="top-actions">
-        <span class="clock"><span class="dot-live"></span><span id="clock">--:--:--</span></span>
-        <button class="icon-btn" id="themeBtn" aria-label="Ganti tema"><svg class="ico" id="themeIco"><use href="#i-sun"/></svg></button>
-        <button class="btn btn-primary" id="topAdd"><svg class="ico"><use href="#i-plus"/></svg>Catat Tagihan</button>
-      </div>
-    </header>
-
-    <!-- DASHBOARD -->
-    <section class="view active" id="v-dashboard">
-      <div class="grid-kpi" id="kpis"></div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">Tren Arus Kas</div>
-              <div class="card-sub">Tagihan lunas vs piutang per periode</div>
-            </div>
-            <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-              <div class="legend"><span><i style="background:var(--ok)"></i>Lunas</span><span><i style="background:var(--accent)"></i>Piutang</span></div>
-              <div class="seg" id="rangeSeg"><button data-range="6" class="active">6 bln</button><button data-range="12">12 bln</button></div>
-            </div>
-          </div>
-          <div class="chart" id="trend"><div class="tip" id="tip"></div></div>
-        </div>
-
-        <div class="card">
-          <div class="card-head"><div><div class="card-title">Komposisi Tagihan</div><div class="card-sub">Berdasarkan nilai rupiah</div></div></div>
-          <div class="donut-wrap">
-            <div class="donut"><svg viewBox="0 0 36 36" id="donut"></svg><div class="donut-center"><b id="dcVal">0%</b><span id="dcLab">Lunas</span></div></div>
-            <div class="strip-list" id="donutList"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-2b">
-        <div class="card">
-          <div class="card-head"><div><div class="card-title">Prioritas Penagihan</div><div class="card-sub">Piutang aktif terbesar</div></div></div>
-          <div class="rank" id="rank"></div>
-        </div>
-        <div class="card">
-          <div class="card-head"><div><div class="card-title">Aktivitas Terbaru</div><div class="card-sub">Catatan yang baru dibuat atau dilunasi</div></div></div>
-          <div class="feed" id="feed"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CUSTOMERS -->
-    <section class="view" id="v-customers">
-      <div class="card customer-total-card" style="margin-bottom:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-        <div class="customer-total-main">
-          <div class="customer-total-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <div class="customer-total-copy"><div class="card-sub">TOTAL PELANGGAN TERDAFTAR</div><div id="customerTotal" style="font-size:clamp(24px,5vw,32px);font-weight:800;line-height:1.25;font-variant-numeric:tabular-nums">0</div></div>
-        </div>
-        <div class="customer-total-note">Pelanggan unik<br>di daftar</div>
-      </div>
-      <div class="toolbar">
-        <label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Cari nama pelanggan…" autocomplete="off"></label>
-        <div class="seg" id="filterSeg">
-          <button data-filter="all" class="active">Semua</button>
-          <button data-filter="debt">Belum bayar</button>
-          <button data-filter="overdue">⚠️ Overdue</button>
-          <button data-filter="paid">Lunas</button>
-        </div>
-        <select class="select" id="sort">
-          <option value="recent">Terbaru</option>
-          <option value="debt">Piutang tertinggi</option>
-          <option value="name">Nama A–Z</option>
-        </select>
-      </div>
-      <div class="list" id="list"></div>
-    </section>
-
-    <!-- CALENDAR -->
-    <section class="view" id="v-calendar">
-      <div class="calendar-layout">
-        <div class="card">
-          <div class="cal-bar">
-            <button class="icon-btn" id="calPrev" aria-label="Bulan sebelumnya"><svg class="ico" style="transform:rotate(90deg)"><use href="#i-chev"/></svg></button>
-            <div class="cal-title" id="calTitle"></div>
-            <button class="icon-btn" id="calNext" aria-label="Bulan berikutnya"><svg class="ico" style="transform:rotate(-90deg)"><use href="#i-chev"/></svg></button>
-          </div>
-          <div class="cal-grid" id="calGrid"></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--text-3)">
-            <div class="legend"><span><i style="background:var(--bad);border-radius:50%"></i>Piutang</span><span><i style="background:var(--ok);border-radius:50%"></i>Lunas</span></div>
-            <button class="btn btn-ghost" id="calToday" style="font-size:12px">Hari ini</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div class="detail-heading"><div class="card-title">Rincian <span id="selLabel" style="color:var(--accent-2)"></span></div><div class="card-sub">Transaksi pada tanggal terpilih</div></div>
-            <button class="btn btn-soft" id="calAdd" style="padding:8px 12px"><svg class="ico"><use href="#i-plus"/></svg>Tambah</button>
-          </div>
-          <div id="dayList"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- DATA -->
-    <section class="view" id="v-data">
-      <div class="tiles">
-        <button class="tile" id="bJson"><div class="kpi-ico c-accent" style="background:var(--accent-soft);color:var(--accent-2)"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button>
-        <button class="tile" id="bCsv"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Buka di Excel / Google Sheets</span></div></button>
-        <label class="tile" for="restore"><div class="kpi-ico" style="background:rgba(96,165,250,.13);color:var(--info)"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor dari file backup .json</span></div><input type="file" id="restore" accept=".json,application/json" hidden></label>
-        <label class="tile" for="customerImport"><div class="kpi-ico" style="background:var(--ok-soft);color:var(--ok)"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Impor Excel / CSV</b><span class="s">Gabungkan daftar pelanggan tanpa membuat tagihan</span></div><input type="file" id="customerImport" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label>
-        <button class="tile" id="bSeed"><div class="kpi-ico" style="background:var(--warn-soft);color:var(--warn)"><svg class="ico"><use href="#i-spark"/></svg></div><div><b>Muat Data Contoh</b><span class="s">Isi simulasi untuk mencoba tampilan</span></div></button>
-      </div>
-      <div class="card" style="margin-bottom:14px">
-        <div class="card-head"><div><div class="card-title">Diagnostik Penyimpanan</div><div class="card-sub">Data tersimpan lokal di perangkat ini</div></div></div>
-        <div class="diag">
-          <div class="strip"><span class="strip-l">Total catatan</span><span class="strip-v" id="dCount">0</span></div>
-          <div class="strip"><span class="strip-l">Ukuran data</span><span class="strip-v" id="dSize">0 KB</span></div>
-          <div class="strip"><span class="strip-l">Backup terakhir</span><span class="strip-v" id="dBackup">Belum ada</span></div>
-          <div class="strip"><span class="strip-l">Versi</span><span class="strip-v">MIKASA V0.1</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div><div class="card-title" style="color:var(--bad)">Zona Berbahaya</div><div class="card-sub">Tindakan ini tidak bisa dibatalkan. Lakukan backup lebih dulu.</div></div>
-          <button class="btn btn-danger" id="bWipe"><svg class="ico"><use href="#i-trash"/></svg>Hapus Semua Data</button></div>
-      </div>
-    </section>
-  </main>
-</div>
-
-<nav class="dock"><div class="dock-grid">
-  <button data-nav="dashboard" class="active"><svg class="ico"><use href="#i-grid"/></svg>Ringkasan</button>
-  <button data-nav="customers"><svg class="ico"><use href="#i-users"/></svg>Pelanggan</button>
-  <button class="fab" id="dockAdd"><svg class="ico"><use href="#i-plus"/></svg>Catat</button>
-  <button data-nav="calendar"><svg class="ico"><use href="#i-cal"/></svg>Kalender</button>
-  <button data-nav="data"><svg class="ico"><use href="#i-db"/></svg>Data</button>
-</div></nav>
-
-<!-- FORM SHEET -->
+</svg><div class="shell"><aside class="side"><div class="brand"><img class="brand-logo" src="./assets/icon-192.png" alt="MIKASA" width="40" height="40"><div><div class="brand-name">MIKASA <span class="tag">V0.1</span></div><div class="brand-sub">Wireless Billing</div></div></div><div class="nav-label">WORKSPACE</div>
+<button class="nav-btn active" data-nav="dashboard"><svg class="ico"><use href="#i-grid"/></svg><span>Dashboard</span></button><button class="nav-btn" data-nav="customers"><svg class="ico"><use href="#i-users"/></svg><span>Pelanggan</span><span class="nav-count" id="navCount">0</span></button><button class="nav-btn" data-nav="calendar"><svg class="ico"><use href="#i-cal"/></svg><span>Kalender</span></button><button class="nav-btn" data-nav="data"><svg class="ico"><use href="#i-db"/></svg><span>Data & Backup</span></button>
+<div class="side-foot"><div class="side-card"><div class="cap"><span>Preferensi</span><span><span class="dot-live"></span></span></div><div class="seg" id="avSeg" style="margin-top:8px"><button data-av="glyph" class="active">Glyph</button><button data-av="mono">Inisial</button><button data-av="3d">3D</button></div><button class="btn btn-ghost" id="themeBtn" style="width:100%;margin-top:8px"><svg class="ico" id="themeIco"><use href="#i-sun"/></svg> Ganti tema</button></div></div></aside>
+<main class="main"><header class="top"><div><h1 id="hTitle">Dashboard</h1><p id="hSub">Ringkasan billing dan arus kas pelanggan WiFi Anda</p></div><div class="top-actions"><span class="clock"><span class="dot-live"></span><span id="clock">--:--:--</span></span><button class="btn btn-primary" id="topAdd"><svg class="ico"><use href="#i-plus"/></svg>Catat Tagihan</button></div></header>
+<section class="view active" id="v-dashboard"><div class="grid-kpi" id="kpis"></div><div class="grid-2"><div class="card"><div class="card-head"><div><div class="card-title">Arus Kas</div><div class="card-sub">Tagihan lunas dan piutang per periode</div></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div class="legend"><span><i style="background:var(--ok)"></i>Lunas</span><span><i style="background:var(--accent)"></i>Piutang</span></div><div class="seg" id="rangeSeg"><button data-range="6" class="active">6 bln</button><button data-range="12">12 bln</button></div></div></div><div class="chart" id="trend"><div class="tip" id="tip"></div></div></div><div class="card"><div class="card-head"><div><div class="card-title">Status Tagihan</div><div class="card-sub">Komposisi berdasarkan nilai rupiah</div></div></div><div class="donut-wrap"><div class="donut"><svg viewBox="0 0 36 36" id="donut"></svg><div class="donut-center"><b id="dcVal">0%</b><span id="dcLab">Lunas</span></div></div><div class="strip-list" id="donutList"></div></div></div></div>
+<div class="grid-2b"><div class="card"><div class="card-head"><div><div class="card-title">Prioritas Penagihan</div><div class="card-sub">Piutang aktif terbesar</div></div></div><div class="rank" id="rank"></div></div><div class="card"><div class="card-head"><div><div class="card-title">Transaksi Terbaru</div><div class="card-sub">Tagihan baru dan pembayaran</div></div></div><div class="feed" id="feed"></div></div></div></section>
+<section class="view" id="v-customers"><div class="card customer-total-card" style="margin-bottom:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px"><div class="customer-total-main"><div class="customer-total-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg></div><div class="customer-total-copy"><div class="card-sub">TOTAL PELANGGAN TERDAFTAR</div><div id="customerTotal" style="font-size:30px;font-weight:800">0</div></div></div><div class="customer-total-note">Pelanggan unik<br>di daftar</div></div><div class="toolbar"><label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Cari nama pelanggan…" autocomplete="off"></label><div class="seg" id="filterSeg"><button data-filter="all" class="active">Semua</button><button data-filter="debt">Belum bayar</button><button data-filter="overdue">Overdue</button><button data-filter="paid">Lunas</button></div><select class="select" id="sort"><option value="recent">Terbaru</option><option value="debt">Piutang tertinggi</option><option value="name">Nama A–Z</option></select></div><div class="list" id="list"></div></section>
+<section class="view" id="v-calendar"><div class="calendar-layout"><div class="card"><div class="cal-bar"><button class="icon-btn" id="calPrev">‹</button><div class="cal-title" id="calTitle"></div><button class="icon-btn" id="calNext">›</button></div><div class="cal-grid" id="calGrid"></div><div style="display:flex;justify-content:space-between;margin-top:14px"><div class="legend"><span><i style="background:var(--bad);border-radius:50%"></i>Piutang</span><span><i style="background:var(--ok);border-radius:50%"></i>Lunas</span></div><button class="btn btn-ghost" id="calToday">Hari ini</button></div></div><div class="card"><div class="card-head"><div class="card-title">Rincian <span id="selLabel" style="color:var(--accent)"></span></div><button class="btn btn-soft" id="calAdd"><svg class="ico"><use href="#i-plus"/></svg>Tambah</button></div><div id="dayList"></div></div></div></section>
+<section class="view" id="v-data"><div class="tiles"><button class="tile" id="bJson"><div class="kpi-ico"><svg class="ico"><use href="#i-dl"/></svg></div><div><b>Backup JSON</b><span class="s">Salinan lengkap seluruh data</span></div></button><button class="tile" id="bCsv"><div class="kpi-ico"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Ekspor CSV</b><span class="s">Excel / Google Sheets</span></div></button><label class="tile" for="restore"><div class="kpi-ico"><svg class="ico"><use href="#i-ul"/></svg></div><div><b>Pulihkan Data</b><span class="s">Impor backup JSON</span></div><input type="file" id="restore" accept=".json,application/json" hidden></label><label class="tile" for="customerImport"><div class="kpi-ico"><svg class="ico"><use href="#i-file"/></svg></div><div><b>Impor Excel / CSV</b><span class="s">Impor daftar pelanggan</span></div><input type="file" id="customerImport" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label><button class="tile" id="bSeed"><div class="kpi-ico"><svg class="ico"><use href="#i-spark"/></svg></div><div><b>Muat Data Contoh</b><span class="s">Simulasi untuk mencoba</span></div></button></div><div class="card" style="margin:14px 0"><div class="card-head"><div><div class="card-title">Diagnostik Penyimpanan</div><div class="card-sub">Data lokal pada perangkat ini</div></div></div><div class="diag"><div class="strip"><span class="strip-l">Total catatan</span><span class="strip-v" id="dCount">0</span></div><div class="strip"><span class="strip-l">Ukuran data</span><span class="strip-v" id="dSize">0 KB</span></div><div class="strip"><span class="strip-l">Backup terakhir</span><span class="strip-v" id="dBackup">Belum ada</span></div><div class="strip"><span class="strip-l">Versi</span><span class="strip-v">MIKASA V0.1</span></div></div></div><div class="card"><div class="card-head"><div><div class="card-title" style="color:var(--bad)">Zona Berbahaya</div><div class="card-sub">Hapus data lokal hanya setelah backup.</div></div><button class="btn btn-danger" id="bWipe"><svg class="ico"><use href="#i-trash"/></svg>Hapus Semua Data</button></div></div></section></main></div>
+<nav class="dock"><div class="dock-grid"><button data-nav="dashboard" class="active"><svg class="ico"><use href="#i-grid"/></svg>Beranda</button><button data-nav="customers"><svg class="ico"><use href="#i-users"/></svg>Pelanggan</button><button class="fab" id="dockAdd"><svg class="ico"><use href="#i-plus"/></svg>Catat</button><button data-nav="calendar"><svg class="ico"><use href="#i-cal"/></svg>Kalender</button><button data-nav="data"><svg class="ico"><use href="#i-db"/></svg>Data</button></div></nav><!-- FORM SHEET -->
 <div class="overlay" id="formOv">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fTitle">
     <h3 id="fTitle">Catat Tagihan</h3>
@@ -1424,5 +1261,3 @@ let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() 
 if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 })();
 </script>
-</body>
-</html>
