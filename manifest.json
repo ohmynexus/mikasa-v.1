@@ -1,13 +1,13 @@
 {
-  "name": "MIKASA V0.1 — Wireless Billing & Analytics",
-  "short_name": "MIKASA",
+  "name": "MIKASA V0.1 — Finora Clone",
+  "short_name": "MIKASA Clone",
   "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0a0c12",
-  "theme_color": "#0a0c12",
+  "background_color": "#f1f6fc",
+  "theme_color": "#f1f6fc",
   "description": "Aplikasi tagihan dan analitik pelanggan WiFi yang modern, minimalis, dan responsif.",
   "categories": [
     "finance",
